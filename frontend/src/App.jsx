@@ -6,7 +6,9 @@ import Navbar from './components/Navbar'
 
 const App = () => {
   return (
-      <div> 
+      <div style= {{  
+        backgroundColor: 'purple', color: 'white', minHeight: '100vh', padding: '20px', margin: -12 
+        }} > 
        <Navbar />
        <Home />
       </div>
