@@ -1,7 +1,15 @@
 
+
+const Button = () => {
+  return (
+    <button onClick={() => alert('Clicked')} >Click me</button>
+  )
+}
+
 const Home = () => {
   return (
-    <div>Home</div>
+    <div><Button /></div>
+    
   )
 }
 
