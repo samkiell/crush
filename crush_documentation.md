@@ -1,8 +1,8 @@
-# CrushEdu Place International – Technical Documentation Template
+# Crush EduPlace International – Technical Documentation Template
 
 ## 1. Project Overview
 
-CrushEdu Place International is a unified digital platform delivering past questions, exam practice, study resources, and admission guidance for WAEC, NECO, JAMB, and OAU-specific PUTME and DE applicants. The product is built on the MERN stack with a full‑stack monorepo structure containing distinct frontend and backend services inside a single root directory.
+Crush EduPlace International is a unified digital platform delivering past questions, exam practice, study resources, and admission guidance for WAEC, NECO, JAMB, and OAU-specific PUTME and DE applicants. The product is built on the MERN stack with a full‑stack monorepo structure containing distinct frontend and backend services inside a single root directory.
 
 This documentation outlines the architectural blueprint, development standards, feature requirements, API expectations, deployment workflow, and operational governance for the platform.
 
@@ -203,5 +203,5 @@ Code must follow ESLint and Prettier rulesets. Every module requires test covera
 
 The roadmap includes introducing AI‑driven tutoring, expanding coverage to other universities, integrating live classes, and deploying a mobile wrapper for Android and iOS.
 
-This template serves as the operational backbone for building CrushEdu Place International through a resilient, enterprise‑grade MERN implementation.
+This template serves as the operational backbone for building Crush EduPlace International through a resilient, enterprise‑grade MERN implementation.
 
