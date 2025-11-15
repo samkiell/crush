@@ -11,7 +11,7 @@ const App = () => {
        <Home />
       </div>
   )
-}x
+}
 
 
 
