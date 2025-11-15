@@ -1,8 +1,12 @@
-
+import { Loader } from 'lucide-react';
 
 const Navbar = () => {
   return (
-    <div>Crush EduPlace International</div>
+    <div>
+      <Loader />
+      Crush EduPlace International
+      
+      </div>
   )
 }
 
