@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/crush.js",
-  "scripts": {#
-    "nodemon": "node src/crush.js",
+  "scripts": {
     "dev": "nodemon src/crush.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/crush.js"
   },
   "keywords": [],
   "author": "",
