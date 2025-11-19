@@ -36,4 +36,12 @@ const dashboardSlice = createSlice({
   },
 });
 
+export const {
+  fetchDashboardStart,
+  fetchDashboardSuccess,
+  fetchDashboardFailure,
+  updateProgress,
+} = dashboardSlice.actions;
+
+export default dashboardSlice.reducer;
 
