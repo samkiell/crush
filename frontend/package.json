@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "daisyui": "^4.12.10",
     "eslint": "^9",
     "tailwindcss": "^4"
-  }
 }
