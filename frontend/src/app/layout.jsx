@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "./ReduxProvider";
-import { ThemeProvider } from "../utils/theme";
+import ThemeWrapper from "./theme-wrapper"; // NEW client wrapper
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,11 +17,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <ThemeProvider>
+        <ThemeWrapper>
           <ReduxProvider>
             {children}
           </ReduxProvider>
-        </ThemeProvider>
+        </ThemeWrapper>
       </body>
     </html>
   );
