@@ -79,7 +79,7 @@ export default function QuestionsPage() {
     <div className="min-h-screen bg-base-100 text-base-content">
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-6 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,7 +92,7 @@ export default function QuestionsPage() {
           </p>
 
           <div className="flex flex-wrap gap-4 mb-6">
-            <select className="select select-bordered">
+            <select className="select select-bordered rounded-xl">
               <option>All Subjects</option>
               <option>Mathematics</option>
               <option>English</option>
@@ -100,7 +100,7 @@ export default function QuestionsPage() {
               <option>Chemistry</option>
               <option>Biology</option>
             </select>
-            <select className="select select-bordered">
+            <select className="select select-bordered rounded-xl">
               <option>All Difficulties</option>
               <option>Easy</option>
               <option>Medium</option>
@@ -108,7 +108,7 @@ export default function QuestionsPage() {
             </select>
             <button
               onClick={handleShowAnswers}
-              className="btn btn-primary"
+              className="btn btn-primary rounded-xl"
               disabled={Object.keys(selectedAnswers).length === 0}
             >
               Check Answers
@@ -132,28 +132,3 @@ export default function QuestionsPage() {
             {questions.map((question, index) => (
               <motion.div
                 key={question.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <QuestionCard
-                  question={question}
-                  showAnswer={showAnswers}
-                  onAnswerSelect={handleAnswerSelect}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {!loading && questions.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-base-content/70">No questions found matching your criteria.</p>
-          </div>
-        )}
-      </div>
-
-      <Footer />
-    </div>
-  );
-}

@@ -96,7 +96,7 @@ const AnalyticsChart = ({ data, type = 'bar' }) => {
   };
 
   return (
-    <div className="bg-base-100 rounded-lg shadow-md p-4">
+    <div className="bg-base-100 rounded-xl shadow p-6">
       <canvas
         ref={canvasRef}
         width={400}

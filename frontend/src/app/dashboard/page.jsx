@@ -52,7 +52,7 @@ export default function DashboardPage() {
           <p className="text-error mb-4">Error loading dashboard: {error}</p>
           <button
             onClick={fetchDashboardData}
-            className="btn btn-primary"
+            className="btn btn-primary rounded-xl"
           >
             Try Again
           </button>
@@ -63,13 +63,13 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-base-100">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-6 py-20">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold text-base-content mb-8">Dashboard</h1>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-base-100 rounded-lg shadow-md p-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-8">
+            <div className="bg-base-100 rounded-xl shadow p-6 flex flex-col gap-3">
               <div className="flex items-center">
                 <div className="bg-primary/10 p-3 rounded-full">
                   <span className="text-2xl">📚</span>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-base-100 rounded-lg shadow-md p-6">
+            <div className="bg-base-100 rounded-xl shadow p-6 flex flex-col gap-3">
               <div className="flex items-center">
                 <div className="bg-success/10 p-3 rounded-full">
                   <span className="text-2xl">✅</span>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-base-100 rounded-lg shadow-md p-6">
+            <div className="bg-base-100 rounded-xl shadow p-6 flex flex-col gap-3">
               <div className="flex items-center">
                 <div className="bg-accent/10 p-3 rounded-full">
                   <span className="text-2xl">📊</span>
@@ -105,7 +105,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-base-100 rounded-lg shadow-md p-6">
+            <div className="bg-base-100 rounded-xl shadow p-6 flex flex-col gap-3">
               <div className="flex items-center">
                 <div className="bg-error/10 p-3 rounded-full">
                   <span className="text-2xl">🎯</span>
@@ -119,8 +119,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <div className="bg-base-100 rounded-lg shadow-md p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-8">
+            <div className="bg-base-200 rounded-xl p-6 shadow">
               <h2 className="text-xl font-bold text-base-content mb-4">Progress Over Time</h2>
               <AnalyticsChart
                 data={progress.map(p => ({ label: p.date, value: p.score }))}
@@ -128,7 +128,7 @@ export default function DashboardPage() {
               />
             </div>
 
-            <div className="bg-base-100 rounded-lg shadow-md p-6">
+            <div className="bg-base-200 rounded-x-l p-6 shadow">
               <h2 className="text-xl font-bold text-base-content mb-4">Subject Performance</h2>
               <AnalyticsChart
                 data={[
@@ -144,9 +144,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Weak Topics */}
-          <div className="bg-base-100 rounded-lg shadow-md p-6 mb-8">
+          <div className="bg-base-100 rounded-xl shadow p-6 mb-8">
             <h2 className="text-xl font-bold text-base-content mb-4">Areas for Improvement</h2>
-            {stats.weakTopics.length === 0 ? (
               <p className="text-base-content/70">Great job! No weak areas identified.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -164,25 +163,3 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-base-100 rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold text-base-content mb-4">Recent Activity</h2>
-            <div className="space-y-4">
-              {progress.slice(0, 5).map((activity, index) => (
-                <div key={index} className="flex items-center justify-between py-2 border-b border-base-300 last:border-b-0">
-                  <div>
-                    <p className="font-medium text-base-content">Completed {activity.subject} Practice</p>
-                    <p className="text-sm text-base-content/70">{activity.date}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-base-content">{activity.score}%</p>
-                    <p className="text-sm text-base-content/70">Score</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

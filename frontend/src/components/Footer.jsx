@@ -1,17 +1,17 @@
 const Footer = () => {
   return (
-    <footer className="bg-base-200 text-base-content py-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-base-200 text-base-content/70 rounded-t-3xl">
+      <div className="container mx-auto px-4 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
-            <h3 className="text-lg font-semibold mb-4">DEVOUR TO CRUSH</h3>
+            <h3 className="text-lg font-semibold mb-4 text-base-content">DEVOUR TO CRUSH</h3>
             <p className="text-base-content/70">
               Your ultimate JAMB exam preparation platform.
             </p>
           </div>
 
           <div>
-            <h4 className="text-md font-semibold mb-4">Features</h4>
+            <h4 className="text-md font-semibold mb-4 text-base-content">Features</h4>
             <ul className="space-y-2 text-base-content/70">
               <li>Question Bank</li>
               <li>Exam Simulator</li>
@@ -21,7 +21,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-md font-semibold mb-4">Support</h4>
+            <h4 className="text-md font-semibold mb-4 text-base-content">Support</h4>
             <ul className="space-y-2 text-base-content/70">
               <li>Help Center</li>
               <li>Contact Us</li>
@@ -31,7 +31,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-md font-semibold mb-4">Connect</h4>
+            <h4 className="text-md font-semibold mb-4 text-base-content">Connect</h4>
             <ul className="space-y-2 text-base-content/70">
               <li>Facebook</li>
               <li>Twitter</li>

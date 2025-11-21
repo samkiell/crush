@@ -1,8 +1,9 @@
-t"use client";
+"use client";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import Link from 'next/link';
+import { Sun, Moon, Eye } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 
 const Header = () => {
@@ -10,9 +11,14 @@ const Header = () => {
   const dispatch = useDispatch();
   const { theme, setTheme } = useTheme();
 
+  const cycleTheme = () => {
+    if (theme === "light") setTheme("dark");
+    else if (theme === "dark") setTheme("eye-care");
+    else setTheme("light");
+  };
+
   const handleLogout = () => {
-    dispatch(logout());
-    localStorage.removeItem('token');
+        localStorage.removeItem('token');
   };
 
   return (
@@ -24,62 +30,4 @@ const Header = () => {
           </Link>
 
           <nav className="hidden md:flex space-x-6">
-            <Link href="/questions" className="text-base-content hover:text-primary">
-              Questions
-            </Link>
-            <Link href="/exam" className="text-base-content hover:text-primary">
-              Exam Simulator
-            </Link>
-            <Link href="/dashboard" className="text-base-content hover:text-primary">
-              Dashboard
-            </Link>
-            <Link href="/community" className="text-base-content hover:text-primary">
-              Community
-            </Link>
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            <select
-              className="select select-bordered select-sm"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="eye-care">Eye-Care</option>
-            </select>
-
-            {isAuthenticated ? (
-              <>
-                <span className="text-base-content">Welcome, {user?.name}</span>
-                <button
-                  onClick={handleLogout}
-                  className="btn btn-error btn-sm"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <div className="space-x-2">
-                <Link
-                  href="/auth/login"
-                  className="btn btn-primary btn-sm"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/auth/register"
-                  className="btn btn-secondary btn-sm"
-                >
-                  Register
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-};
-
-export default Header;
+            <Link href="/questions" className="text-base-content hover:bg-base-200 rounded-xl px-4 py-2 transition-all duration-300">
