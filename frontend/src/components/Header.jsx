@@ -1,14 +1,24 @@
-t"use client";
+"use client";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import Link from 'next/link';
 import { useTheme } from '../utils/theme';
+import { Sun, Moon, Eye } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname?.() || '';
+
+  const showEyeCare = Boolean(
+    isAuthenticated ||
+      pathname.startsWith('/dashboard') ||
+      pathname.startsWith('/questions') ||
+      pathname.startsWith('/exam')
+  );
 
   const handleLogout = () => {
     dispatch(logout());
@@ -39,15 +49,39 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <select
-              className="select select-bordered select-sm"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="eye-care">Eye-Care</option>
-            </select>
+            <div className="btn-group" role="tablist" aria-label="Theme selector">
+              <button
+                type="button"
+                aria-pressed={theme === 'light'}
+                onClick={() => setTheme('light')}
+                className={"btn btn-ghost btn-sm " + (theme === 'light' ? 'btn-primary' : '')}
+                title="Light"
+              >
+                <Sun className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                aria-pressed={theme === 'dark'}
+                onClick={() => setTheme('dark')}
+                className={"btn btn-ghost btn-sm " + (theme === 'dark' ? 'btn-primary' : '')}
+                title="Dark"
+              >
+                <Moon className="w-4 h-4" />
+              </button>
+
+              {showEyeCare && (
+                <button
+                  type="button"
+                  aria-pressed={theme === 'eye-care'}
+                  onClick={() => setTheme('eye-care')}
+                  className={"btn btn-ghost btn-sm " + (theme === 'eye-care' ? 'btn-primary' : '')}
+                  title="Eye Care"
+                >
+                  <Eye className="w-4 h-4" />
+                </button>
+              )}
+            </div>
 
             {isAuthenticated ? (
               <>
