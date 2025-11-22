@@ -19,6 +19,18 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-primary to-accent text-base-content py-24 rounded-b-3xl shadow-xl">
+        
+
+        <div className="absolute top-6 left-6 flex items-center space-x-2">
+
+          <Link href="/"className="flex items-center space-x-2">
+              <img src="/logo.png" className="w-10" alt="Logo" />
+              <span className="text-lg font-bold text-white select-none">D2C</span>
+           
+          </Link>
+
+        </div>
+        
         <div className="absolute top-6 right-6">
           <button
             onClick={cycleTheme}
