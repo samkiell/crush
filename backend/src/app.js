@@ -42,10 +42,7 @@ app.get('/api/health', (req, res) => {
 app.use(errorHandler);
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/d2c-jamb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/d2c-jamb')
 .then(() => {
   console.log('Connected to MongoDB');
 })

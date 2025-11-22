@@ -128,7 +128,7 @@ export default function DashboardPage() {
               />
             </div>
 
-            <div className="bg-base-200 rounded-x-l p-6 shadow">
+            <div className="bg-base-200 rounded-xl p-6 shadow">
               <h2 className="text-xl font-bold text-base-content mb-4">Subject Performance</h2>
               <AnalyticsChart
                 data={[
@@ -146,6 +146,7 @@ export default function DashboardPage() {
           {/* Weak Topics */}
           <div className="bg-base-100 rounded-xl shadow p-6 mb-8">
             <h2 className="text-xl font-bold text-base-content mb-4">Areas for Improvement</h2>
+            {!stats.weakTopics || stats.weakTopics.length === 0 ? (
               <p className="text-base-content/70">Great job! No weak areas identified.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -165,3 +166,10 @@ export default function DashboardPage() {
           {/* Recent Activity */}
           <div className="bg-base-100 rounded-xl shadow p-6">
             <h2 className="text-xl font-bold text-base-content mb-4">Recent Activity</h2>
+            <p className="text-base-content/70">Your recent activity will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

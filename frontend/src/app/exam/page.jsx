@@ -107,3 +107,96 @@ export default function ExamPage() {
     );
   }
 
+  const currentQuestion = currentExam.questions[currentQuestionIndex];
+
+  return (
+    <div className="min-h-screen bg-base-100 text-base-content">
+      {/* Header */}
+      <div className="bg-base-200 border-b border-base-300 sticky top-0 z-10">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-bold">{currentExam.title}</h1>
+          
+          <div className="flex items-center gap-4">
+            <ExamTimer duration={currentExam.duration} onTimeUp={handleSubmitExam} />
+            
+            <button
+              onClick={cycleTheme}
+              className="btn btn-circle btn-sm bg-base-100 border border-base-300"
+            >
+              {theme === "light" && <Sun size={18} />}
+              {theme === "dark" && <Moon size={18} />}
+              {theme === "eye-care" && <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Question Counter */}
+          <div className="mb-6 flex justify-between items-center">
+            <span className="text-base-content/70">
+              Question {currentQuestionIndex + 1} of {currentExam.questions.length}
+            </span>
+            <div className="flex gap-2">
+              {currentExam.questions.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentQuestionIndex(idx)}
+                  className={`w-8 h-8 rounded-lg text-sm font-semibold ${
+                    idx === currentQuestionIndex
+                      ? 'bg-primary text-primary-content'
+                      : answers[currentExam.questions[idx].id]
+                      ? 'bg-success/20 text-success'
+                      : 'bg-base-200 text-base-content'
+                  }`}
+                >
+                  {idx + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Question Card */}
+          <QuestionCard
+            question={currentQuestion}
+            showAnswer={false}
+            onAnswerSelect={handleAnswerSelect}
+            selectedAnswer={answers[currentQuestion.id]}
+          />
+
+          {/* Navigation */}
+          <div className="mt-8 flex justify-between items-center">
+            <button
+              onClick={prevQuestion}
+              disabled={currentQuestionIndex === 0}
+              className="btn btn-outline rounded-xl"
+            >
+              Previous
+            </button>
+
+            <div className="flex gap-4">
+              {currentQuestionIndex === currentExam.questions.length - 1 ? (
+                <button
+                  onClick={handleSubmitExam}
+                  className="btn btn-success rounded-xl px-8"
+                  disabled={loading}
+                >
+                  {loading ? 'Submitting...' : 'Submit Exam'}
+                </button>
+              ) : (
+                <button
+                  onClick={nextQuestion}
+                  className="btn btn-primary rounded-xl"
+                >
+                  Next
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
