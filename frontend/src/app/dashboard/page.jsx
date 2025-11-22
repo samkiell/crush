@@ -163,3 +163,5 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Activity */}
+          <div className="bg-base-100 rounded-xl shadow p-6">
+            <h2 className="text-xl font-bold text-base-content mb-4">Recent Activity</h2>

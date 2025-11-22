@@ -6,11 +6,20 @@ import { startExam, submitAnswer, submitExamStart, submitExamSuccess, submitExam
 import { examsAPI } from '../../services/api';
 import QuestionCard from '../../components/QuestionCard';
 import ExamTimer from '../../components/ExamTimer';
+import { Sun, Moon, Eye } from 'lucide-react';
+import { useTheme } from '../../utils/theme';
 
 export default function ExamPage() {
   const dispatch = useDispatch();
   const { currentExam, answers, isExamActive, loading } = useSelector((state) => state.exams);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const { theme, setTheme } = useTheme();
+
+  const cycleTheme = () => {
+    if (theme === "light") setTheme("dark");
+    else if (theme === "dark") setTheme("eye-care");
+    else setTheme("light");
+  };
 
   useEffect(() => {
     // Start exam when component mounts (in real app, this would be triggered by user action)
@@ -91,99 +100,3 @@ export default function ExamPage() {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-base-content/70">Loading exam...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const currentQuestion = currentExam.questions[currentQuestionIndex];
-  const answeredQuestions = Object.keys(answers).length;
-
-  return (
-    <div className="min-h-screen bg-base-100">
-      <ExamTimer />
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Exam Header */}
-          <div className="bg-base-100 rounded-lg shadow-md p-6 mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-2xl font-bold text-base-content">{currentExam.title}</h1>
-              <div className="text-sm text-base-content/70">
-                Question {currentQuestionIndex + 1} of {currentExam.questions.length}
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-base-content/70">
-                Answered: {answeredQuestions} / {currentExam.questions.length}
-              </div>
-              <div className="w-full max-w-md bg-base-200 rounded-full h-2 ml-4">
-                <div
-                  className="bg-primary h-2 rounded-full"
-                  style={{ width: `${(answeredQuestions / currentExam.questions.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Question */}
-          <QuestionCard
-            question={currentQuestion}
-            onAnswerSelect={handleAnswerSelect}
-          />
-
-          {/* Navigation */}
-          <div className="bg-base-100 rounded-lg shadow-md p-6 mt-6">
-            <div className="flex justify-between items-center">
-              <button
-                onClick={prevQuestion}
-                disabled={currentQuestionIndex === 0}
-                className="btn btn-ghost"
-              >
-                Previous
-              </button>
-
-              <div className="flex space-x-2">
-                {currentExam.questions.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentQuestionIndex(index)}
-                    className={`btn btn-sm ${
-                      index === currentQuestionIndex
-                        ? 'btn-primary'
-                        : answers[currentExam.questions[index].id]
-                        ? 'btn-success'
-                        : 'btn-ghost'
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-
-              {currentQuestionIndex === currentExam.questions.length - 1 ? (
-                <button
-                  onClick={handleSubmitExam}
-                  disabled={loading}
-                  className="btn btn-success"
-                >
-                  {loading ? 'Submitting...' : 'Submit Exam'}
-                </button>
-              ) : (
-                <button
-                  onClick={nextQuestion}
-                  className="btn btn-primary"
-                >
-                  Next
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
