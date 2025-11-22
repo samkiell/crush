@@ -37,7 +37,7 @@ export default function Home() {
 
           <p className="text-xl mb-10 max-w-2xl mx-auto text-base-content/90">
             Your ultimate JAMB exam preparation platform. Master the questions,
-            crush the exam, and secure your future.
+            Crush the exam, and Secure your future.
           </p>
 
           <div className="flex justify-center gap-4">

@@ -79,14 +79,14 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-base-100">
+      <div className="container mx-auto px-6 py-20">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Community</h1>
+            <h1 className="text-3xl font-bold text-base-content">Community</h1>
             <button
               onClick={() => setShowCreateForm(!showCreateForm)}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+              className="btn btn-primary rounded-xl"
             >
               {showCreateForm ? 'Cancel' : 'Create Post'}
             </button>
@@ -94,37 +94,37 @@ export default function CommunityPage() {
 
           {/* Create Post Form */}
           {showCreateForm && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Create New Post</h2>
+            <div className="bg-base-100 rounded-xl shadow p-6 mb-8">
+              <h2 className="text-xl font-bold text-base-content mb-4">Create New Post</h2>
               <form onSubmit={handleCreatePost}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-base-content mb-2">
                     Title
                   </label>
                   <input
                     type="text"
                     value={newPost.title}
                     onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="input input-bordered rounded-xl w-full"
                     required
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-base-content mb-2">
                     Content
                   </label>
                   <textarea
                     value={newPost.content}
                     onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                     rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="textarea textarea-bordered rounded-xl w-full"
                     required
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-base-content mb-2">
                     Tags (comma-separated)
                   </label>
                   <input
@@ -132,7 +132,7 @@ export default function CommunityPage() {
                     value={newPost.tags}
                     onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                     placeholder="e.g., mathematics, algebra, help"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="input input-bordered rounded-xl w-full"
                   />
                 </div>
 
@@ -140,13 +140,13 @@ export default function CommunityPage() {
                   <button
                     type="button"
                     onClick={() => setShowCreateForm(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="btn btn-ghost rounded-xl"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    className="btn btn-primary rounded-xl"
                   >
                     Create Post
                   </button>
@@ -155,20 +155,20 @@ export default function CommunityPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Posts List */}
             <div className="lg:col-span-2">
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading posts...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-base-content/70">Loading posts...</p>
                 </div>
               ) : error ? (
                 <div className="text-center py-12">
-                  <p className="text-red-600 mb-4">Error loading posts: {error}</p>
+                  <p className="text-error mb-4">Error loading posts: {error}</p>
                   <button
                     onClick={fetchPosts}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    className="btn btn-primary rounded-xl"
                   >
                     Try Again
                   </button>
@@ -178,29 +178,29 @@ export default function CommunityPage() {
                   {posts.map((post) => (
                     <div
                       key={post.id}
-                      className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
+                      className="bg-base-100 rounded-xl shadow p-6 cursor-pointer hover:shadow-lg transition-all duration-300"
                       onClick={() => handleViewPost(post)}
                     >
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      <h3 className="text-xl font-semibold text-base-content mb-2">
                         {post.title}
                       </h3>
-                      <p className="text-gray-600 mb-4 line-clamp-3">
+                      <p className="text-base-content/70 mb-4 line-clamp-3">
                         {post.content}
                       </p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-base-content/70">
                             By {post.author.name}
                           </span>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-base-content/70">
                             {new Date(post.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         <div className="flex items-center space-x-4">
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-base-content/70">
                             {post.commentsCount} comments
                           </span>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-base-content/70">
                             {post.likes} likes
                           </span>
                         </div>
@@ -210,7 +210,7 @@ export default function CommunityPage() {
                           {post.tags.map((tag, index) => (
                             <span
                               key={index}
-                              className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                              className="bg-primary/10 text-primary text-xs px-2 py-1 rounded"
                             >
                               {tag}
                             </span>
@@ -226,26 +226,26 @@ export default function CommunityPage() {
             {/* Post Detail */}
             <div className="lg:col-span-1">
               {currentPost ? (
-                <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                <div className="bg-base-100 rounded-xl shadow p-6 sticky top-8">
+                  <h3 className="text-xl font-semibold text-base-content mb-4">
                     {currentPost.title}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-base-content/70 mb-4">
                     {currentPost.content}
                   </p>
 
                   {/* Comments */}
-                  <div className="border-t pt-4">
-                    <h4 className="font-semibold text-gray-900 mb-4">Comments</h4>
+                  <div className="border-t border-base-300 pt-4">
+                    <h4 className="font-semibold text-base-content mb-4">Comments</h4>
 
                     {comments.length === 0 ? (
-                      <p className="text-gray-500 text-sm">No comments yet.</p>
+                      <p className="text-base-content/70 text-sm">No comments yet.</p>
                     ) : (
                       <div className="space-y-4 mb-4">
                         {comments.map((comment) => (
-                          <div key={comment.id} className="border-l-2 border-gray-200 pl-4">
-                            <p className="text-sm text-gray-600">{comment.content}</p>
-                            <p className="text-xs text-gray-500 mt-1">
+                          <div key={comment.id} className="border-l-2 border-base-300 pl-4">
+                            <p className="text-sm text-base-content/70">{comment.content}</p>
+                            <p className="text-xs text-base-content/70 mt-1">
                               By {comment.author.name} • {new Date(comment.createdAt).toLocaleDateString()}
                             </p>
                           </div>
@@ -260,12 +260,12 @@ export default function CommunityPage() {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Add a comment..."
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 mb-2"
+                        className="textarea textarea-bordered rounded-xl w-full mb-2"
                         required
                       />
                       <button
                         type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
+                        className="btn btn-primary rounded-xl text-sm"
                       >
                         Add Comment
                       </button>
@@ -273,8 +273,8 @@ export default function CommunityPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                  <p className="text-gray-500">Select a post to view details</p>
+                <div className="bg-base-100 rounded-xl shadow p-6 text-center">
+                  <p className="text-base-content/70">Select a post to view details</p>
                 </div>
               )}
             </div>

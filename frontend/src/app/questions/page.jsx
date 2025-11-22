@@ -1,47 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import QuestionCard from '../../components/QuestionCard';
-import SkeletonLoader from '../../components/SkeletonLoader';
-import { motion } from 'framer-motion';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import QuestionCard from "../../components/QuestionCard";
+import SkeletonLoader from "../../components/SkeletonLoader";
+import { motion } from "framer-motion";
 
 // Sample data - TODO: Replace with API call
 const sampleQuestions = [
   {
     id: 1,
-    subject: 'Mathematics',
-    topic: 'Algebra',
-    difficulty: 'medium',
-    question: 'Solve for x: 2x + 3 = 7',
-    options: ['x = 1', 'x = 2', 'x = 3', 'x = 4'],
-    correctAnswer: 'x = 2',
-    explanation: 'Subtract 3 from both sides: 2x = 4. Then divide by 2: x = 2.'
+    subject: "Mathematics",
+    topic: "Algebra",
+    difficulty: "medium",
+    question: "Solve for x: 2x + 3 = 7",
+    options: ["x = 1", "x = 2", "x = 3", "x = 4"],
+    correctAnswer: "x = 2",
+    explanation: "Subtract 3 from both sides: 2x = 4. Then divide by 2: x = 2.",
   },
   {
     id: 2,
-    subject: 'English',
-    topic: 'Grammar',
-    difficulty: 'easy',
-    question: 'Choose the correct sentence:',
+    subject: "English",
+    topic: "Grammar",
+    difficulty: "easy",
+    question: "Choose the correct sentence:",
     options: [
-      'She don\'t like apples.',
-      'She doesn\'t likes apples.',
-      'She doesn\'t like apples.',
-      'She don\'t likes apples.'
+      "She don't like apples.",
+      "She doesn't likes apples.",
+      "She doesn't like apples.",
+      "She don't likes apples.",
     ],
-    correctAnswer: 'She doesn\'t like apples.',
-    explanation: 'The correct form is "doesn\'t" (third person singular) with "like" (base form).'
+    correctAnswer: "She doesn't like apples.",
+    explanation:
+      'The correct form is "doesn\'t" (third person singular) with "like" (base form).',
   },
   {
     id: 3,
-    subject: 'Physics',
-    topic: 'Mechanics',
-    difficulty: 'hard',
-    question: 'A car accelerates from rest at 2 m/s² for 5 seconds. What is its final velocity?',
-    options: ['5 m/s', '7 m/s', '10 m/s', '15 m/s'],
-    correctAnswer: '10 m/s',
-    explanation: 'Using v = u + at: v = 0 + (2)(5) = 10 m/s.'
-  }
+    subject: "Physics",
+    topic: "Mechanics",
+    difficulty: "hard",
+    question:
+      "A car accelerates from rest at 2 m/s² for 5 seconds. What is its final velocity?",
+    options: ["5 m/s", "7 m/s", "10 m/s", "15 m/s"],
+    correctAnswer: "10 m/s",
+    explanation: "Using v = u + at: v = 0 + (2)(5) = 10 m/s.",
+  },
 ];
 
 export default function QuestionsPage() {
@@ -51,10 +55,13 @@ export default function QuestionsPage() {
   const [showAnswers, setShowAnswers] = useState(false);
 
   useEffect(() => {
-    // Simulate API call
+      setTimeout(() => {
+        setQuestions(sampleQuestions);
+        setLoading(false);
+      }, 1500);
+    };
     const fetchQuestions = async () => {
       setLoading(true);
-      // TODO: Replace with actual API call
       setTimeout(() => {
         setQuestions(sampleQuestions);
         setLoading(false);
@@ -65,9 +72,9 @@ export default function QuestionsPage() {
   }, []);
 
   const handleAnswerSelect = (questionId, answer) => {
-    setSelectedAnswers(prev => ({
+    setSelectedAnswers((prev) => ({
       ...prev,
-      [questionId]: answer
+      [questionId]: answer,
     }));
   };
 
@@ -100,12 +107,14 @@ export default function QuestionsPage() {
               <option>Chemistry</option>
               <option>Biology</option>
             </select>
+
             <select className="select select-bordered rounded-xl">
               <option>All Difficulties</option>
               <option>Easy</option>
               <option>Medium</option>
               <option>Hard</option>
             </select>
+
             <button
               onClick={handleShowAnswers}
               className="btn btn-primary rounded-xl"
@@ -132,3 +141,30 @@ export default function QuestionsPage() {
             {questions.map((question, index) => (
               <motion.div
                 key={question.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <QuestionCard
+                  question={question}
+                  showAnswer={showAnswers}
+                  onAnswerSelect={handleAnswerSelect}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        {!loading && questions.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-base-content/70">
+              No questions found matching your criteria.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
