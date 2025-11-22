@@ -8,6 +8,7 @@ import QuestionCard from '../../components/QuestionCard';
 import ExamTimer from '../../components/ExamTimer';
 import { Sun, Moon, Eye } from 'lucide-react';
 import { useTheme } from '../../utils/theme';
+import toast from 'react-hot-toast';
 
 export default function ExamPage() {
   const dispatch = useDispatch();
@@ -77,10 +78,10 @@ export default function ExamPage() {
       dispatch(submitExamStart());
       const result = await examsAPI.submitExam(currentExam.id, answers);
       dispatch(submitExamSuccess(result.data));
-      alert('Exam submitted successfully!');
+      toast.success('Exam submitted successfully! Check your results in the dashboard.');
     } catch (error) {
       dispatch(submitExamFailure(error.message));
-      alert('Failed to submit exam. Please try again.');
+      toast.error('Failed to submit exam. Please try again.');
     }
   };
 
@@ -115,10 +116,10 @@ export default function ExamPage() {
       <div className="bg-base-200 border-b border-base-300 sticky top-0 z-10">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">{currentExam.title}</h1>
-          
+
           <div className="flex items-center gap-4">
             <ExamTimer duration={currentExam.duration} onTimeUp={handleSubmitExam} />
-            
+
             <button
               onClick={cycleTheme}
               className="btn btn-circle btn-sm bg-base-100 border border-base-300"
@@ -144,13 +145,12 @@ export default function ExamPage() {
                 <button
                   key={idx}
                   onClick={() => setCurrentQuestionIndex(idx)}
-                  className={`w-8 h-8 rounded-lg text-sm font-semibold ${
-                    idx === currentQuestionIndex
-                      ? 'bg-primary text-primary-content'
-                      : answers[currentExam.questions[idx].id]
+                  className={`w-8 h-8 rounded-lg text-sm font-semibold ${idx === currentQuestionIndex
+                    ? 'bg-primary text-primary-content'
+                    : answers[currentExam.questions[idx].id]
                       ? 'bg-success/20 text-success'
                       : 'bg-base-200 text-base-content'
-                  }`}
+                    }`}
                 >
                   {idx + 1}
                 </button>

@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "./ReduxProvider";
 import ThemeWrapper from "./theme-wrapper"; // NEW client wrapper
+import ToastProvider from "../components/ToastProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
         <ThemeWrapper>
           <ReduxProvider>
             {children}
+            <ToastProvider />
           </ReduxProvider>
         </ThemeWrapper>
       </body>
