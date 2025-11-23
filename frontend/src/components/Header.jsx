@@ -18,7 +18,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-        localStorage.removeItem('token');
+    localStorage.removeItem('token');
   };
 
   return (
@@ -29,10 +29,22 @@ const Header = () => {
             DEVOUR TO CRUSH
           </Link>
 
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/questions" className="text-base-content hover:bg-base-200 rounded-xl px-4 py-2 transition-all duration-300">
-              Questions
-            </Link>
+          <nav className="flex items-center space-x-4">
+            <button
+              onClick={cycleTheme}
+              className="btn btn-ghost btn-circle"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' && <Sun className="w-5 h-5" />}
+              {theme === 'dark' && <Moon className="w-5 h-5" />}
+              {theme === 'eye-care' && <Eye className="w-5 h-5" />}
+            </button>
+
+            <div className="hidden md:flex space-x-6">
+              <Link href="/questions" className="text-base-content hover:bg-base-200 rounded-xl px-4 py-2 transition-all duration-300">
+                Questions
+              </Link>
+            </div>
           </nav>
         </div>
       </div>
