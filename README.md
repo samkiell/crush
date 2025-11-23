@@ -1,227 +1,124 @@
-CrushEdu Place International – ReadMe
-1. Executive Summary and Strategic Objective
-Objective
+# CrushEdu Place International – README
 
-Position CrushEdu as the definitive OAU-focused exam-prep ecosystem that consolidates past questions, CBT simulations, performance analytics, study resources, admission guidance, and a peer-driven community. The platform addresses a fragmented market by offering deeply specialized OAU content enhanced with AI-powered personalization and offline capability.
+> The definitive OAU-focused exam-prep ecosystem: past questions, CBT simulations, AI-powered analytics, study resources, admission guidance & peer community.
 
-Success Metrics
+---
 
-• Increase weekly active learners across subjects and exam types.
-• Reduce time-to-mastery for JAMB, WAEC, NECO, and OAU PUTME content.
-• Achieve >92 percent reliability milestone across CBT sessions and analytics delivery.
-• Drive conversions from freemium tier to premium subscription bundle.
+## 1. Executive Summary & Strategic Objective
 
-Constraints
+| Item | Description |
+|------|-------------|
+| **Objective** | Consolidate JAMB, WAEC, NECO & OAU PUTME prep into one AI-personalised, offline-first platform. |
+| **Success Metrics** | ≥ 92 % CBT reliability, ↑ weekly active learners, ↓ time-to-mastery, ↑ freemium→premium conversion. |
+| **Tech Stack** | MERN + Tailwind + Vite, JWT auth, optional mobile wrapper. |
+| **Constraints** | Verified question banks only; offline mode mandatory for NG connectivity. |
 
-MERN stack implementation, modular Express backend, MongoDB Atlas, TailwindCSS, Vite, JWT authentication, optional mobile wrapper. Content accuracy sourced from verified question banks (WAEC, NECO, JAMB, OAU). Offline mode required for Nigeria’s connectivity context.
+---
 
-2. High-Level Product Pillars
+## 2. Product Pillars
 
-Landing + acquisition flow.
-Exam categories: WAEC, NECO, JAMB/UTME, OAU PUTME & DE.
-CBT engine with analytics.
-Study resources and syllabus hub.
-Admissions and departmental guidance.
-Performance dashboard with AI insights.
-Community mentorship/Q&A.
-Marketplace for student commerce.
-Offline mode.
-Payment and subscription rails.
-Admin suite and content management.
+1. Landing & acquisition  
+2. Exam categories (WAEC | NECO | JAMB | PUTME | DE)  
+3. CBT engine + analytics  
+4. Study-resources & syllabus hub  
+5. Admissions / cut-off guidance  
+6. AI performance dashboard  
+7. Community mentorship / Q&A  
+8. Student-to-student marketplace  
+9. Offline mode  
+10. Payments & subscriptions  
+11. Admin CMS  
 
-3. Design System and Component Framework
-Design Tokens
+---
 
-Semantic colors for exam states, difficulty levels, performance bands, OAU-specific brand identity.
+## 3. Design System
 
-Typography & Spacing
+| Token | Usage |
+|-------|-------|
+| **Colours** | semantic exam states, difficulty bands, OAU brand |
+| **Typography** | Tailwind scale, mobile-first |
+| **Components** | Hero, CTA, cards, timers, question tiles, CBT layout, modals, charts, Q&A threads, syllabus viewer, admin tables |
+| **Deliverables** | Figma library, Tailwind tokens, Storybook + visual regression |
 
-Tailwind configuration for responsive scale across mobile-first touchpoints.
+---
 
-Component Library Mapping
+## 4. Page-by-Page Dev Matrix
 
-Hero, CTA blocks, cards, metrics widgets, charts, timers, question tiles, CBT layout, tabs, dialogs, modals, marketplace widgets, Q&A threads, notification center, syllabus viewer, admin tables.
+| Page | Core Features | Acceptance |
+|------|---------------|------------|
+| **Landing** | value prop, exam cats, social proof, free-trial CTA | ≤ 1.5 s FCP, CVR optimised |
+| **Auth** | email/social, role picker (SSCE | JAMB | DE) | adaptive redirect |
+| **Dashboard** | daily plan, performance snap, continue-pipeline | auto-refresh, personalised |
+| **Past Questions** | subject/year filter, instant check, explanations | zero-error accuracy |
+| **CBT Simulator** | full exam window, timer, calculator, flag, submit | score + analytics ≤ 250 ms |
+| **Study Hub** | notes, videos, syllabus | searchable |
+| **Admissions** | dept requirements, cut-off, DE paths | updated each session |
+| **Community** | topic threads, mentors | moderation tools |
+| **Marketplace** | listings, txn mgmt | secure, reportable |
+| **Notifications** | push + email digests | timely |
+| **Admin Panel** | content mgmt, analytics | audit logs |
 
-Deliverables
+---
 
-• Figma component library
-• Tailwind tokens
-• Storybook components and visual regression setup
+## 5. Data Models (MongoDB)
 
-4. Page-by-Page Development Matrix
-Landing Page
-
-• Hero with value proposition
-• WAEC, NECO, UTME, PUTME categories
-• Social proof + success metrics
-• CTA for free trial
-Acceptance: Optimized for conversion, sub-1.5s load.
-
-Auth & Onboarding
-
-• Email/password + optional social auth
-• Role selection (SSCE student, JAMB aspirant, DE candidate)
-• First-time preference setup
-Acceptance: Redirect into adaptive study flow.
-
-Dashboard
-
-• Daily study plan
-• Performance snapshots
-• Continue-where-you-stopped pipeline
-Acceptance: Personalized and auto-refreshed.
-
-Past Questions Module
-
-• Subject/year filters
-• Instant checking
-• Explanations and difficulty tags
-API: /questions/:examType
-Acceptance: Zero-error accuracy.
-
-CBT Simulator
-
-• Full exam window
-• Timer, calculator, flag, submit
-• Performance analytics
-Acceptance: Accurate scoring and analytics within 250ms post-submit.
-
-Study Resources Hub
-
-• Notes, summaries, syllabus
-• Video links
-Acceptance: Searchable and categorized.
-
-Admissions Center
-
-• Departmental requirements
-• Cut-off ranges
-• DE pathways
-Acceptance: Periodically updated content.
-
-Community Layer
-
-• Topic-based threads
-• Peer support and mentors
-Acceptance: Moderation tools operational.
-
-Marketplace
-
-• Student-to-student item listing
-• Transaction management
-Acceptance: Secure listing and reporting flow.
-
-Notifications
-
-• Push and email digests
-Acceptance: Timely delivery.
-
-Admin Panel
-
-• Content management
-• Student analytics
-Acceptance: Audit logs enabled.
-
-5. Data Models
-
-User
-Question
-ExamSession
-StudyResource
-Notification
-MarketplaceItem
-CommunityPost + Comment
-Payment
-
-All models include indexing strategy for text search and high-volume read patterns.
-
+```javascript
+User | Question | ExamSession | StudyResource | Notification
+MarketplaceItem | CommunityPost + Comment | Payment
+All collections indexed for text-search & high-volume reads.
 6. API Surface
-
-Auth
-User
-Questions
-Exams
-Study Resources
-Admissions
-Community
-Marketplace
-Payments
-Admin
-
-Schema definitions recommended via OpenAPI.
-
-7. Real-Time & System Architecture
-
-WebSocket for exam presence, community threads, and incremental analytics.
-Redis Pub/Sub for ephemeral communication.
-Node clusters with stateless API layer.
-Offline cache using IndexedDB and local bundles.
-
-8. UX, Accessibility & Edge Handling
-
-Skeleton loaders across heavy fetch screens.
-Retry logic for CBT sessions offline.
-Adaptive font scaling.
-Mobile-first layouts across <410px displays.
-Time drift reconciliation during CBT.
-
-9. UI Component Development Checklist
-
-Buttons
-Inputs
-Forms
-Cards
-Progress bars
-Timer
-Tabs
-Tables
-Toast/alerts
-CBT layout
-Q&A thread
-Syllabus viewer
-Marketplace listing card
-
-10. QA, Testing & Deployment
-
-Unit tests (Jest + RTL).
-Integration tests for CBT flow.
-E2E tests with Playwright.
-CI pipeline for linting, build, tests, Storybook.
-Deployment to Vercel (frontend) + Render/Docker (backend).
-Monitoring via Sentry and Grafana dashboards.
-
+Copy
+Auth  | User     | Questions | Exams
+Study | Admissions | Community | Marketplace
+Payments | Admin
+OpenAPI 3.1 spec recommended.
+7. Real-Time & Architecture
+WebSocket: exam presence, live analytics, community threads
+Redis Pub/Sub for ephemeral events
+Stateless Node clusters behind ALB
+Offline cache: IndexedDB + versioned asset bundles
+8. UX & Accessibility
+Skeleton loaders on heavy screens
+Retry logic for offline CBT sessions
+Adaptive font scaling, ≤ 410 px layouts
+Time-drift reconciliation server-side
+9. Component Checklist
+Buttons | Inputs | Forms | Cards | Progress | Timer | Tabs
+Tables | Toasts | CBT Layout | Q&A Thread | Syllabus Viewer | Marketplace Card
+10. QA & Deployment
+Unit: Jest + RTL
+Integration: CBT flow
+E2E: Playwright
+CI: lint → test → build → Storybook
+Deploy: Vercel (front) / Render-Docker (back)
+Monitor: Sentry + Grafana
 11. Collaboration Workflow
-
-Monorepo structure, feature-branch development, pull-request compliance checklist.
-Design → Dev → QA alignment.
-Requirement acceptance docs per sprint.
-Versioned API and release tagging.
-
+Monorepo, feature branches, PR checklist
+Design → Dev → QA acceptance docs each sprint
+Versioned API & release tags
 12. Suggested Timeline
-
-Sprint 0 – Infrastructure, Auth, Global UI
-Sprint 1 – Landing + Dashboard
-Sprint 2 – Past Questions Engine
-Sprint 3 – CBT Module
-Sprint 4 – Study Hub + Admissions
-Sprint 5 – Community Layer
-Sprint 6 – Marketplace
-Sprint 7 – Offline Mode + Polishing
-Sprint 8 – Admin Suite + Final QA
-
+Table
+Copy
+Sprint	Focus
+0	Infra, Auth, Global UI
+1	Landing + Dashboard
+2	Past-Questions Engine
+3	CBT Module
+4	Study Hub + Admissions
+5	Community Layer
+6	Marketplace
+7	Offline Mode & Polish
+8	Admin Suite + Final QA
 13. Security Checklist
-
-RBAC for admin/user separation.
-Input sanitization + rate limiting.
-JWT rotation and expiry.
-Secure storage for payment webhooks.
-Encrypted secrets in CI.
-Data retention and audit compliance.
-
+RBAC (admin vs user)
+Input sanitisation + rate-limit
+JWT rotation & short TTL
+Encrypted payment webhooks
+Secrets in CI vault
+GDPR / NDPR audit compliance
 14. Optional Deliverables
-
-User flow maps
+User-flow maps
 Figma prototypes
-OpenAPI documentation
+OpenAPI docs
 Storybook foundations
-AI recommendation model blueprint
+AI-recommendation blueprint
