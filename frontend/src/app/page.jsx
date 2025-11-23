@@ -11,17 +11,17 @@ export default function Home() {
             <section className="relative bg-gradient-to-r from-primary to-accent text-base-content py-24 rounded-b-3xl shadow-xl">
 
                 <div className="container mx-auto px-6 text-center">
-                    <h1 className="text-6xl font-bold mb-6 drop-shadow-lg text-white">
+                    <h1 className="text-6xl font-bold mb-6 drop-shadow-lg text-neutral-900">
                         DEVOUR TO CRUSH
                     </h1>
 
-                    <p className="text-xl mb-10 max-w-2xl mx-auto text-white/90">
+                    <p className="text-xl mb-10 max-w-2xl mx-auto text-neutral-900/90">
                         Your ultimate JAMB exam preparation platform. Master the questions,
                         Crush the exam, and Secure your future.
                     </p>
 
                     <div className="flex justify-center gap-4">
-                        <Link href="/auth/register" className="btn btn-primary px-10 py-3 rounded-xl shadow-md border-none bg-white text-primary hover:bg-gray-100">
+                        <Link href="/auth/register" className="btn btn-neutral px-10 py-3 rounded-xl shadow-md border-none text-white hover:bg-neutral-focus">
                             Get Started
                         </Link>
 
