@@ -44,8 +44,20 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
   reactStrictMode: true,
+  // Add empty turbopack config to silence Next.js 16 warning
+  turbopack: {},
   images: {
-    domains: ['localhost'],
+    // Updated from deprecated 'domains' to 'remotePatterns'
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'localhost',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
 };
