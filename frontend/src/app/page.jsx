@@ -21,7 +21,7 @@ export default function Home() {
                     </p>
 
                     <div className="flex justify-center gap-4">
-                        <Link href="/auth/register" className="btn btn-primary px-10 py-3 rounded-xl shadow-md text-white">
+                        <Link href="/auth/register" className="btn btn-primary px-10 py-3 rounded-xl shadow-md text-grey">
                             Get Started
                         </Link>
 
