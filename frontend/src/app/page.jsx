@@ -8,24 +8,24 @@ export default function Home() {
         <div className="min-h-screen bg-base-100 text-base-content">
 
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-r from-primary to-accent text-base-content py-24 rounded-b-3xl shadow-xl">
+            <section className="relative bg-base-200 text-base-content py-24 rounded-b-3xl shadow-sm">
 
                 <div className="container mx-auto px-6 text-center">
-                    <h1 className="text-6xl font-bold mb-6 drop-shadow-lg text-neutral-900">
+                    <h1 className="text-6xl font-bold mb-6 drop-shadow-sm text-base-content">
                         DEVOUR TO CRUSH
                     </h1>
 
-                    <p className="text-xl mb-10 max-w-2xl mx-auto text-neutral-900/90">
+                    <p className="text-xl mb-10 max-w-2xl mx-auto text-base-content/80">
                         Your ultimate JAMB exam preparation platform. Master the questions,
                         Crush the exam, and Secure your future.
                     </p>
 
                     <div className="flex justify-center gap-4">
-                        <Link href="/auth/register" className="btn btn-neutral px-10 py-3 rounded-xl shadow-md border-none text-white hover:bg-neutral-focus">
+                        <Link href="/auth/register" className="btn btn-primary px-10 py-3 rounded-xl shadow-md text-white">
                             Get Started
                         </Link>
 
-                        <Link href="/community" className="btn btn-secondary px-10 py-3 rounded-xl shadow-md border-none bg-black/20 text-white hover:bg-black/30">
+                        <Link href="/community" className="btn btn-outline btn-secondary px-10 py-3 rounded-xl shadow-sm">
                             Join Community
                         </Link>
                     </div>
@@ -33,9 +33,9 @@ export default function Home() {
             </section>
 
             {/* Features */}
-            <section className="py-20">
+            <section className="py-20 bg-base-100">
                 <div className="container mx-auto px-6 text-center">
-                    <h2 className="text-4xl font-bold mb-14">Why Choose DEVOUR TO CRUSH?</h2>
+                    <h2 className="text-4xl font-bold mb-14 text-base-content">Why Choose DEVOUR TO CRUSH?</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[
@@ -45,13 +45,13 @@ export default function Home() {
                         ].map((item, idx) => (
                             <div
                                 key={idx}
-                                className="p-8 rounded-2xl bg-base-200 shadow hover:shadow-lg transition"
+                                className="p-8 rounded-2xl bg-base-200 shadow-sm hover:shadow-md transition border border-base-300"
                             >
-                                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-base-300 flex items-center justify-center text-4xl">
+                                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-base-100 flex items-center justify-center text-4xl shadow-inner">
                                     {item.icon}
                                 </div>
 
-                                <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
+                                <h3 className="text-2xl font-semibold mb-3 text-base-content">{item.title}</h3>
                                 <p className="text-base-content/70">
                                     High-quality JAMB prep tools designed for top performance.
                                 </p>
@@ -62,7 +62,7 @@ export default function Home() {
             </section>
 
             {/* Stats */}
-            <section className="bg-base-200 py-20 rounded-2xl mx-4 my-10">
+            <section className="bg-base-200 py-20 rounded-2xl mx-4 my-10 border border-base-300">
                 <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 text-center">
                     <div>
                         <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
@@ -84,13 +84,13 @@ export default function Home() {
             </section>
 
             {/* CTA */}
-            <section className="py-24 text-center">
-                <h2 className="text-4xl font-bold mb-6">Ready to Crush Your JAMB Exam?</h2>
+            <section className="py-24 text-center bg-base-100">
+                <h2 className="text-4xl font-bold mb-6 text-base-content">Ready to Crush Your JAMB Exam?</h2>
                 <p className="text-xl mb-10 text-base-content/70">
                     Join thousands of students achieving outstanding results.
                 </p>
 
-                <Link href="/auth/register" className="btn btn-primary px-12 py-4 rounded-xl shadow-lg">
+                <Link href="/auth/register" className="btn btn-primary px-12 py-4 rounded-xl shadow-lg text-white">
                     Start Your Journey Today
                 </Link>
             </section>
