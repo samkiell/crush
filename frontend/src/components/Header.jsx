@@ -1,14 +1,11 @@
 "use client";
 
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../store/slices/authSlice';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Sun, Moon, Eye } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 
 const Header = () => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const { theme, setTheme } = useTheme();
 
   const cycleTheme = () => {
@@ -17,36 +14,23 @@ const Header = () => {
     else setTheme("light");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-  };
-
   return (
-    <header className="bg-base-100 shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            DEVOUR TO CRUSH
-          </Link>
+    <header className="navbar bg-base-100 shadow-md px-6 py-4">
+      <div className="flex items-center gap-6">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Image src="/logo.png" width={40} height={40} alt="D2C Logo" className="w-10 h-10" />
+          <span className="text-xl font-bold text-primary tracking-tight">D2C</span>
+        </Link>
 
-          <nav className="flex items-center space-x-4">
-            <button
-              onClick={cycleTheme}
-              className="btn btn-ghost btn-circle"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' && <Sun className="w-5 h-5" />}
-              {theme === 'dark' && <Moon className="w-5 h-5" />}
-              {theme === 'eye-care' && <Eye className="w-5 h-5" />}
-            </button>
-
-            <div className="hidden md:flex space-x-6">
-              <Link href="/questions" className="text-base-content hover:bg-base-200 rounded-xl px-4 py-2 transition-all duration-300">
-                Questions
-              </Link>
-            </div>
-          </nav>
-        </div>
+        <button
+          onClick={cycleTheme}
+          className="btn btn-ghost btn-circle hover:bg-base-200"
+          aria-label="Toggle theme"
+        >
+          {theme === 'light' && <Sun className="w-5 h-5" />}
+          {theme === 'dark' && <Moon className="w-5 h-5" />}
+          {theme === 'eye-care' && <Eye className="w-5 h-5" />}
+        </button>
       </div>
     </header>
   );
