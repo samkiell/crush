@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { loginStart } from '../../../store/slices/authSlice';
-import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 
 export default function LoginPage() {
@@ -31,7 +30,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-base-200">
-      <Header />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-300">

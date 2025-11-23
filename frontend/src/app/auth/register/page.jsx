@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerStart } from '../../../store/slices/authSlice';
 import Link from 'next/link';
-import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 
 export default function RegisterPage() {
@@ -36,7 +35,6 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-base-200">
-      <Header />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-300">
