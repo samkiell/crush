@@ -9,12 +9,21 @@ import ExamTimer from '../../components/ExamTimer';
 import { Sun, Moon, Eye } from 'lucide-react';
 import { useTheme } from '../../utils/theme';
 import toast from 'react-hot-toast';
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 
 export default function ExamPage() {
   const dispatch = useDispatch();
   const { currentExam, answers, isExamActive, loading } = useSelector((state) => state.exams);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { theme, setTheme } = useTheme();
+
+  // Keyboard navigation
+  useKeyboardNavigation({
+    onNext: () => nextQuestion(),
+    onPrevious: () => prevQuestion(),
+    onSubmit: () => currentQuestionIndex === currentExam?.questions.length - 1 && handleSubmitExam(),
+    enabled: !!currentExam,
+  });
 
   const cycleTheme = () => {
     if (theme === "light") setTheme("dark");
