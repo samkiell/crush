@@ -34,7 +34,7 @@ export default function LoginPage() {
       <Header />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="card w-full max-w-md bg-base-100 shadow-xl">
+        <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-300">
           <div className="card-body">
             <h2 className="card-title text-3xl font-bold text-center justify-center mb-2">
               Welcome Back
