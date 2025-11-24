@@ -16,7 +16,7 @@ export const metadata = {
   title: "DEVOUR TO CRUSH - JAMB Exam Prep",
   description: "Comprehensive JAMB exam preparation platform",
   manifest: '/manifest.json',
-  themeColor: '#FFC107',
+  themeColor: '#ece9e1ff',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#FFC107" />
+        <meta name="theme-color" content="#e8e7e4ff" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
