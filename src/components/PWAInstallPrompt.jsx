@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+const COOLDOWN_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
+
 export default function PWAInstallPrompt() {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [showInstallButton, setShowInstallButton] = useState(false);
@@ -11,6 +13,16 @@ export default function PWAInstallPrompt() {
         const handler = (e) => {
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
+
+            // Check if user dismissed the prompt recently
+            const dismissedAt = localStorage.getItem('pwa_prompt_dismissed');
+            if (dismissedAt) {
+                const timeSinceDismissal = Date.now() - parseInt(dismissedAt, 10);
+                if (timeSinceDismissal < COOLDOWN_PERIOD) {
+                    return;
+                }
+            }
+
             // Stash the event so it can be triggered later
             setDeferredPrompt(e);
             // Show install button
@@ -47,6 +59,11 @@ export default function PWAInstallPrompt() {
         setShowInstallButton(false);
     };
 
+    const handleDismiss = () => {
+        localStorage.setItem('pwa_prompt_dismissed', Date.now().toString());
+        setShowInstallButton(false);
+    };
+
     if (!showInstallButton) return null;
 
     return (
@@ -67,7 +84,7 @@ export default function PWAInstallPrompt() {
                                 Install
                             </button>
                             <button
-                                onClick={() => setShowInstallButton(false)}
+                                onClick={handleDismiss}
                                 className="btn btn-ghost btn-sm rounded-lg"
                             >
                                 Later
