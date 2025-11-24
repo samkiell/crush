@@ -122,7 +122,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="btn btn-primary w-full rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 mt-2 text-lg font-medium"
+                className="btn btn-primary w-full rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 mt-2 text-lg font-medium flex items-center justify-center gap-2"
                 disabled={loading}
               >
                 {loading ? (
@@ -132,9 +132,8 @@ export default function LoginPage() {
                   </>
                 ) : (
                   <>
-
-                    <ArrowRight className="h-5 w-5 ml-1" />
-                      Sign In
+                    Sign In
+                    <ArrowRight className="h-5 w-5" />
                   </>
                 )}
               </button>
@@ -156,9 +155,9 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </main>
+      </main >
 
       <Footer />
-    </div>
+    </div >
   );
 }
