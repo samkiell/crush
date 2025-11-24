@@ -1,0 +1,46 @@
+import { NextResponse } from 'next/server';
+import { protect } from '@/lib/auth';
+import dbConnect from '@/lib/db';
+import User from '@/lib/models/User';
+
+export async function GET(req) {
+  try {
+    const user = await protect(req);
+    return NextResponse.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      examType: user.examType,
+    });
+  } catch (error) {
+    return NextResponse.json({ message: error.message }, { status: 401 });
+  }
+}
+
+export async function PUT(req) {
+  try {
+    const user = await protect(req);
+    await dbConnect();
+    const { name, email, password, examType } = await req.json();
+
+    const updatedUser = await User.findById(user._id);
+
+    if (name) updatedUser.name = name;
+    if (email) updatedUser.email = email;
+    if (examType) updatedUser.examType = examType;
+    if (password) updatedUser.password = password;
+
+    await updatedUser.save();
+
+    return NextResponse.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      examType: updatedUser.examType,
+    });
+  } catch (error) {
+    return NextResponse.json({ message: error.message }, { status: 401 });
+  }
+}
