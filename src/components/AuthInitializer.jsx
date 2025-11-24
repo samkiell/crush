@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { setUser } from '@/store/slices/authSlice';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -24,13 +25,10 @@ export default function AuthInitializer() {
                     });
 
                     // Dispatch action to set user in Redux
-                    dispatch({
-                        type: 'auth/setUser',
-                        payload: {
-                            user: response.data,
-                            token,
-                        },
-                    });
+                    dispatch(setUser({
+                        user: response.data,
+                        token,
+                    }));
                 } catch (error) {
                     console.error('Failed to initialize auth:', error);
                     // If token is invalid, remove it

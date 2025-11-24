@@ -6,6 +6,7 @@ import ToastProvider from "../components/ToastProvider";
 import PWAInstallPrompt from "../components/PWAInstallPrompt";
 import OfflineIndicator from "../components/OfflineIndicator";
 import Header from "../components/Header";
+import AuthInitializer from "../components/AuthInitializer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({ children }) {
         <OfflineIndicator />
         <ThemeWrapper>
           <ReduxProvider>
+            <AuthInitializer />
             <Header />
             {children}
             <ToastProvider />
