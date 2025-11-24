@@ -15,6 +15,7 @@
     "daisyui": "^4.12.14",
     "eslint-config-next": "^16.0.3",
     "framer-motion": "^12.23.24",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.554.0",
     "mongoose": "^8.8.2",
