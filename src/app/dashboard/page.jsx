@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
 import {
   fetchDashboardStart,
   fetchDashboardSuccess,
@@ -12,11 +13,22 @@ import AnalyticsChart from '../../components/AnalyticsChart';
 
 export default function DashboardPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { stats, progress, loading, error } = useSelector((state) => state.dashboard);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated && !user) {
+      router.push('/auth/login');
+    }
+  }, [isAuthenticated, user, router]);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (isAuthenticated) {
+      fetchDashboardData();
+    }
+  }, [isAuthenticated]);
 
   const fetchDashboardData = async () => {
     try {

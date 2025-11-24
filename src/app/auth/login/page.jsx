@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ export default function LoginPage() {
     password: ''
   });
   const [mounted, setMounted] = useState(false);
+  const loginAttempted = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -28,9 +29,10 @@ export default function LoginPage() {
     };
   }, [dispatch]);
 
-  // Watch for login success and redirect to dashboard
+  // Watch for login success and redirect to dashboard  
   useEffect(() => {
-    if (isAuthenticated && user && !loading) {
+    // Only redirect if user actually tried to log in, not from auth initialization
+    if (isAuthenticated && user && !loading && loginAttempted.current) {
       // Show welcome toast with username
       const username = user.name || user.email?.split('@')[0] || 'User';
       showWelcomeToast(username);
@@ -58,6 +60,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    loginAttempted.current = true;
 
     // Dispatch login action
     await dispatch(loginUser(formData));

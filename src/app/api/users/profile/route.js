@@ -12,6 +12,12 @@ export async function GET(req) {
       email: user.email,
       role: user.role,
       examType: user.examType,
+      stats: {
+        totalQuestions: 0,
+        completedExams: 0,
+        averageScore: 0,
+        weakTopics: []
+      }
     });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 401 });
