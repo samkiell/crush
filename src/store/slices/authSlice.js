@@ -95,6 +95,13 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    setUser: (state, action) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      state.loading = false;
+      state.error = null;
+    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -156,6 +163,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, logout } = authSlice.actions;
+export const { clearError, setUser, logout } = authSlice.actions;
 
 export default authSlice.reducer;
