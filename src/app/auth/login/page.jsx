@@ -4,14 +4,15 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { loginStart } from '../../../store/slices/authSlice';
+import { loginUser, clearError } from '../../../store/slices/authSlice';
 import Footer from '../../../components/Footer';
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { showErrorToast, showWelcomeToast } from '../../../utils/toast-helpers';
 
 export default function LoginPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated, user } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -20,7 +21,33 @@ export default function LoginPage() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    // Cleanup on unmount
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
+
+  // Watch for login success and redirect to dashboard
+  useEffect(() => {
+    if (isAuthenticated && user && !loading) {
+      // Show welcome toast with username
+      const username = user.name || user.email?.split('@')[0] || 'User';
+      showWelcomeToast(username);
+
+      // Redirect to dashboard after a brief delay
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 800);
+    }
+  }, [isAuthenticated, user, loading, router]);
+
+  // Display error toast when error changes
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
+    }
+  }, [error]);
 
   const handleChange = (e) => {
     setFormData({
@@ -29,9 +56,11 @@ export default function LoginPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginStart(formData));
+
+    // Dispatch login action
+    await dispatch(loginUser(formData));
   };
 
   if (!mounted) return null;
@@ -112,13 +141,6 @@ export default function LoginPage() {
                   </Link>
                 </label>
               </div>
-
-              {error && (
-                <div className="alert alert-error shadow-sm rounded-2xl border border-error/20 text-sm py-3">
-                  <AlertCircle className="h-5 w-5 shrink-0" />
-                  <span>{error}</span>
-                </div>
-              )}
 
               <button
                 type="submit"

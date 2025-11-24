@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerStart } from '../../../store/slices/authSlice';
+import { registerUser, clearError } from '../../../store/slices/authSlice';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Footer from '../../../components/Footer';
 import { User, Mail, Lock, ArrowRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { showErrorToast, showRegistrationSuccessToast } from '../../../utils/toast-helpers';
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -15,28 +17,82 @@ export default function RegisterPage() {
         confirmPassword: ''
     });
     const [mounted, setMounted] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const { loading, error } = useSelector((state) => state.auth);
 
     useEffect(() => {
         setMounted(true);
-    }, []);
 
-    const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
+        // Cleanup on unmount
+        return () => {
+            dispatch(clearError());
+        };
+    }, [dispatch]);
+
+    // Watch for registration success
+    const [registerSuccess, setRegisterSuccess] = useState(false);
+
+    useEffect(() => {
+        if (registerSuccess && !loading && !error) {
+            // Show success toast and redirect to login
+            showRegistrationSuccessToast();
+            setTimeout(() => {
+                router.push('/auth/login');
+            }, 1000);
+        }
+    }, [registerSuccess, loading, error, router]);
+
+    // Display error toast when error changes
+    useEffect(() => {
+        if (error) {
+            showErrorToast(error);
+        }
+    }, [error]);
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
+
+        // Clear password error when user types
+        if (passwordError && (e.target.name === 'password' || e.target.name === 'confirmPassword')) {
+            setPasswordError('');
+        }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Client-side validation
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
+            const errorMsg = 'The two passwords no be the same. Check am again';
+            setPasswordError(errorMsg);
+            showErrorToast(errorMsg);
             return;
         }
-        dispatch(registerStart(formData));
+
+        if (formData.password.length < 6) {
+            const errorMsg = 'Password too short, do better. At least 6 characters abeg';
+            setPasswordError(errorMsg);
+            showErrorToast(errorMsg);
+            return;
+        }
+
+        // Dispatch register action
+        const result = await dispatch(registerUser({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+        }));
+
+        // Check if registration was successful
+        if (registerUser.fulfilled.match(result)) {
+            setRegisterSuccess(true);
+        }
     };
 
     if (!mounted) return null;
@@ -126,6 +182,7 @@ export default function RegisterPage() {
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
+                                        minLength={6}
                                     />
                                 </div>
                             </div>
@@ -150,10 +207,10 @@ export default function RegisterPage() {
                                 </div>
                             </div>
 
-                            {error && (
+                            {passwordError && (
                                 <div className="alert alert-error shadow-sm rounded-2xl border border-error/20 text-sm py-3">
                                     <AlertCircle className="h-5 w-5 shrink-0" />
-                                    <span>{error}</span>
+                                    <span>{passwordError}</span>
                                 </div>
                             )}
 
