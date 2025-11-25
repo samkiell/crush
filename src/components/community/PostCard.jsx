@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, ThumbsUp, Eye, CheckCircle } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { toggleReaction } from '@/store/slices/communitySlice';
