@@ -4,6 +4,7 @@ import Comment from '@/lib/models/Comment';
 import CommunityPost from '@/lib/models/CommunityPost';
 import User from '@/lib/models/User';
 import jwt from 'jsonwebtoken';
+import { filterProfanity } from '@/utils/moderation';
 
 const getUserFromRequest = async (req) => {
   const token = req.cookies.get('token')?.value;
@@ -44,8 +45,14 @@ export async function POST(req, { params }) {
     const body = await req.json();
     const { content, parentComment } = body;
 
+    if (!content) {
+      return NextResponse.json({ success: false, error: 'Please provide a comment' }, { status: 400 });
+    }
+
+    const cleanContent = filterProfanity(content);
+
     const comment = await Comment.create({
-      content,
+      content: cleanContent,
       post: id,
       author: user._id,
       parentComment: parentComment || null,

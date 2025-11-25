@@ -24,7 +24,6 @@ const CommunityLayout = ({ children }) => {
     }, [dispatch]);
 
     return (
-    return (
         <div className="drawer">
             <input id="community-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col min-h-screen bg-base-200">
@@ -73,43 +72,78 @@ const CommunityLayout = ({ children }) => {
                     </main>
 
                     {/* Right Sidebar (Trending/Stats) */}
-                    <div className="drawer-side z-50">
-                        <label htmlFor="community-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                        <div className="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
-                            <SidebarContent navItems={navItems} pathname={pathname} />
+                    <aside className="hidden xl:block w-72 shrink-0">
+                        <div className="card bg-base-100 shadow-sm sticky top-20">
+                            <div className="card-body p-4">
+                                <h3 className="font-bold text-lg flex items-center gap-2">
+                                    <TrendingUp className="w-5 h-5 text-secondary" />
+                                    Trending
+                                </h3>
+                                <ul className="list-none space-y-3 mt-4">
+                                    {trendingTopics && trendingTopics.length > 0 ? (
+                                        trendingTopics.map((topic, index) => (
+                                            <li key={index} className="text-sm hover:underline cursor-pointer">
+                                                <Link href={`/community?search=${topic}`} className="block">
+                                                    <span className="font-medium">#{topic}</span>
+                                                </Link>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="text-sm text-base-content/60">No trending topics yet.</li>
+                                    )}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    </aside>
                 </div>
-                );
+            </div>
+            <div className="drawer-side z-50">
+                <label htmlFor="community-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                <div className="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+                    <SidebarContent navItems={navItems} pathname={pathname} />
+                </div>
+            </div>
+        </div>
+    );
 };
 
-                const SidebarContent = ({navItems, pathname}) => (
-                <>
-                    <ul className="menu w-full rounded-box p-0">
-                        {navItems.map((item) => {
-                            const Icon = item.icon;
-                            const isActive = pathname === item.href;
-                            return (
-                                <li key={item.href}>
-                                    <Link href={item.href} className={isActive ? 'active' : ''}>
-                                        <Icon className="w-4 h-4" />
-                                        {item.label}
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                    </ul>
-
-                    <div className="divider my-2"></div>
-
-                    <h3 className="font-semibold text-sm px-4 mb-2 text-base-content/70">Categories</h3>
-                    <ul className="menu w-full rounded-box text-sm p-0">
-                        <li><Link href="/community?category=General">General</Link></li>
-                        <li><Link href="/community?category=Exam Help">Exam Help</Link></li>
-                        <li><Link href="/community?category=Study Tips">Study Tips</Link></li>
-                        <li><Link href="/community?category=Career">Career</Link></li>
-                    </ul>
-                </>
+const SidebarContent = ({ navItems, pathname }) => (
+    <>
+        <ul className="menu w-full rounded-box p-0">
+            {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                    <li key={item.href}>
+                        <Link href={item.href} className={isActive ? 'active' : ''}>
+                            <Icon className="w-4 h-4" />
+                            {item.label}
+                        </Link>
+                    </li>
                 );
+            })}
+        </ul>
 
-                export default CommunityLayout;
+        <div className="divider my-2"></div>
+
+        <h3 className="font-semibold text-sm px-4 mb-2 text-base-content/70">Categories</h3>
+        <ul className="menu w-full rounded-box text-sm p-0">
+            <li><Link href="/community?category=General">General</Link></li>
+            <li><Link href="/community?category=Exam Help">Exam Help</Link></li>
+            <li><Link href="/community?category=Study Tips">Study Tips</Link></li>
+            <li><Link href="/community?category=Career">Career</Link></li>
+        </ul>
+
+        <div className="card bg-primary text-primary-content shadow-sm mt-6">
+            <div className="card-body p-4">
+                <h3 className="font-bold text-lg">Ace Your Exams!</h3>
+                <p className="text-sm opacity-90 mb-2">Get access to exclusive study materials and expert mentors.</p>
+                <Link href="/pricing" className="btn btn-sm btn-white bg-base-100 text-primary hover:bg-base-200 border-none w-full">
+                    Go Premium
+                </Link>
+            </div>
+        </div>
+    </>
+);
+
+export default CommunityLayout;

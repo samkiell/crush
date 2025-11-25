@@ -42,11 +42,19 @@ export async function POST(req, { params }) {
       // Toggle off (remove reaction)
       await Reaction.findByIdAndDelete(existingReaction._id);
       
-      // Decrement count
+      // Decrement count and update author reputation
+      let targetAuthorId;
       if (targetType === 'CommunityPost') {
-        await CommunityPost.findByIdAndUpdate(id, { $inc: { likes: -1 } });
+        const post = await CommunityPost.findByIdAndUpdate(id, { $inc: { likes: -1 } });
+        targetAuthorId = post.author;
       } else {
-        await Comment.findByIdAndUpdate(id, { $inc: { likes: -1 } });
+        const comment = await Comment.findByIdAndUpdate(id, { $inc: { likes: -1 } });
+        targetAuthorId = comment.author;
+      }
+
+      // Decrement Reputation
+      if (targetAuthorId && targetAuthorId.toString() !== user._id.toString()) {
+        await User.findByIdAndUpdate(targetAuthorId, { $inc: { reputation: -5 } });
       }
 
       return NextResponse.json({ success: true, action: 'removed' });
@@ -59,11 +67,29 @@ export async function POST(req, { params }) {
         type,
       });
 
-      // Increment count
+      // Increment count and update author reputation
+      let targetAuthorId;
       if (targetType === 'CommunityPost') {
-        await CommunityPost.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+        const post = await CommunityPost.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+        targetAuthorId = post.author;
       } else {
-        await Comment.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+        const comment = await Comment.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+        targetAuthorId = comment.author;
+      }
+
+      // Update Reputation
+      if (targetAuthorId && targetAuthorId.toString() !== user._id.toString()) {
+        const author = await User.findByIdAndUpdate(targetAuthorId, { $inc: { reputation: 5 } }, { new: true });
+        
+        // Check for Badges
+        const newBadges = [];
+        if (author.reputation >= 50 && !author.badges.includes('Rising Star')) newBadges.push('Rising Star');
+        if (author.reputation >= 200 && !author.badges.includes('Expert')) newBadges.push('Expert');
+        if (author.reputation >= 1000 && !author.badges.includes('Legend')) newBadges.push('Legend');
+
+        if (newBadges.length > 0) {
+          await User.findByIdAndUpdate(targetAuthorId, { $push: { badges: { $each: newBadges } } });
+        }
       }
 
       return NextResponse.json({ success: true, action: 'added' });

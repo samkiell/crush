@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import CommunityPost from '@/lib/models/CommunityPost';
 import User from '@/lib/models/User';
 import jwt from 'jsonwebtoken';
+import { filterProfanity } from '@/utils/moderation';
 
 // Helper to get user from token
 const getUserFromRequest = async (req) => {
@@ -65,28 +66,6 @@ export async function GET(req) {
 export async function POST(req) {
   await dbConnect();
   const user = await getUserFromRequest(req);
-
-  if (!user) {
-    return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
-  }
-
-  try {
-    const body = await req.json();
-    const { title, content, tags, category, isQuestion } = body;
-
-    const post = await CommunityPost.create({
-      title,
-      content,
-      tags,
-      category,
-      isQuestion,
-      author: user._id,
-    });
-
-    // Increment user reputation for posting
-    user.reputation += 5;
-    await user.save();
-
     return NextResponse.json({ success: true, data: post }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 400 });
