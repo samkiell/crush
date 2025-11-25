@@ -38,7 +38,7 @@ const Header = () => {
   // Let's show a minimal header for guests (Logo + Theme Toggle) and full for auth.
 
   return (
-    <header className="navbar bg-base-100 shadow-md px-4 md:px-6 py-3 sticky top-0 z-50">
+    <header className="navbar bg-base-100/80 backdrop-blur-md shadow-md px-4 md:px-6 py-3 sticky top-0 z-50">
       <div className="flex items-center justify-between w-full">
         {/* Left Side: Logo & Name */}
         <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 hover:opacity-80 transition-opacity">

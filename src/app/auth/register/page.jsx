@@ -106,7 +106,7 @@ export default function RegisterPage() {
             </div>
 
             <main className="flex-grow flex items-center justify-center p-4 sm:p-6 relative z-10">
-                <div className="card w-full max-w-md bg-base-100/80 backdrop-blur-xl shadow-2xl border border-base-content/5">
+                <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-content/5">
                     <div className="card-body p-8">
                         <div className="text-center mb-8">
                             <h2 className="text-3xl font-bold text-base-content mb-2 tracking-tight">
@@ -138,7 +138,7 @@ export default function RegisterPage() {
                                         type="text"
                                         name="name"
                                         placeholder="John Doe"
-                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200/50 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
@@ -158,7 +158,7 @@ export default function RegisterPage() {
                                         type="email"
                                         name="email"
                                         placeholder="you@example.com"
-                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200/50 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                                         type="password"
                                         name="password"
                                         placeholder="••••••••"
-                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200/50 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
@@ -199,7 +199,7 @@ export default function RegisterPage() {
                                         type="password"
                                         name="confirmPassword"
                                         placeholder="••••••••"
-                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200/50 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         required
