@@ -98,9 +98,9 @@ export default function RegisterPage() {
     if (!mounted) return null;
 
     return (
-        <div className="min-h-screen flex flex-col bg-base-200 relative overflow-hidden transition-colors duration-300">
+        <div className="min-h-screen flex flex-col bg-base-200 relative transition-colors duration-300">
             {/* Background decoration */}
-            <div className="absolute inset-0 w-full h-full bg-base-200">
+            <div className="fixed inset-0 w-full h-full bg-base-200 overflow-hidden pointer-events-none">
                 <div className="absolute top-[-10%] right-[20%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
                 <div className="absolute bottom-[-10%] left-[10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px]" />
             </div>
