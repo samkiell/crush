@@ -16,10 +16,10 @@ const Footer = () => {
           <div>
             <h4 className="text-md font-semibold mb-4 text-base-content">Features</h4>
             <ul className="space-y-2 text-base-content/70">
-              <li><Link href="/questions" className="hover:text-primary transition-colors">Question Bank</Link></li>
-              <li><Link href="/exam" className="hover:text-primary transition-colors">Exam Simulator</Link></li>
-              <li><Link href="/dashboard" className="hover:text-primary transition-colors">Progress Tracking</Link></li>
-              <li><Link href="/community" className="hover:text-primary transition-colors">Community Support</Link></li>
+              <li>Question Bank</li>
+              <li>Exam Simulator</li>
+              <li>Progress Tracking</li>
+              <li>Community Support</li>
             </ul>
           </div>
 
