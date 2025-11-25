@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost, selectCommunityError } from '@/store/slices/communitySlice';
+import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
@@ -10,6 +11,13 @@ const RichEditor = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const error = useSelector(selectCommunityError);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.push('/login?redirect=/community/create');
+        }
+    }, [isAuthenticated, router]);
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -17,6 +25,10 @@ const RichEditor = () => {
     const [tags, setTags] = useState('');
     const [isQuestion, setIsQuestion] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+
+    if (!isAuthenticated) {
+        return null;
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
