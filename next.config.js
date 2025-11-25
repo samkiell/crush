@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+// Rebuild trigger
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
