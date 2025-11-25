@@ -89,79 +89,68 @@ const Header = () => {
 
               {/* User Dropdown (Desktop) / Logout */}
               <div className="hidden md:flex items-center gap-2">
-                <div className="dropdown dropdown-end">
-                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                      {user?.name?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                  </div>
-                  <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                    <li>
-                      <Link href="/profile" className="justify-between">
-                        Profile
-                        <span className="badge">New</span>
-                      </Link>
-                    </li>
-                    <li><Link href="/settings">Settings</Link></li>
-                    <li><button onClick={handleLogout} className="text-error">Logout</button></li>
-                  </ul>
-                </div>
-              </div>
+                <li><Link href="/settings">Settings</Link></li>
+                <li><button onClick={handleLogout} className="text-error">Logout</button></li>
+              </ul>
+            </div>
+        </div>
 
-              {/* Mobile Menu Toggle */}
-              <button
-                className="btn btn-ghost btn-circle md:hidden"
-                onClick={toggleMenu}
-              >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </>
+        {/* Mobile Menu Toggle */}
+        <button
+          className="btn btn-ghost btn-circle md:hidden"
+          onClick={toggleMenu}
+        >
+          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </>
           )}
-        </div>
-      </div>
+    </div>
+      </div >
 
-      {/* Mobile Menu Overlay */}
-      {isAuthenticated && isMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-base-100 shadow-lg md:hidden border-t border-base-200 animate-in slide-in-from-top-2">
-          <nav className="flex flex-col p-4 gap-2">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-base-200 text-base-content'}`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{link.name}</span>
-                </Link>
-              );
-            })}
-            <div className="divider my-2"></div>
+  {/* Mobile Menu Overlay */ }
+{
+  isAuthenticated && isMenuOpen && (
+    <div className="absolute top-full left-0 w-full bg-base-100/80 backdrop-blur-md shadow-lg md:hidden border-t border-base-200 animate-in slide-in-from-top-2">
+      <nav className="flex flex-col p-4 gap-2">
+        {navLinks.map((link) => {
+          const Icon = link.icon;
+          const isActive = pathname.startsWith(link.href);
+          return (
             <Link
-              href="/settings"
+              key={link.name}
+              href={link.href}
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 text-base-content"
+              className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-base-200 text-base-content'}`}
             >
-              <Settings className="w-5 h-5" />
-              <span className="font-medium">Settings</span>
+              <Icon className="w-5 h-5" />
+              <span className="font-medium">{link.name}</span>
             </Link>
-            <button
-              onClick={() => {
-                setIsMenuOpen(false);
-                handleLogout();
-              }}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-error/10 text-error transition-colors w-full text-left"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="font-medium">Logout</span>
-            </button>
-          </nav>
-        </div>
-      )}
-    </header>
+          );
+        })}
+        <div className="divider my-2"></div>
+        <Link
+          href="/settings"
+          onClick={() => setIsMenuOpen(false)}
+          className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 text-base-content"
+        >
+          <Settings className="w-5 h-5" />
+          <span className="font-medium">Settings</span>
+        </Link>
+        <button
+          onClick={() => {
+            setIsMenuOpen(false);
+            handleLogout();
+          }}
+          className="flex items-center gap-3 p-3 rounded-lg hover:bg-error/10 text-error transition-colors w-full text-left"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="font-medium">Logout</span>
+        </button>
+      </nav>
+    </div>
+  )
+}
+    </header >
   );
 }
 
