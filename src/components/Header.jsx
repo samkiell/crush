@@ -63,12 +63,12 @@ const Header = () => {
           href={link.href}
           onClick={() => setIsMenuOpen(false)}
           className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 group ${isActive
-            ? 'bg-primary/10 text-primary font-semibold'
-            : 'hover:bg-base-200 text-base-content/80 hover:text-base-content'
+            ? 'bg-primary/20 text-white font-semibold'
+            : 'hover:bg-white/10 text-white/80 hover:text-white'
             }`}
         >
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${isActive ? 'bg-primary/20' : 'bg-base-200 group-hover:bg-base-300'} transition-colors`}>
+            <div className={`p-2 rounded-lg ${isActive ? 'bg-primary/20' : 'bg-white/5 group-hover:bg-white/10'} transition-colors`}>
               <Icon className="w-5 h-5" />
             </div>
             <span>{link.name}</span>
@@ -214,38 +214,38 @@ const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-base-100 shadow-2xl z-50 md:hidden overflow-y-auto border-l border-base-content/10"
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-neutral text-neutral-content shadow-2xl z-50 md:hidden overflow-y-auto border-l border-white/10"
             >
               <div className="flex flex-col h-full">
-                <div className="p-6 border-b border-base-content/10">
+                <div className="p-6 border-b border-white/10">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                       <div className="relative w-10 h-10">
-                        <Image src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} fill alt="D2C Logo" className="object-contain" />
+                        <Image src="/logo-dark.png" fill alt="D2C Logo" className="object-contain" />
                       </div>
-                      <span className="text-xl font-bold text-base-content">D2C</span>
+                      <span className="text-xl font-bold text-white">D2C</span>
                     </div>
                     <button
                       onClick={() => setIsMenuOpen(false)}
-                      className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10"
+                      className="btn btn-ghost btn-circle btn-sm hover:bg-white/10 text-white"
                     >
                       <X className="w-6 h-6" />
                     </button>
                   </div>
 
                   {isAuthenticated ? (
-                    <div className="flex items-center gap-4 p-4 bg-base-content/5 rounded-2xl">
+                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg">
                         {user?.name?.charAt(0).toUpperCase() || 'U'}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-base-content truncate">{user?.name || 'User'}</p>
-                        <p className="text-xs text-base-content/60 truncate">{user?.email || 'student@example.com'}</p>
+                        <p className="font-bold text-white truncate">{user?.name || 'User'}</p>
+                        <p className="text-xs text-white/60 truncate">{user?.email || 'student@example.com'}</p>
                       </div>
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
-                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-base-content/20 hover:bg-base-content hover:text-base-100 hover:border-base-content">Login</Link>
+                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-white/20 text-white hover:bg-white hover:text-neutral hover:border-white">Login</Link>
                       <Link href="/auth/register" onClick={() => setIsMenuOpen(false)} className="btn btn-primary btn-sm w-full text-white">Signup</Link>
                     </div>
                   )}
@@ -253,7 +253,7 @@ const Header = () => {
 
                 <div className="flex-1 p-4 overflow-y-auto">
                   <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-base-content/40 uppercase tracking-wider px-4 mb-2">Menu</span>
+                    <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Menu</span>
                     {(isAuthenticated ? navLinks : guestLinks).map((link) => (
                       <NavItem key={link.name} link={link} mobile={true} />
                     ))}
@@ -261,9 +261,9 @@ const Header = () => {
 
                   {isAuthenticated && (
                     <>
-                      <div className="divider my-6 before:bg-base-content/10 after:bg-base-content/10"></div>
+                      <div className="divider my-6 before:bg-white/10 after:bg-white/10"></div>
                       <div className="flex flex-col gap-2">
-                        <span className="text-xs font-semibold text-base-content/40 uppercase tracking-wider px-4 mb-2">Settings</span>
+                        <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Settings</span>
                         <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
                         <button
                           onClick={() => {
@@ -284,8 +284,8 @@ const Header = () => {
                   )}
                 </div>
 
-                <div className="p-6 border-t border-base-content/10 bg-base-content/5">
-                  <p className="text-xs text-center text-base-content/40">
+                <div className="p-6 border-t border-white/10 bg-white/5">
+                  <p className="text-xs text-center text-white/40">
                     &copy; 2025 Crush EduPlace Intl.
                   </p>
                 </div>
