@@ -150,30 +150,32 @@ const Header = () => {
                 {/* User Dropdown (Desktop) */}
                 <div className="hidden md:flex items-center gap-2 ml-2">
                   <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle w-10 h-10 min-h-0 p-0 ring-2 ring-base-content/10 ring-offset-2 ring-offset-base-100 transition-all hover:ring-primary">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
-                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                      <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
+                          {user?.name?.charAt(0).toUpperCase() || 'U'}
+                        </div>
                       </div>
                     </div>
-                    <ul tabIndex={0} className="mt-2 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-content/5">
+                    <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-2xl bg-base-100 rounded-box w-52 gap-1 border border-base-content/5">
                       <li className="menu-title px-4 py-2">
                         <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
                       </li>
                       <li>
-                        <Link href="/profile" className="py-3 px-4 rounded-xl hover:bg-base-content/5 active:bg-base-content/10">
+                        <Link href="/profile" className="py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10">
                           <User className="w-4 h-4" />
                           Profile
                         </Link>
                       </li>
                       <li>
-                        <Link href="/settings" className="py-3 px-4 rounded-xl hover:bg-base-content/5 active:bg-base-content/10">
+                        <Link href="/settings" className="py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10">
                           <Settings className="w-4 h-4" />
                           Settings
                         </Link>
                       </li>
                       <div className="divider my-1 before:bg-base-content/5 after:bg-base-content/5"></div>
                       <li>
-                        <button onClick={handleLogout} className="py-3 px-4 rounded-xl text-error hover:bg-error/10 active:bg-error/20">
+                        <button onClick={handleLogout} className="py-2 px-4 rounded-lg text-error hover:bg-error/10 active:bg-error/20">
                           <LogOut className="w-4 h-4" />
                           Logout
                         </button>
