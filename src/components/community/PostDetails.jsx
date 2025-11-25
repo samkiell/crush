@@ -6,6 +6,7 @@ import { fetchPostDetails, selectCurrentPost, selectCommunityLoading, selectComm
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Eye, MessageSquare, Share2, Flag } from 'lucide-react';
 import CommentSection from './CommentSection';
+import SkeletonPostDetails from './skeletons/SkeletonPostDetails';
 import { Loader2 } from 'lucide-react';
 
 const PostDetails = ({ postId }) => {
@@ -27,11 +28,7 @@ const PostDetails = ({ postId }) => {
     };
 
     if (loading) {
-        return (
-            <div className="flex justify-center py-20">
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            </div>
-        );
+        return <SkeletonPostDetails />;
     }
 
     if (error) {

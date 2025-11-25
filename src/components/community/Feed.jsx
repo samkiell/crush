@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts, selectCommunityPosts, selectCommunityLoading, selectCommunityError } from '@/store/slices/communitySlice';
 import PostCard from './PostCard';
+import SkeletonPostCard from './skeletons/SkeletonPostCard';
 import { Loader2 } from 'lucide-react';
 
 const Feed = () => {
@@ -18,8 +19,10 @@ const Feed = () => {
 
     if (loading && posts.length === 0) {
         return (
-            <div className="flex justify-center py-10">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <div className="space-y-4">
+                {[...Array(5)].map((_, i) => (
+                    <SkeletonPostCard key={i} />
+                ))}
             </div>
         );
     }
