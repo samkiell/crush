@@ -11,7 +11,7 @@ export const useLogout = () => {
     dispatch(logout());
     
     // Redirect to login page
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   return { handleLogout };
