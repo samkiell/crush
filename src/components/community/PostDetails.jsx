@@ -18,6 +18,12 @@ const PostDetails = ({ postId }) => {
     useEffect(() => {
         if (postId) {
             dispatch(fetchPostDetails(postId));
+
+            const interval = setInterval(() => {
+                dispatch(fetchPostDetails({ id: postId, isPolling: true }));
+            }, 15000); // Poll every 15 seconds
+
+            return () => clearInterval(interval);
         }
     }, [dispatch, postId]);
 

@@ -43,8 +43,9 @@ export const createPost = createAsyncThunk(
 
 export const fetchComments = createAsyncThunk(
   'community/fetchComments',
-  async (postId, { rejectWithValue }) => {
+  async (arg, { rejectWithValue }) => {
     try {
+      const postId = typeof arg === 'object' ? arg.postId : arg;
       const response = await axios.get(`/api/community/posts/${postId}/comments`);
       return response.data.data;
     } catch (error) {

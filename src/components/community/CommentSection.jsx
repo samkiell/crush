@@ -57,6 +57,12 @@ const CommentSection = ({ postId }) => {
     useEffect(() => {
         if (postId) {
             dispatch(fetchComments(postId));
+
+            const interval = setInterval(() => {
+                dispatch(fetchComments({ postId, isPolling: true }));
+            }, 15000); // Poll every 15 seconds
+
+            return () => clearInterval(interval);
         }
     }, [dispatch, postId]);
 
