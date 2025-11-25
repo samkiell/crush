@@ -6,7 +6,7 @@ import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen,
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,6 +15,20 @@ const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const { handleLogout } = useLogout();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const pathname = usePathname();
 
   // Close menu when route changes
@@ -148,39 +162,67 @@ const Header = () => {
                 </button>
 
                 {/* User Dropdown (Desktop) */}
-                <div className="hidden md:flex items-center gap-2 ml-2">
-                  <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                      <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <div className="hidden md:flex items-center gap-2 ml-2" ref={profileRef}>
+                  <div className="relative">
+                    <button
+                      onClick={toggleProfile}
+                      className="btn btn-ghost btn-circle avatar"
+                    >
+                      <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105 active:scale-95">
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
                           {user?.name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                       </div>
-                    </div>
-                    <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-2xl bg-base-100 rounded-box w-52 gap-1 border border-base-content/5">
-                      <li className="menu-title px-4 py-2">
-                        <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
-                      </li>
-                      <li>
-                        <Link href="/profile" className="py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10">
-                          <User className="w-4 h-4" />
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/settings" className="py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10">
-                          <Settings className="w-4 h-4" />
-                          Settings
-                        </Link>
-                      </li>
-                      <div className="divider my-1 before:bg-base-content/5 after:bg-base-content/5"></div>
-                      <li>
-                        <button onClick={handleLogout} className="py-2 px-4 rounded-lg text-error hover:bg-error/10 active:bg-error/20">
-                          <LogOut className="w-4 h-4" />
-                          Logout
-                        </button>
-                      </li>
-                    </ul>
+                    </button>
+
+                    <AnimatePresence>
+                      {isProfileOpen && (
+                        <motion.ul
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-3 z-[1] p-2 shadow-2xl bg-base-100 rounded-box w-52 gap-1 border border-base-content/5 origin-top-right"
+                        >
+                          <li className="menu-title px-4 py-2">
+                            <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
+                          </li>
+                          <li>
+                            <Link
+                              href="/profile"
+                              onClick={() => setIsProfileOpen(false)}
+                              className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
+                            >
+                              <User className="w-4 h-4" />
+                              Profile
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/settings"
+                              onClick={() => setIsProfileOpen(false)}
+                              className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
+                            >
+                              <Settings className="w-4 h-4" />
+                              Settings
+                            </Link>
+                          </li>
+                          <div className="divider my-1 before:bg-base-content/5 after:bg-base-content/5"></div>
+                          <li>
+                            <button
+                              onClick={() => {
+                                setIsProfileOpen(false);
+                                handleLogout();
+                              }}
+                              className="flex items-center gap-3 py-2 px-4 rounded-lg text-error hover:bg-error/10 active:bg-error/20 w-full text-left"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              Logout
+                            </button>
+                          </li>
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               </>
