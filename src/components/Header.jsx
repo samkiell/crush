@@ -102,7 +102,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="navbar bg-base-100/90 backdrop-blur-xl shadow-sm px-4 md:px-6 py-3 sticky top-0 z-40 border-b border-base-200/50">
+      <header className="navbar bg-base-100/95 backdrop-blur-sm shadow-sm px-4 md:px-6 py-3 sticky top-0 z-40 border-b border-base-content/10 transition-colors duration-300">
         <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
           {/* Left Side: Logo & Name */}
           <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 group">
@@ -122,7 +122,7 @@ const Header = () => {
                 <>
                   {guestLinks.map((link) => <NavItem key={link.name} link={link} />)}
                   <div className="w-px h-6 bg-base-content/10 mx-2"></div>
-                  <Link href="/auth/login" className="btn btn-ghost btn-sm font-medium">Login</Link>
+                  <Link href="/auth/login" className="btn btn-ghost btn-sm font-medium hover:bg-base-content/10">Login</Link>
                   <Link href="/auth/register" className="btn btn-primary btn-sm text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">Get Started</Link>
                 </>
               )}
@@ -131,7 +131,7 @@ const Header = () => {
             {/* Theme Toggle */}
             <button
               onClick={cycleTheme}
-              className="btn btn-ghost btn-circle btn-sm hover:bg-base-200 transition-transform hover:rotate-12"
+              className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 transition-transform hover:rotate-12"
               aria-label="Toggle theme"
             >
               {theme === 'light' && <Sun className="w-5 h-5" />}
@@ -142,7 +142,7 @@ const Header = () => {
             {isAuthenticated && (
               <>
                 {/* Notification Bell */}
-                <button className="btn btn-ghost btn-circle btn-sm hover:bg-base-200 relative">
+                <button className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 relative">
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-base-100 animate-pulse"></span>
                 </button>
@@ -150,28 +150,28 @@ const Header = () => {
                 {/* User Dropdown (Desktop) */}
                 <div className="hidden md:flex items-center gap-2 ml-2">
                   <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar ring-2 ring-base-200 ring-offset-2 ring-offset-base-100 transition-all hover:ring-primary">
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar ring-2 ring-base-content/10 ring-offset-2 ring-offset-base-100 transition-all hover:ring-primary">
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
                         {user?.name?.charAt(0).toUpperCase() || 'U'}
                       </div>
                     </div>
-                    <ul tabIndex={0} className="mt-4 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-200">
+                    <ul tabIndex={0} className="mt-4 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-content/10">
                       <li className="menu-title px-4 py-2">
                         <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
                       </li>
                       <li>
-                        <Link href="/profile" className="py-3 px-4 rounded-xl hover:bg-base-200 active:bg-base-300">
+                        <Link href="/profile" className="py-3 px-4 rounded-xl hover:bg-base-content/10 active:bg-base-content/20">
                           <User className="w-4 h-4" />
                           Profile
                         </Link>
                       </li>
                       <li>
-                        <Link href="/settings" className="py-3 px-4 rounded-xl hover:bg-base-200 active:bg-base-300">
+                        <Link href="/settings" className="py-3 px-4 rounded-xl hover:bg-base-content/10 active:bg-base-content/20">
                           <Settings className="w-4 h-4" />
                           Settings
                         </Link>
                       </li>
-                      <div className="divider my-1"></div>
+                      <div className="divider my-1 before:bg-base-content/10 after:bg-base-content/10"></div>
                       <li>
                         <button onClick={handleLogout} className="py-3 px-4 rounded-xl text-error hover:bg-error/10 active:bg-error/20">
                           <LogOut className="w-4 h-4" />
@@ -186,7 +186,7 @@ const Header = () => {
 
             {/* Mobile Menu Toggle */}
             <button
-              className="btn btn-ghost btn-circle md:hidden z-50 relative"
+              className="btn btn-ghost btn-circle md:hidden z-50 relative hover:bg-base-content/10"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -214,10 +214,10 @@ const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-base-100 shadow-2xl z-50 md:hidden overflow-y-auto border-l border-base-200"
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-base-100 shadow-2xl z-50 md:hidden overflow-y-auto border-l border-base-content/10"
             >
               <div className="flex flex-col h-full">
-                <div className="p-6 border-b border-base-200">
+                <div className="p-6 border-b border-base-content/10">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="relative w-10 h-10">
                       <Image src="/logo.png" fill alt="D2C Logo" className="object-contain" />
@@ -226,7 +226,7 @@ const Header = () => {
                   </div>
 
                   {isAuthenticated ? (
-                    <div className="flex items-center gap-4 p-4 bg-base-200/50 rounded-2xl">
+                    <div className="flex items-center gap-4 p-4 bg-base-content/5 rounded-2xl">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg">
                         {user?.name?.charAt(0).toUpperCase() || 'U'}
                       </div>
@@ -237,7 +237,7 @@ const Header = () => {
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
-                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full">Login</Link>
+                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-base-content/20 hover:bg-base-content hover:text-base-100 hover:border-base-content">Login</Link>
                       <Link href="/auth/register" onClick={() => setIsMenuOpen(false)} className="btn btn-primary btn-sm w-full text-white">Signup</Link>
                     </div>
                   )}
@@ -253,7 +253,7 @@ const Header = () => {
 
                   {isAuthenticated && (
                     <>
-                      <div className="divider my-6"></div>
+                      <div className="divider my-6 before:bg-base-content/10 after:bg-base-content/10"></div>
                       <div className="flex flex-col gap-2">
                         <span className="text-xs font-semibold text-base-content/40 uppercase tracking-wider px-4 mb-2">Settings</span>
                         <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
@@ -276,7 +276,7 @@ const Header = () => {
                   )}
                 </div>
 
-                <div className="p-6 border-t border-base-200 bg-base-200/30">
+                <div className="p-6 border-t border-base-content/10 bg-base-content/5">
                   <p className="text-xs text-center text-base-content/40">
                     &copy; 2025 Crush EduPlace Intl.
                   </p>
