@@ -66,6 +66,31 @@ export async function GET(req) {
 export async function POST(req) {
   await dbConnect();
   const user = await getUserFromRequest(req);
+
+  if (!user) {
+    return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+    const { title, content, category, tags, isQuestion } = body;
+
+    if (!title || !content || !category) {
+      return NextResponse.json({ success: false, error: 'Please provide all required fields' }, { status: 400 });
+    }
+
+    const cleanTitle = filterProfanity(title);
+    const cleanContent = filterProfanity(content);
+
+    const post = await CommunityPost.create({
+      title: cleanTitle,
+      content: cleanContent,
+      category,
+      tags: tags || [],
+      isQuestion: isQuestion || false,
+      author: user._id,
+    });
+
     return NextResponse.json({ success: true, data: post }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 400 });
