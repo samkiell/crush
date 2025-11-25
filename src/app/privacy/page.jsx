@@ -10,7 +10,7 @@ const Privacy = () => {
                         Last updated: November 25, 2025
                     </p>
                     <p>
-                        Crush EduPlace Intl ("us", "we", or "our") operates the D2C website (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+                        Crush EduPlace Intl operates the D2C website. This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
                     </p>
 
                     <h3>1. Information Collection and Use</h3>

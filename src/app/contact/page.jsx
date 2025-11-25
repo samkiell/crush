@@ -1,7 +1,50 @@
-import React from 'react';
-import { Mail, MapPin, Phone, Send } from 'lucide-react';
+"use client";
+import React, { useState } from 'react';
+import { Mail, MapPin, Phone, Send, Loader2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 const Contact = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        message: ''
+    });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                toast.success('Message sent successfully!');
+                setFormData({ firstName: '', lastName: '', email: '', message: '' });
+            } else {
+                toast.error(data.error || 'Failed to send message.');
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            toast.error('Something went wrong. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-base-100 pt-24 pb-12 px-4">
             <div className="container mx-auto max-w-6xl">
@@ -53,19 +96,35 @@ const Contact = () => {
 
                     {/* Contact Form */}
                     <div className="bg-base-200 p-8 rounded-3xl shadow-lg">
-                        <form className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="form-control w-full">
                                     <label className="label">
                                         <span className="label-text font-medium">First Name</span>
                                     </label>
-                                    <input type="text" placeholder="First name" className="input input-bordered w-full" />
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        value={formData.firstName}
+                                        onChange={handleChange}
+                                        placeholder="First name"
+                                        className="input input-bordered w-full"
+                                        required
+                                    />
                                 </div>
                                 <div className="form-control w-full">
                                     <label className="label">
                                         <span className="label-text font-medium">Last Name</span>
                                     </label>
-                                    <input type="text" placeholder="Last name" className="input input-bordered w-full" />
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        value={formData.lastName}
+                                        onChange={handleChange}
+                                        placeholder="Last name"
+                                        className="input input-bordered w-full"
+                                        required
+                                    />
                                 </div>
                             </div>
 
@@ -73,19 +132,43 @@ const Contact = () => {
                                 <label className="label">
                                     <span className="label-text font-medium">Email</span>
                                 </label>
-                                <input type="email" placeholder="you@company.com" className="input input-bordered w-full" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="you@company.com"
+                                    className="input input-bordered w-full"
+                                    required
+                                />
                             </div>
 
                             <div className="form-control w-full">
                                 <label className="label">
                                     <span className="label-text font-medium">Message</span>
                                 </label>
-                                <textarea className="textarea textarea-bordered h-32" placeholder="Leave us a message..."></textarea>
+                                <textarea
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    className="textarea textarea-bordered h-32"
+                                    placeholder="Leave us a message..."
+                                    required
+                                ></textarea>
                             </div>
 
-                            <button type="submit" className="btn btn-primary w-full text-lg">
-                                Send Message
-                                <Send className="w-5 h-5 ml-2" />
+                            <button type="submit" className="btn btn-primary w-full text-lg" disabled={isLoading}>
+                                {isLoading ? (
+                                    <>
+                                        Sending...
+                                        <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+                                    </>
+                                ) : (
+                                    <>
+                                        Send Message
+                                        <Send className="w-5 h-5 ml-2" />
+                                    </>
+                                )}
                             </button>
                         </form>
                     </div>
