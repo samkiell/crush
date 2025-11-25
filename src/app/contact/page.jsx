@@ -159,15 +159,15 @@ const Contact = () => {
 
                             <button type="submit" className="btn btn-primary w-full text-lg" disabled={isLoading}>
                                 {isLoading ? (
-                                    <>
+                                    <div className="flex items-center justify-center gap-2">
                                         Sending...
-                                        <Loader2 className="w-5 h-5 ml-2 animate-spin" />
-                                    </>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                    </div>
                                 ) : (
-                                    <>
+                                    <div className="flex items-center justify-center gap-2">
                                         Send Message
-                                        <Send className="w-5 h-5 ml-2" />
-                                    </>
+                                        <Send className="w-5 h-5" />
+                                    </div>
                                 )}
                             </button>
                         </form>

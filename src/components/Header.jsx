@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
@@ -31,11 +31,13 @@ const Header = () => {
     { name: 'Profile', href: '/profile', icon: User },
   ];
 
-  // If not authenticated, show simplified header or nothing?
-  // Requirement: "Global Header Component ... appears on all authenticated pages"
-  // Requirement: "Users not logged in should only access Landing page, Login, Signup"
-  // So for guest pages, we might want a different header or just the logo.
-  // Let's show a minimal header for guests (Logo + Theme Toggle) and full for auth.
+  const guestLinks = [
+    { name: 'Community', href: '/community', icon: Users },
+    { name: 'Contact Us', href: '/contact', icon: Phone },
+    { name: 'Help Center', href: '/help-center', icon: HelpCircle },
+    { name: 'Login', href: '/auth/login', icon: LogIn },
+    { name: 'Signup', href: '/auth/register', icon: UserPlus },
+  ];
 
   return (
     <header className="navbar bg-base-100/80 backdrop-blur-md shadow-md px-4 md:px-6 py-3 sticky top-0 z-50">
@@ -49,7 +51,7 @@ const Header = () => {
         {/* Right Side: Desktop Nav, Theme, User Actions */}
         <div className="flex items-center gap-4">
           {/* Desktop Navigation */}
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <nav className="hidden md:flex items-center gap-6 mr-4">
               {navLinks.map((link) => {
                 const Icon = link.icon;
@@ -65,6 +67,14 @@ const Header = () => {
                   </Link>
                 );
               })}
+            </nav>
+          ) : (
+            <nav className="hidden md:flex items-center gap-6 mr-4">
+              <Link href="/community" className="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Community</Link>
+              <Link href="/contact" className="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</Link>
+              <Link href="/help-center" className="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Help</Link>
+              <Link href="/auth/login" className="btn btn-sm btn-ghost">Login</Link>
+              <Link href="/auth/register" className="btn btn-sm btn-primary">Signup</Link>
             </nav>
           )}
 
@@ -107,24 +117,24 @@ const Header = () => {
                   </ul>
                 </div>
               </div>
-
-              {/* Mobile Menu Toggle */}
-              <button
-                className="btn btn-ghost btn-circle md:hidden"
-                onClick={toggleMenu}
-              >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
             </>
           )}
+
+          {/* Mobile Menu Toggle - Always visible on mobile */}
+          <button
+            className="btn btn-ghost btn-circle md:hidden"
+            onClick={toggleMenu}
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
-      {isAuthenticated && isMenuOpen && (
+      {isMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-base-100/80 backdrop-blur-md shadow-lg md:hidden border-t border-base-200 animate-in slide-in-from-top-2">
           <nav className="flex flex-col p-4 gap-2">
-            {navLinks.map((link) => {
+            {(isAuthenticated ? navLinks : guestLinks).map((link) => {
               const Icon = link.icon;
               const isActive = pathname.startsWith(link.href);
               return (
@@ -139,25 +149,30 @@ const Header = () => {
                 </Link>
               );
             })}
-            <div className="divider my-2"></div>
-            <Link
-              href="/settings"
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 text-base-content"
-            >
-              <Settings className="w-5 h-5" />
-              <span className="font-medium">Settings</span>
-            </Link>
-            <button
-              onClick={() => {
-                setIsMenuOpen(false);
-                handleLogout();
-              }}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-error/10 text-error transition-colors w-full text-left"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="font-medium">Logout</span>
-            </button>
+
+            {isAuthenticated && (
+              <>
+                <div className="divider my-2"></div>
+                <Link
+                  href="/settings"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 text-base-content"
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="font-medium">Settings</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-error/10 text-error transition-colors w-full text-left"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              </>
+            )}
           </nav>
         </div>
       )}
