@@ -90,7 +90,7 @@ export default function Home() {
                     Join thousands of students achieving outstanding results.
                 </p>
 
-                <Link href="/auth/register" className="btn btn-primary px-12 py-4 rounded-xl shadow-lg text-white">
+                <Link href="/auth/register" className="btn btn-primary px-12 py-4 rounded-xl shadow-lg text-grey">
                     Start Your Journey Today
                 </Link>
             </section>
