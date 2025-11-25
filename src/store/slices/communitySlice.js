@@ -18,8 +18,9 @@ export const fetchPosts = createAsyncThunk(
 
 export const fetchPostDetails = createAsyncThunk(
   'community/fetchPostDetails',
-  async (id, { rejectWithValue }) => {
+  async (arg, { rejectWithValue }) => {
     try {
+      const id = typeof arg === 'object' ? arg.id : arg;
       const response = await axios.get(`/api/community/posts/${id}`);
       return response.data.data;
     } catch (error) {
@@ -130,8 +131,10 @@ const communitySlice = createSlice({
   extraReducers: (builder) => {
     // Fetch Posts
     builder
-      .addCase(fetchPosts.pending, (state) => {
-        state.loading = true;
+      .addCase(fetchPosts.pending, (state, action) => {
+        if (!action.meta.arg?.isPolling) {
+          state.loading = true;
+        }
         state.error = null;
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
@@ -146,8 +149,10 @@ const communitySlice = createSlice({
 
     // Fetch Post Details
     builder
-      .addCase(fetchPostDetails.pending, (state) => {
-        state.loading = true;
+      .addCase(fetchPostDetails.pending, (state, action) => {
+        if (!action.meta.arg?.isPolling) {
+          state.loading = true;
+        }
         state.error = null;
       })
       .addCase(fetchPostDetails.fulfilled, (state, action) => {
