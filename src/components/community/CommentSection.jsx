@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Reply, Send } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag } from 'lucide-react';
 import Link from 'next/link';
 
 const CommentItem = ({ comment, allComments, onReply, onLike }) => {
@@ -51,6 +51,12 @@ const CommentItem = ({ comment, allComments, onReply, onLike }) => {
                             className="hover:text-primary font-medium flex items-center gap-1"
                         >
                             <Reply className="w-3 h-3" /> Reply
+                        </button>
+                        <button
+                            onClick={() => alert('Report submitted.')}
+                            className="hover:text-error font-medium flex items-center gap-1 ml-auto"
+                        >
+                            <Flag className="w-3 h-3" /> Report
                         </button>
                     </div>
                 </div>
@@ -156,21 +162,28 @@ const CommentSection = ({ postId }) => {
                     <div className="bg-base-200 p-6 rounded-lg text-center mb-8">
                         <p className="text-base-content/70">
                             Please <Link href={`/login?redirect=/community/${postId}`} className="link link-primary font-bold">login</Link> to join the discussion.
-                            onLike={handleLike}
-                            />
-                        ))}
-
-                            {comments.length === 0 && (
-                                <p className="text-center text-base-content/50 py-4">No comments yet. Be the first!</p>
-                            )}
+                        </p>
                     </div>
+                )}
+
+                {/* Comments List */}
+                <div className="space-y-2">
+                    {rootComments.map((comment) => (
+                        <CommentItem
+                            key={comment._id}
+                            comment={comment}
+                            allComments={comments}
+                            onReply={setReplyTo}
+                            onLike={handleLike}
+                        />
+                    ))}
 
                     {comments.length === 0 && (
-                    <p className="text-center text-base-content/50 py-4">No comments yet. Be the first!</p>
-                )}
+                        <p className="text-center text-base-content/50 py-4">No comments yet. Be the first!</p>
+                    )}
+                </div>
             </div>
         </div>
-        </div >
     );
 };
 
