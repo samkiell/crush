@@ -43,7 +43,7 @@ const Header = () => {
         {/* Left Side: Logo & Name */}
         <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <Image src="/logo.png" width={40} height={40} alt="D2C Logo" className="w-10 h-10" />
-          <span className="text-xl font-bold text-base-content tracking-tight hidden sm:block">D2C</span>
+          <span className="text-xl font-bold text-base-content tracking-tight">D2C</span>
         </Link>
 
         {/* Right Side: Desktop Nav, Theme, User Actions */}
