@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction } from '@/store/slices/communitySlice';
-import { formatDistanceToNow } from 'date-fns';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ThumbsUp, Reply, Send } from 'lucide-react';
 
 const CommentItem = ({ comment, onReply, onLike }) => {
