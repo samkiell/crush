@@ -4,6 +4,7 @@ import questionsReducer from "./slices/questionsSlice";
 import examsReducer from "./slices/examsSlice";
 import dashboardReducer from "./slices/dashboardSlice";
 import communityReducer from "./slices/communitySlice";
+import adminReducer from "./slices/adminSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     exams: examsReducer,
     dashboard: dashboardReducer,
     community: communityReducer,
+    admin: adminReducer,
   },
 });
