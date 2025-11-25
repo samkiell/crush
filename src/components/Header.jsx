@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -16,13 +17,28 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
+
   const cycleTheme = () => {
     if (theme === "light") setTheme("dark");
     else if (theme === "dark") setTheme("eye-care");
     else setTheme("light");
   };
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -35,149 +51,243 @@ const Header = () => {
     { name: 'Community', href: '/community', icon: Users },
     { name: 'Contact Us', href: '/contact', icon: Phone },
     { name: 'Help Center', href: '/help-center', icon: HelpCircle },
-    { name: 'Login', href: '/auth/login', icon: LogIn },
-    { name: 'Signup', href: '/auth/register', icon: UserPlus },
   ];
 
-  return (
-    <header className="navbar bg-base-100/80 backdrop-blur-md shadow-md px-4 md:px-6 py-3 sticky top-0 z-50">
-      <div className="flex items-center justify-between w-full">
-        {/* Left Side: Logo & Name */}
-        <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <Image src="/logo.png" width={40} height={40} alt="D2C Logo" className="w-10 h-10" />
-          <span className="text-xl font-bold text-base-content tracking-tight">D2C</span>
+  const NavItem = ({ link, mobile = false }) => {
+    const Icon = link.icon;
+    const isActive = pathname.startsWith(link.href);
+
+    if (mobile) {
+      return (
+        <Link
+          href={link.href}
+          onClick={() => setIsMenuOpen(false)}
+          className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 group ${isActive
+              ? 'bg-primary/10 text-primary font-semibold'
+              : 'hover:bg-base-200 text-base-content/80 hover:text-base-content'
+            }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg ${isActive ? 'bg-primary/20' : 'bg-base-200 group-hover:bg-base-300'} transition-colors`}>
+              <Icon className="w-5 h-5" />
+            </div>
+            <span>{link.name}</span>
+          </div>
+          <ChevronRight className={`w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity ${isActive ? 'opacity-100 text-primary' : ''}`} />
         </Link>
+      );
+    }
 
-        {/* Right Side: Desktop Nav, Theme, User Actions */}
-        <div className="flex items-center gap-4">
-          {/* Desktop Navigation */}
-          {isAuthenticated ? (
-            <nav className="hidden md:flex items-center gap-6 mr-4">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = pathname.startsWith(link.href);
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`flex items-center gap-2 text-sm font-medium transition-colors ${isActive ? 'text-primary' : 'text-base-content/70 hover:text-base-content'}`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {link.name}
-                  </Link>
-                );
-              })}
+    return (
+      <Link
+        href={link.href}
+        className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+            ? 'text-primary'
+            : 'text-base-content/70 hover:text-base-content hover:bg-base-200/50'
+          }`}
+      >
+        <Icon className="w-4 h-4" />
+        {link.name}
+        {isActive && (
+          <motion.div
+            layoutId="activeNav"
+            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+            initial={false}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          />
+        )}
+      </Link>
+    );
+  };
+
+  return (
+    <>
+      <header className="navbar bg-base-100/90 backdrop-blur-xl shadow-sm px-4 md:px-6 py-3 sticky top-0 z-40 border-b border-base-200/50">
+        <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
+          {/* Left Side: Logo & Name */}
+          <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 group">
+            <div className="relative w-10 h-10 transition-transform group-hover:scale-105 duration-200">
+              <Image src="/logo.png" fill alt="D2C Logo" className="object-contain" />
+            </div>
+            <span className="text-xl font-bold text-base-content tracking-tight group-hover:text-primary transition-colors">D2C</span>
+          </Link>
+
+          {/* Right Side: Desktop Nav, Theme, User Actions */}
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-1 mr-2">
+              {isAuthenticated ? (
+                navLinks.map((link) => <NavItem key={link.name} link={link} />)
+              ) : (
+                <>
+                  {guestLinks.map((link) => <NavItem key={link.name} link={link} />)}
+                  <div className="w-px h-6 bg-base-content/10 mx-2"></div>
+                  <Link href="/auth/login" className="btn btn-ghost btn-sm font-medium">Login</Link>
+                  <Link href="/auth/register" className="btn btn-primary btn-sm text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">Get Started</Link>
+                </>
+              )}
             </nav>
-          ) : (
-            <nav className="hidden md:flex items-center gap-6 mr-4">
-              <Link href="/community" className="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Community</Link>
-              <Link href="/contact" className="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Contact</Link>
-              <Link href="/help-center" className="text-sm font-medium text-base-content/70 hover:text-base-content transition-colors">Help</Link>
-              <Link href="/auth/login" className="btn btn-sm btn-ghost">Login</Link>
-              <Link href="/auth/register" className="btn btn-sm btn-primary">Signup</Link>
-            </nav>
-          )}
 
-          {/* Theme Toggle */}
-          <button
-            onClick={cycleTheme}
-            className="btn btn-ghost btn-circle btn-sm hover:bg-base-200"
-            aria-label="Toggle theme"
-          >
-            {theme === 'light' && <Sun className="w-5 h-5" />}
-            {theme === 'dark' && <Moon className="w-5 h-5" />}
-            {theme === 'eye-care' && <Eye className="w-5 h-5" />}
-          </button>
-
-          {isAuthenticated && (
-            <>
-              {/* Notification Bell */}
-              <button className="btn btn-ghost btn-circle btn-sm hover:bg-base-200 relative">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full ring-2 ring-base-100"></span>
-              </button>
-
-              {/* User Dropdown (Desktop) / Logout */}
-              <div className="hidden md:flex items-center gap-2">
-                <div className="dropdown dropdown-end">
-                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                      {user?.name?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                  </div>
-                  <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100/80 backdrop-blur-md rounded-box w-52">
-                    <li>
-                      <Link href="/profile" className="justify-between">
-                        Profile
-                        <span className="badge">New</span>
-                      </Link>
-                    </li>
-                    <li><Link href="/settings">Settings</Link></li>
-                    <li><button onClick={handleLogout} className="text-error">Logout</button></li>
-                  </ul>
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Mobile Menu Toggle - Always visible on mobile */}
-          <button
-            className="btn btn-ghost btn-circle md:hidden"
-            onClick={toggleMenu}
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-base-100/80 backdrop-blur-md shadow-lg md:hidden border-t border-base-200 animate-in slide-in-from-top-2">
-          <nav className="flex flex-col p-4 gap-2">
-            {(isAuthenticated ? navLinks : guestLinks).map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-base-200 text-base-content'}`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{link.name}</span>
-                </Link>
-              );
-            })}
+            {/* Theme Toggle */}
+            <button
+              onClick={cycleTheme}
+              className="btn btn-ghost btn-circle btn-sm hover:bg-base-200 transition-transform hover:rotate-12"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' && <Sun className="w-5 h-5" />}
+              {theme === 'dark' && <Moon className="w-5 h-5" />}
+              {theme === 'eye-care' && <Eye className="w-5 h-5" />}
+            </button>
 
             {isAuthenticated && (
               <>
-                <div className="divider my-2"></div>
-                <Link
-                  href="/settings"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 text-base-content"
-                >
-                  <Settings className="w-5 h-5" />
-                  <span className="font-medium">Settings</span>
-                </Link>
-                <button
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleLogout();
-                  }}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-error/10 text-error transition-colors w-full text-left"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-medium">Logout</span>
+                {/* Notification Bell */}
+                <button className="btn btn-ghost btn-circle btn-sm hover:bg-base-200 relative">
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-base-100 animate-pulse"></span>
                 </button>
+
+                {/* User Dropdown (Desktop) */}
+                <div className="hidden md:flex items-center gap-2 ml-2">
+                  <div className="dropdown dropdown-end">
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar ring-2 ring-base-200 ring-offset-2 ring-offset-base-100 transition-all hover:ring-primary">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
+                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                    </div>
+                    <ul tabIndex={0} className="mt-4 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-200">
+                      <li className="menu-title px-4 py-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
+                      </li>
+                      <li>
+                        <Link href="/profile" className="py-3 px-4 rounded-xl hover:bg-base-200 active:bg-base-300">
+                          <User className="w-4 h-4" />
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/settings" className="py-3 px-4 rounded-xl hover:bg-base-200 active:bg-base-300">
+                          <Settings className="w-4 h-4" />
+                          Settings
+                        </Link>
+                      </li>
+                      <div className="divider my-1"></div>
+                      <li>
+                        <button onClick={handleLogout} className="py-3 px-4 rounded-xl text-error hover:bg-error/10 active:bg-error/20">
+                          <LogOut className="w-4 h-4" />
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </>
             )}
-          </nav>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className="btn btn-ghost btn-circle md:hidden z-50 relative"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
-      )}
-    </header>
+      </header>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+            />
+
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-base-100 shadow-2xl z-50 md:hidden overflow-y-auto border-l border-base-200"
+            >
+              <div className="flex flex-col h-full">
+                <div className="p-6 border-b border-base-200">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="relative w-10 h-10">
+                      <Image src="/logo.png" fill alt="D2C Logo" className="object-contain" />
+                    </div>
+                    <span className="text-xl font-bold text-base-content">D2C</span>
+                  </div>
+
+                  {isAuthenticated ? (
+                    <div className="flex items-center gap-4 p-4 bg-base-200/50 rounded-2xl">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-base-content truncate">{user?.name || 'User'}</p>
+                        <p className="text-xs text-base-content/60 truncate">{user?.email || 'student@example.com'}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full">Login</Link>
+                      <Link href="/auth/register" onClick={() => setIsMenuOpen(false)} className="btn btn-primary btn-sm w-full text-white">Signup</Link>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 p-4 overflow-y-auto">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-semibold text-base-content/40 uppercase tracking-wider px-4 mb-2">Menu</span>
+                    {(isAuthenticated ? navLinks : guestLinks).map((link) => (
+                      <NavItem key={link.name} link={link} mobile={true} />
+                    ))}
+                  </div>
+
+                  {isAuthenticated && (
+                    <>
+                      <div className="divider my-6"></div>
+                      <div className="flex flex-col gap-2">
+                        <span className="text-xs font-semibold text-base-content/40 uppercase tracking-wider px-4 mb-2">Settings</span>
+                        <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
+                        <button
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            handleLogout();
+                          }}
+                          className="flex items-center justify-between p-4 rounded-xl hover:bg-error/10 text-error transition-all group mt-2"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-error/10 group-hover:bg-error/20 transition-colors">
+                              <LogOut className="w-5 h-5" />
+                            </div>
+                            <span className="font-medium">Logout</span>
+                          </div>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="p-6 border-t border-base-200 bg-base-200/30">
+                  <p className="text-xs text-center text-base-content/40">
+                    &copy; 2025 Crush EduPlace Intl.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
-}
+};
 
 export default Header;
