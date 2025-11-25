@@ -10,7 +10,7 @@ const Terms = () => {
                         Last updated: November 25, 2025
                     </p>
                     <p>
-                        Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the D2C website (the "Service") operated by Crush EduPlace Intl ("us", "we", or "our").
+                        Please read these Terms of Service carefully before using the D2C website operated by Crush EduPlace Intl.
                     </p>
 
                     <h3>1. Acceptance of Terms</h3>
