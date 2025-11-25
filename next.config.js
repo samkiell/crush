@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-// Trigger reload for date-fns
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
