@@ -63,8 +63,8 @@ const Header = () => {
           href={link.href}
           onClick={() => setIsMenuOpen(false)}
           className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 group ${isActive
-              ? 'bg-primary/10 text-primary font-semibold'
-              : 'hover:bg-base-200 text-base-content/80 hover:text-base-content'
+              ? 'bg-primary/10 text-primary font-bold'
+              : 'hover:bg-base-200 text-base-content font-medium hover:text-primary'
             }`}
         >
           <div className="flex items-center gap-3">
@@ -81,9 +81,9 @@ const Header = () => {
     return (
       <Link
         href={link.href}
-        className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+        className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${isActive
             ? 'text-primary'
-            : 'text-base-content/70 hover:text-base-content hover:bg-base-200/50'
+            : 'text-base-content hover:text-primary hover:bg-base-200/50'
           }`}
       >
         <Icon className="w-4 h-4" />
