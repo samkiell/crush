@@ -63,8 +63,8 @@ const Header = () => {
           href={link.href}
           onClick={() => setIsMenuOpen(false)}
           className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 group ${isActive
-              ? 'bg-primary/10 text-primary font-bold'
-              : 'hover:bg-base-200 text-base-content font-medium hover:text-primary'
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'hover:bg-base-200 text-base-content/80 hover:text-base-content'
             }`}
         >
           <div className="flex items-center gap-3">
@@ -81,9 +81,9 @@ const Header = () => {
     return (
       <Link
         href={link.href}
-        className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${isActive
-            ? 'text-primary'
-            : 'text-base-content hover:text-primary hover:bg-base-200/50'
+        className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+          ? 'text-primary'
+          : 'text-base-content/70 hover:text-base-content hover:bg-base-200/50'
           }`}
       >
         <Icon className="w-4 h-4" />
@@ -107,7 +107,12 @@ const Header = () => {
           {/* Left Side: Logo & Name */}
           <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 transition-transform group-hover:scale-105 duration-200">
-              <Image src="/logo.png" fill alt="D2C Logo" className="object-contain" />
+              <Image
+                src={theme === 'dark' ? "/logo_dark.png" : "/logo.png"}
+                fill
+                alt="D2C Logo"
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-base-content tracking-tight group-hover:text-primary transition-colors">D2C</span>
           </Link>
