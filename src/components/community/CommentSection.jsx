@@ -8,7 +8,9 @@ import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Reply, Send, Flag } from 'lucide-react';
 import Link from 'next/link';
 
-const CommentItem = ({ comment, allComments, onReply, onLike }) => {
+import ReportModal from './ReportModal';
+
+const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
     const replies = allComments.filter(c => c.parentComment === comment._id);
 
     return (
@@ -53,7 +55,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike }) => {
                             <Reply className="w-3 h-3" /> Reply
                         </button>
                         <button
-                            onClick={() => alert('Report submitted.')}
+                            onClick={() => onReport(comment._id)}
                             className="hover:text-error font-medium flex items-center gap-1 ml-auto"
                         >
                             <Flag className="w-3 h-3" /> Report
@@ -72,6 +74,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike }) => {
                             allComments={allComments}
                             onReply={onReply}
                             onLike={onLike}
+                            onReport={onReport}
                         />
                     ))}
                 </div>
@@ -86,6 +89,8 @@ const CommentSection = ({ postId }) => {
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const [newComment, setNewComment] = useState('');
     const [replyTo, setReplyTo] = useState(null);
+    const [reportModalOpen, setReportModalOpen] = useState(false);
+    const [reportTargetId, setReportTargetId] = useState(null);
 
     useEffect(() => {
         if (postId) {
@@ -115,6 +120,11 @@ const CommentSection = ({ postId }) => {
 
     const handleLike = (commentId) => {
         dispatch(toggleReaction({ id: commentId, targetType: 'Comment', type: 'like' }));
+    };
+
+    const handleReport = (commentId) => {
+        setReportTargetId(commentId);
+        setReportModalOpen(true);
     };
 
     // Filter top-level comments (simplified for now, ideally recursive)
@@ -175,6 +185,7 @@ const CommentSection = ({ postId }) => {
                             allComments={comments}
                             onReply={setReplyTo}
                             onLike={handleLike}
+                            onReport={handleReport}
                         />
                     ))}
 
@@ -183,6 +194,13 @@ const CommentSection = ({ postId }) => {
                     )}
                 </div>
             </div>
+
+            <ReportModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                targetType="Comment"
+                targetId={reportTargetId}
+            />
         </div>
     );
 };
