@@ -1,18 +1,21 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPostDetails, selectCurrentPost, selectCommunityLoading, selectCommunityError, toggleReaction } from '@/store/slices/communitySlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Eye, MessageSquare, Share2, Flag } from 'lucide-react';
 import CommentSection from './CommentSection';
 import SkeletonPostDetails from './skeletons/SkeletonPostDetails';
+import ReportModal from './ReportModal';
 
 const PostDetails = ({ postId }) => {
     const dispatch = useDispatch();
     const post = useSelector(selectCurrentPost);
     const loading = useSelector(selectCommunityLoading);
     const error = useSelector(selectCommunityError);
+
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     useEffect(() => {
         if (postId) {
@@ -129,7 +132,7 @@ const PostDetails = ({ postId }) => {
                             <button
                                 className="btn btn-ghost btn-sm btn-square text-error"
                                 title="Report"
-                                onClick={() => alert('Report submitted for review.')}
+                                onClick={() => setIsReportModalOpen(true)}
                             >
                                 <Flag className="w-4 h-4" />
                             </button>
@@ -140,6 +143,14 @@ const PostDetails = ({ postId }) => {
 
             {/* Comments Section */}
             <CommentSection postId={post._id} />
+
+            {/* Report Modal */}
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                targetType="CommunityPost"
+                targetId={post._id}
+            />
         </div>
     );
 };

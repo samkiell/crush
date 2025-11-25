@@ -96,6 +96,23 @@ export const fetchStats = createAsyncThunk(
   }
 );
 
+export const reportContent = createAsyncThunk(
+  'community/reportContent',
+  async ({ targetType, targetId, reason, description }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/api/community/reports', {
+        targetType,
+        targetId,
+        reason,
+        description,
+      });
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || error.message);
+    }
+  }
+);
+
 const initialState = {
   posts: [],
   currentPost: null,
