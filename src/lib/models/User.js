@@ -36,6 +36,18 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // Community Fields
+  badges: [{
+    type: String, // e.g., 'Rising Scholar', 'Mentor'
+  }],
+  reputation: {
+    type: Number,
+    default: 0,
+  },
+  avatar: {
+    type: String, // URL to avatar image
+    default: '',
+  },
 });
 
 // Encrypt password using bcrypt
