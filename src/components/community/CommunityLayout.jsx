@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Users, MessageSquare, TrendingUp, Award, Search } from 'lucide-react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStats, selectCommunityStats } from '@/store/slices/communitySlice';
 
 const CommunityLayout = ({ children }) => {
     const pathname = usePathname();
@@ -12,6 +15,13 @@ const CommunityLayout = ({ children }) => {
         { label: 'My Posts', href: '/community/my-posts', icon: Users },
         { label: 'Leaderboard', href: '/community/leaderboard', icon: Award },
     ];
+
+    const dispatch = useDispatch();
+    const { trendingTopics } = useSelector(selectCommunityStats);
+
+    useEffect(() => {
+        dispatch(fetchStats());
+    }, [dispatch]);
 
     return (
     return (
@@ -63,69 +73,43 @@ const CommunityLayout = ({ children }) => {
                     </main>
 
                     {/* Right Sidebar (Trending/Stats) */}
-                    <aside className="hidden xl:block w-72 shrink-0">
-                        <div className="card bg-base-100 shadow-sm sticky top-20">
-                            <div className="card-body p-4">
-                                <h3 className="font-bold text-lg flex items-center gap-2">
-                                    <TrendingUp className="w-5 h-5 text-secondary" />
-                                    Trending
-                                </h3>
-                                <ul className="list-none space-y-3 mt-4">
-                                    <li className="text-sm hover:underline cursor-pointer">
-                                        <span className="font-medium">#JAMB2025</span>
-                                        <p className="text-xs text-base-content/60">1.2k discussions</p>
-                                    </li>
-                                    <li className="text-sm hover:underline cursor-pointer">
-                                        <span className="font-medium">#PhysicsHelp</span>
-                                        <p className="text-xs text-base-content/60">850 discussions</p>
-                                    </li>
-                                    <li className="text-sm hover:underline cursor-pointer">
-                                        <span className="font-medium">#AdmissionCutoff</span>
-                                        <p className="text-xs text-base-content/60">500 discussions</p>
-                                    </li>
-                                </ul>
-                            </div>
+                    <div className="drawer-side z-50">
+                        <label htmlFor="community-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                        <div className="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+                            <SidebarContent navItems={navItems} pathname={pathname} />
                         </div>
-                    </aside>
+                    </div>
                 </div>
-            </div>
-            <div className="drawer-side z-50">
-                <label htmlFor="community-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <div className="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
-                    <SidebarContent navItems={navItems} pathname={pathname} />
-                </div>
-            </div>
-        </div>
-    );
+                );
 };
 
-const SidebarContent = ({ navItems, pathname }) => (
-    <>
-        <ul className="menu w-full rounded-box p-0">
-            {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname === item.href;
-                return (
-                    <li key={item.href}>
-                        <Link href={item.href} className={isActive ? 'active' : ''}>
-                            <Icon className="w-4 h-4" />
-                            {item.label}
-                        </Link>
-                    </li>
+                const SidebarContent = ({navItems, pathname}) => (
+                <>
+                    <ul className="menu w-full rounded-box p-0">
+                        {navItems.map((item) => {
+                            const Icon = item.icon;
+                            const isActive = pathname === item.href;
+                            return (
+                                <li key={item.href}>
+                                    <Link href={item.href} className={isActive ? 'active' : ''}>
+                                        <Icon className="w-4 h-4" />
+                                        {item.label}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+
+                    <div className="divider my-2"></div>
+
+                    <h3 className="font-semibold text-sm px-4 mb-2 text-base-content/70">Categories</h3>
+                    <ul className="menu w-full rounded-box text-sm p-0">
+                        <li><Link href="/community?category=General">General</Link></li>
+                        <li><Link href="/community?category=Exam Help">Exam Help</Link></li>
+                        <li><Link href="/community?category=Study Tips">Study Tips</Link></li>
+                        <li><Link href="/community?category=Career">Career</Link></li>
+                    </ul>
+                </>
                 );
-            })}
-        </ul>
 
-        <div className="divider my-2"></div>
-
-        <h3 className="font-semibold text-sm px-4 mb-2 text-base-content/70">Categories</h3>
-        <ul className="menu w-full rounded-box text-sm p-0">
-            <li><Link href="/community?category=General">General</Link></li>
-            <li><Link href="/community?category=Exam Help">Exam Help</Link></li>
-            <li><Link href="/community?category=Study Tips">Study Tips</Link></li>
-            <li><Link href="/community?category=Career">Career</Link></li>
-        </ul>
-    </>
-);
-
-export default CommunityLayout;
+                export default CommunityLayout;

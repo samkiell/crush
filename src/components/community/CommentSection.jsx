@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction } from '@/store/slices/communitySlice';
+import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Reply, Send } from 'lucide-react';
+import Link from 'next/link';
 
 const CommentItem = ({ comment, onReply, onLike }) => {
     return (
@@ -51,6 +53,7 @@ const CommentItem = ({ comment, onReply, onLike }) => {
 const CommentSection = ({ postId }) => {
     const dispatch = useDispatch();
     const comments = useSelector(selectCommunityComments);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
     const [newComment, setNewComment] = useState('');
     const [replyTo, setReplyTo] = useState(null);
 
@@ -93,37 +96,45 @@ const CommentSection = ({ postId }) => {
                 <h3 className="font-bold text-lg mb-4">Discussion ({comments.length})</h3>
 
                 {/* Comment Input */}
-                <form onSubmit={handleSubmit} className="mb-8 flex gap-3">
-                    <div className="avatar placeholder">
-                        <div className="bg-neutral text-neutral-content rounded-full w-10">
-                            <span>Me</span>
-                        </div>
-                    </div>
-                    <div className="flex-1">
-                        {replyTo && (
-                            <div className="text-xs text-base-content/60 mb-2 flex items-center justify-between bg-base-200 p-2 rounded">
-                                <span>Replying to <b>{replyTo.author?.name}</b></span>
-                                <button type="button" onClick={() => setReplyTo(null)} className="hover:text-error">Cancel</button>
+                {isAuthenticated ? (
+                    <form onSubmit={handleSubmit} className="mb-8 flex gap-3">
+                        <div className="avatar placeholder">
+                            <div className="bg-neutral text-neutral-content rounded-full w-10">
+                                <span>Me</span>
                             </div>
-                        )}
-                        <div className="relative">
-                            <textarea
-                                className="textarea textarea-bordered w-full pr-12 resize-none"
-                                placeholder="Add to the discussion..."
-                                rows="3"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                            ></textarea>
-                            <button
-                                type="submit"
-                                className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm"
-                                disabled={!newComment.trim()}
-                            >
-                                <Send className="w-4 h-4" />
-                            </button>
                         </div>
+                        <div className="flex-1">
+                            {replyTo && (
+                                <div className="text-xs text-base-content/60 mb-2 flex items-center justify-between bg-base-200 p-2 rounded">
+                                    <span>Replying to <b>{replyTo.author?.name}</b></span>
+                                    <button type="button" onClick={() => setReplyTo(null)} className="hover:text-error">Cancel</button>
+                                </div>
+                            )}
+                            <div className="relative">
+                                <textarea
+                                    className="textarea textarea-bordered w-full pr-12 resize-none"
+                                    placeholder="Add to the discussion..."
+                                    rows="3"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                ></textarea>
+                                <button
+                                    type="submit"
+                                    className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm"
+                                    disabled={!newComment.trim()}
+                                >
+                                    <Send className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                ) : (
+                    <div className="bg-base-200 p-6 rounded-lg text-center mb-8">
+                        <p className="text-base-content/70">
+                            Please <Link href={`/login?redirect=/community/${postId}`} className="link link-primary font-bold">login</Link> to join the discussion.
+                        </p>
                     </div>
-                </form>
+                )}
 
                 {/* Comments List */}
                 <div className="space-y-2">

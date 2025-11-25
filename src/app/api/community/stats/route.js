@@ -12,10 +12,25 @@ export async function GET() {
     // Get top contributors (users with highest reputation)
     const topContributors = await User.find().sort({ reputation: -1 }).limit(3).select('name avatar reputation');
     
-    // Get trending topics (tags from recent posts) - Simplified for now
-    // In a real app, this would be an aggregation pipeline
-    const trendingPosts = await CommunityPost.find().sort({ likes: -1 }).limit(3).select('title tags');
-    const trendingTopics = [...new Set(trendingPosts.flatMap(p => p.tags))].slice(0, 5);
+    // Get trending topics (tags from recent posts with high engagement)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const trendingTagsAggregation = await CommunityPost.aggregate([
+      { $match: { createdAt: { $gte: sevenDaysAgo } } },
+      { $unwind: '$tags' },
+      {
+        $group: {
+          _id: '$tags',
+          score: { $sum: { $add: ['$likes', '$commentsCount', 1] } }, // 1 point per post, plus likes and comments
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { score: -1 } },
+      { $limit: 5 }
+    ]);
+
+    const trendingTopics = trendingTagsAggregation.map(t => t._id);
 
     return NextResponse.json({
       success: true,
