@@ -10,9 +10,11 @@ export default function ToastProvider() {
             gutter={8}
             toastOptions={{
                 duration: 4000,
-                className: 'font-semibold shadow-xl',
+                className: 'font-semibold shadow-xl backdrop-blur-3xl',
                 style: {
-                    background: 'var(--fallback-b1,oklch(var(--b1)/1))',
+                    background: 'var(--fallback-b1,oklch(var(--b1)/0.6))',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
                     color: 'var(--fallback-bc,oklch(var(--bc)/1))',
                     border: '1px solid var(--fallback-b3,oklch(var(--b3)/0.2))',
                     padding: '16px',
