@@ -23,7 +23,7 @@ const Contact = () => {
                                 <div>
                                     <h3 className="text-lg font-semibold text-base-content mb-1">Email</h3>
                                     <p className="text-base-content/70">Our friendly team is here to help.</p>
-                                    <a href="mailto:support@crush.edu.ng" className="text-primary font-medium hover:underline">support@crush.edu.ng</a>
+                                    <a href="mailto:crusheduplaceintl@gmail.com" className="text-primary font-medium hover:underline">crusheduplaceintl@gmail.com</a>
                                 </div>
                             </div>
 
@@ -34,7 +34,7 @@ const Contact = () => {
                                 <div>
                                     <h3 className="text-lg font-semibold text-base-content mb-1">Office</h3>
                                     <p className="text-base-content/70">Come say hello at our office HQ.</p>
-                                    <p className="text-base-content/70">123 Education Way, Lagos, Nigeria</p>
+                                    <p className="text-base-content/70">Oduduwa Estate, Ile-Ife, Osun State</p>
                                 </div>
                             </div>
 
@@ -45,7 +45,7 @@ const Contact = () => {
                                 <div>
                                     <h3 className="text-lg font-semibold text-base-content mb-1">Phone</h3>
                                     <p className="text-base-content/70">Mon-Fri from 8am to 5pm.</p>
-                                    <a href="tel:+2348000000000" className="text-primary font-medium hover:underline">+234 800 000 0000</a>
+                                    <a href="tel:+2348030740550" className="text-primary font-medium hover:underline">+234 803 074 0550</a>
                                 </div>
                             </div>
                         </div>
