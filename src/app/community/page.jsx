@@ -10,15 +10,15 @@ export const metadata = {
 export default function CommunityPage() {
   return (
     <CommunityLayout>
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full">
         <HeroSection />
 
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Latest Discussions</h2>
-          <div className="join">
-            <button className="join-item btn btn-sm btn-active">Latest</button>
-            <button className="join-item btn btn-sm">Popular</button>
-            <button className="join-item btn btn-sm">Unsolved</button>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold">Latest Discussions</h2>
+          <div className="join join-horizontal w-full sm:w-auto">
+            <button className="join-item btn btn-sm flex-1 sm:flex-none btn-active">Latest</button>
+            <button className="join-item btn btn-sm flex-1 sm:flex-none">Popular</button>
+            <button className="join-item btn btn-sm flex-1 sm:flex-none">Unsolved</button>
           </div>
         </div>
 
