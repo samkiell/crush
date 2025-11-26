@@ -16,32 +16,32 @@ const PostCard = ({ post }) => {
 
     return (
         <div className="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-200 mb-4 border border-base-200">
-            <div className="card-body p-5">
+            <div className="card-body p-4 sm:p-5">
                 {/* Header: Author & Meta */}
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                        <div className="avatar placeholder">
-                            <div className="bg-neutral text-neutral-content rounded-full w-10">
+                <div className="flex items-start sm:items-center justify-between mb-3 gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <div className="avatar placeholder shrink-0">
+                            <div className="bg-neutral text-neutral-content rounded-full w-8 sm:w-10">
                                 {post.author?.avatar ? (
                                     <img src={post.author.avatar} alt={post.author.name} />
                                 ) : (
-                                    <span className="text-lg">{post.author?.name?.charAt(0) || 'U'}</span>
+                                    <span className="text-base sm:text-lg">{post.author?.name?.charAt(0) || 'U'}</span>
                                 )}
                             </div>
                         </div>
-                        <div>
-                            <h4 className="font-semibold text-sm flex items-center gap-1">
+                        <div className="min-w-0">
+                            <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-1 truncate">
                                 {post.author?.name || 'Anonymous'}
                                 {post.author?.badges?.includes('Mentor') && (
                                     <span className="badge badge-primary badge-xs">Mentor</span>
                                 )}
                             </h4>
-                            <p className="text-xs text-base-content/60">
+                            <p className="text-xs text-base-content/60 truncate">
                                 {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                             </p>
                         </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0 flex-wrap justify-end">
                         {post.isQuestion && (
                             <span className={`badge ${post.isSolved ? 'badge-success' : 'badge-warning'} badge-sm`}>
                                 {post.isSolved ? 'Solved' : 'Question'}
@@ -53,10 +53,10 @@ const PostCard = ({ post }) => {
 
                 {/* Content */}
                 <Link href={`/community/${post._id}`} className="group">
-                    <h3 className="card-title text-lg mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="card-title text-base sm:text-lg mb-2 group-hover:text-primary transition-colors">
                         {post.title}
                     </h3>
-                    <p className="text-base-content/80 line-clamp-3 text-sm">
+                    <p className="text-base-content/80 line-clamp-2 sm:line-clamp-3 text-sm">
                         {post.content}
                     </p>
                 </Link>
@@ -75,8 +75,8 @@ const PostCard = ({ post }) => {
                 <div className="divider my-2"></div>
 
                 {/* Footer: Actions & Stats */}
-                <div className="flex items-center justify-between text-sm text-base-content/70">
-                    <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-base-content/70">
+                    <div className="flex gap-3 sm:gap-4">
                         <button
                             onClick={handleLike}
                             className="flex items-center gap-1 hover:text-primary transition-colors"
@@ -94,7 +94,7 @@ const PostCard = ({ post }) => {
                         </div>
                     </div>
 
-                    <Link href={`/community/${post._id}`} className="btn btn-sm btn-ghost text-primary">
+                    <Link href={`/community/${post._id}`} className="btn btn-sm btn-ghost text-primary w-full sm:w-auto">
                         Join Discussion
                     </Link>
                 </div>
