@@ -47,8 +47,7 @@ export async function POST(req, { params }) {
   const user = await getUserFromRequest(req);
   
   // IMPORTANT: Await params in Next.js 14+
-  const { id } = await params;
-  const { id } = params; // Post ID
+  const { id } = await params; // Post ID
 
   if (!user) {
     return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
