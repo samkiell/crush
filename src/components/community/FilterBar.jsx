@@ -22,7 +22,7 @@ const FilterBar = () => {
     };
 
     return (
-        <div className="flex items-center gap-2 bg-gray-100 dark:bg-neutral-800 p-1.5 rounded-2xl shadow-sm shadow-black/5">
+        <div className="flex items-center gap-2 bg-base-200 p-1.5 rounded-2xl shadow-sm shadow-black/5">
             {filters.map((filter) => {
                 const isActive = currentSort === filter.id;
                 return (
@@ -32,8 +32,8 @@ const FilterBar = () => {
                         className={`
               px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200
               ${isActive
-                                ? 'bg-white dark:bg-neutral-900 text-primary shadow-sm'
-                                : 'text-gray-600 dark:text-gray-400 hover:text-base-content hover:bg-white/50 dark:hover:bg-neutral-700'
+                                ? 'bg-base-100 text-primary shadow-sm'
+                                : 'text-base-content/60 hover:text-base-content hover:bg-base-100/50'
                             }
             `}
                     >
