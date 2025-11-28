@@ -58,6 +58,7 @@ const Header = () => {
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Exams', href: '/exam', icon: BookOpen },
     { name: 'Questions', href: '/questions', icon: FileQuestion },
+    { name: 'Community', href: '/community', icon: Users },
     { name: 'Profile', href: '/profile', icon: User },
   ];
 
