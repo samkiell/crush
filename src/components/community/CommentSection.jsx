@@ -36,24 +36,24 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                                     </span>
                                 ))}
                             </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                            <span className="text-xs text-base-content/60 font-medium">
                                 {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                             </span>
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
+                        <p className="text-sm text-base-content/80 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
                     </div>
 
                     <div className="flex items-center gap-4 mt-2 ml-2">
                         <button
                             onClick={() => onLike(comment._id)}
-                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                            className="text-xs font-semibold text-base-content/60 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200"
                         >
                             <ThumbsUp className="w-3.5 h-3.5" />
                             {comment.likes > 0 ? `${comment.likes} Likes` : 'Like'}
                         </button>
                         <button
                             onClick={() => onReply(comment)}
-                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                            className="text-xs font-semibold text-base-content/60 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200"
                         >
                             <Reply className="w-3.5 h-3.5" /> Reply
                         </button>

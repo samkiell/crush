@@ -55,7 +55,7 @@ const PostCard = ({ post }) => {
                                     </span>
                                 )}
                             </h4>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                            <p className="text-xs text-base-content/60 font-medium">
                                 {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                             </p>
                         </div>
@@ -83,7 +83,7 @@ const PostCard = ({ post }) => {
                     <h3 className="text-xl font-semibold text-base-content mb-2 leading-tight group-hover:text-primary transition-colors">
                         {post.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4">
+                    <p className="text-base-content/70 text-sm leading-relaxed line-clamp-2 mb-4">
                         {post.content}
                     </p>
                 </div>
@@ -112,7 +112,7 @@ const PostCard = ({ post }) => {
                     <div className="flex gap-4">
                         <button
                             onClick={handleLike}
-                            className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition-colors group/like"
+                            className="flex items-center gap-2 text-sm font-medium text-base-content/70 hover:text-primary transition-colors group/like"
                         >
                             <div className="p-2 rounded-full bg-base-200 group-hover/like:bg-primary/10 transition-colors">
                                 <ThumbsUp className="w-4 h-4" />
@@ -120,7 +120,7 @@ const PostCard = ({ post }) => {
                             <span>{post.likes}</span>
                         </button>
 
-                        <div className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-2 text-sm font-medium text-base-content/70">
                             <div className="p-2 rounded-full bg-base-200">
                                 <MessageSquare className="w-4 h-4" />
                             </div>

@@ -116,7 +116,7 @@ const PostDetails = ({ postId }) => {
                                         </span>
                                     ))}
                                 </h4>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                <p className="text-sm text-base-content/60 font-medium">
                                     Posted {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                                 </p>
                             </div>
@@ -142,7 +142,7 @@ const PostDetails = ({ postId }) => {
                     <h1 className="text-2xl sm:text-4xl font-bold mb-6 text-base-content leading-tight">
                         {post.title}
                     </h1>
-                    <div className="prose prose-lg max-w-none mb-8 text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <div className="prose prose-lg max-w-none mb-8 text-base-content/80 leading-relaxed">
                         <p className="whitespace-pre-wrap text-base sm:text-lg">{post.content}</p>
                     </div>
 
@@ -168,16 +168,16 @@ const PostDetails = ({ postId }) => {
                         <div className="flex flex-row items-center flex-wrap gap-3 sm:gap-4">
                             <button
                                 onClick={handleLike}
-                                className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-600 dark:text-gray-400 hover:text-primary transition-all duration-200 group"
+                                className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl hover:bg-base-200 text-base-content/70 hover:text-primary transition-all duration-200 group"
                             >
                                 <ThumbsUp className="w-5 h-5" />
                                 <span className="font-medium">{post.likes} Likes</span>
                             </button>
-                            <div className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
+                            <div className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-base-content/70 cursor-default">
                                 <MessageSquare className="w-5 h-5" />
                                 <span className="font-medium">{post.commentsCount} Comments</span>
                             </div>
-                            <div className="hidden sm:flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
+                            <div className="hidden sm:flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-base-content/70 cursor-default">
                                 <Eye className="w-5 h-5" />
                                 <span className="font-medium">{post.views} Views</span>
                             </div>
