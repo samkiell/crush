@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, MessageSquare, TrendingUp, Award, Search } from 'lucide-react';
-import { useEffect } from 'react';
+import { Users, MessageSquare, TrendingUp, Award, Search, Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStats, selectCommunityStats } from '@/store/slices/communitySlice';
 
 const CommunityLayout = ({ children }) => {
     const pathname = usePathname();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navItems = [
         { label: 'Feed', href: '/community', icon: MessageSquare },
@@ -24,126 +25,167 @@ const CommunityLayout = ({ children }) => {
     }, [dispatch]);
 
     return (
-        <div className="drawer">
-            <input id="community-drawer" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content flex flex-col min-h-screen bg-base-200">
-                {/* Top Navigation */}
-                <div className="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-                    <div className="flex-none lg:hidden">
-                        <label htmlFor="community-drawer" aria-label="open sidebar" className="btn btn-square btn-ghost">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                        </label>
-                    </div>
-                    <div className="flex-1">
-                        <Link href="/community" className="btn btn-ghost text-xl font-bold text-primary">
+        <div className="min-h-screen bg-base-200/50 relative">
+            {/* Background Gradients */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[100px]"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary/5 blur-[100px]"></div>
+            </div>
+
+            {/* Top Navigation */}
+            <div className="sticky top-0 z-50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-sm">
+                <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <button
+                            className="lg:hidden btn btn-ghost btn-circle btn-sm"
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        >
+                            {isMobileMenuOpen ? <X /> : <Menu />}
+                        </button>
+                        <Link href="/community" className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
                             Community
                         </Link>
                     </div>
-                    <div className="flex-none gap-2 flex items-center">
-                        <div className="form-control hidden md:block">
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Search discussions..."
-                                    className="input input-bordered w-auto md:w-64 pl-10 input-sm md:input-md"
-                                />
-                                <Search className="w-4 h-4 absolute left-3 top-3 md:top-3.5 text-base-content/50" />
-                            </div>
+
+                    <div className="flex-1 max-w-xl hidden md:block">
+                        <div className="relative group">
+                            <input
+                                type="text"
+                                placeholder="Search discussions..."
+                                className="w-full bg-base-200/50 border-transparent focus:bg-white focus:border-primary rounded-2xl py-2.5 pl-11 pr-4 transition-all duration-200 shadow-inner"
+                            />
+                            <Search className="w-5 h-5 absolute left-3.5 top-3 text-base-content/40 group-focus-within:text-primary transition-colors" />
                         </div>
-                        <Link href="/community/create" className="btn btn-primary btn-sm md:btn-md whitespace-nowrap">
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href="/community/create"
+                            className="btn btn-primary rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 border-none"
+                        >
                             New Post
                         </Link>
                     </div>
                 </div>
-
-                <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
-                    {/* Sidebar (Desktop) */}
-                    <aside className="hidden lg:block w-64 shrink-0">
-                        <div className="card bg-base-100 shadow-sm sticky top-20">
-                            <div className="card-body p-5">
-                                <SidebarContent navItems={navItems} pathname={pathname} />
-                            </div>
-                        </div>
-                    </aside>
-
-                    {/* Main Content */}
-                    <main className="flex-1 min-w-0 max-w-4xl">
-                        {children}
-                    </main>
-
-                    {/* Right Sidebar (Trending/Stats) */}
-                    <aside className="hidden xl:block w-80 shrink-0">
-                        <div className="card bg-base-100 shadow-sm sticky top-20">
-                            <div className="card-body p-5">
-                                <h3 className="font-bold text-lg flex items-center gap-2 mb-4">
-                                    <TrendingUp className="w-5 h-5 text-secondary" />
-                                    Trending
-                                </h3>
-                                <ul className="list-none space-y-3">
-                                    {trendingTopics && trendingTopics.length > 0 ? (
-                                        trendingTopics.map((topic, index) => (
-                                            <li key={index} className="text-sm hover:underline cursor-pointer">
-                                                <Link href={`/community?search=${topic}`} className="block">
-                                                    <span className="font-medium">#{topic}</span>
-                                                </Link>
-                                            </li>
-                                        ))
-                                    ) : (
-                                        <li className="text-sm text-base-content/60">No trending topics yet.</li>
-                                    )}
-                                </ul>
-                            </div>
-                        </div>
-                    </aside>
-                </div>
             </div>
-            <div className="drawer-side z-50">
-                <label htmlFor="community-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <div className="menu p-4 w-80 min-h-full bg-base-100 text-base-content overflow-y-auto">
-                    <SidebarContent navItems={navItems} pathname={pathname} />
-                </div>
+
+            <div className="container mx-auto max-w-7xl px-4 py-8 flex flex-col lg:flex-row gap-8">
+                {/* Sidebar (Desktop) */}
+                <aside className={`
+                    fixed inset-y-0 left-0 z-40 w-72 bg-base-100/95 backdrop-blur-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:bg-transparent lg:backdrop-blur-none lg:w-64 shrink-0
+                    ${isMobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:shadow-none'}
+                `}>
+                    <div className="h-full overflow-y-auto p-6 lg:p-0 lg:sticky lg:top-24 scrollbar-none">
+                        <div className="lg:bg-white/40 lg:dark:bg-neutral-900/40 lg:backdrop-blur-md lg:rounded-3xl lg:p-6 lg:border lg:border-white/20 lg:dark:border-white/5">
+                            <SidebarContent navItems={navItems} pathname={pathname} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+                        </div>
+                    </div>
+                </aside>
+
+                {/* Overlay for mobile */}
+                {isMobileMenuOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    ></div>
+                )}
+
+                {/* Main Content */}
+                <main className="flex-1 min-w-0">
+                    {children}
+                </main>
+
+                {/* Right Sidebar (Trending/Stats) */}
+                <aside className="hidden xl:block w-80 shrink-0">
+                    <div className="sticky top-24 space-y-6">
+                        <div className="bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md rounded-3xl p-6 border border-white/20 dark:border-white/5 shadow-sm">
+                            <h3 className="font-bold text-lg flex items-center gap-2 mb-4 text-base-content">
+                                <TrendingUp className="w-5 h-5 text-secondary" />
+                                Trending Topics
+                            </h3>
+                            <ul className="space-y-2">
+                                {trendingTopics && trendingTopics.length > 0 ? (
+                                    trendingTopics.map((topic, index) => (
+                                        <li key={index}>
+                                            <Link
+                                                href={`/community?search=${topic}`}
+                                                className="block p-3 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors group"
+                                            >
+                                                <span className="font-medium text-base-content/80 group-hover:text-primary transition-colors">#{topic}</span>
+                                            </Link>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="text-sm text-base-content/60 italic">No trending topics yet.</li>
+                                )}
+                            </ul>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-primary to-secondary rounded-3xl p-6 text-white shadow-lg shadow-primary/20 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700"></div>
+                            <h3 className="font-bold text-xl mb-2 relative z-10">Ace Your Exams!</h3>
+                            <p className="text-white/90 text-sm mb-4 relative z-10">Get access to exclusive study materials and expert mentors.</p>
+                            <Link
+                                href="/pricing"
+                                className="btn btn-sm bg-white/20 hover:bg-white/30 border-none text-white w-full backdrop-blur-md relative z-10"
+                            >
+                                Go Premium
+                            </Link>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </div>
     );
 };
 
-const SidebarContent = ({ navItems, pathname }) => (
-    <>
-        <ul className="menu w-full rounded-box p-0 space-y-1">
-            {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname === item.href;
-                return (
-                    <li key={item.href}>
-                        <Link href={item.href} className={isActive ? 'active' : ''}>
-                            <Icon className="w-5 h-5" />
-                            {item.label}
+const SidebarContent = ({ navItems, pathname, setIsMobileMenuOpen }) => (
+    <div className="space-y-8">
+        <div>
+            <h3 className="font-bold text-xs uppercase tracking-wider text-base-content/40 mb-4 px-3">Menu</h3>
+            <ul className="space-y-1">
+                {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href;
+                    return (
+                        <li key={item.href}>
+                            <Link
+                                href={item.href}
+                                className={`
+                                    flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 font-medium
+                                    ${isActive
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                        : 'text-base-content/70 hover:bg-base-200/50 hover:text-primary'
+                                    }
+                                `}
+                                onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+                            >
+                                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
+                                {item.label}
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
+
+        <div>
+            <h3 className="font-bold text-xs uppercase tracking-wider text-base-content/40 mb-4 px-3">Categories</h3>
+            <ul className="space-y-1">
+                {['General', 'Exam Help', 'Study Tips', 'Career'].map((cat) => (
+                    <li key={cat}>
+                        <Link
+                            href={`/community?category=${cat}`}
+                            className="block px-4 py-2.5 rounded-xl text-sm font-medium text-base-content/70 hover:bg-base-200/50 hover:text-primary transition-colors"
+                            onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+                        >
+                            {cat}
                         </Link>
                     </li>
-                );
-            })}
-        </ul>
-
-        <div className="divider my-3"></div>
-
-        <h3 className="font-semibold text-sm px-4 mb-3 text-base-content/70">Categories</h3>
-        <ul className="menu w-full rounded-box text-sm p-0 space-y-1">
-            <li><Link href="/community?category=General">General</Link></li>
-            <li><Link href="/community?category=Exam Help">Exam Help</Link></li>
-            <li><Link href="/community?category=Study Tips">Study Tips</Link></li>
-            <li><Link href="/community?category=Career">Career</Link></li>
-        </ul>
-
-        <div className="card bg-primary text-primary-content shadow-sm mt-6">
-            <div className="card-body p-4">
-                <h3 className="font-bold text-base sm:text-lg">Ace Your Exams!</h3>
-                <p className="text-xs sm:text-sm opacity-90 mb-3">Get access to exclusive study materials and expert mentors.</p>
-                <Link href="/pricing" className="btn btn-sm btn-white bg-base-100 text-primary hover:bg-base-200 border-none w-full">
-                    Go Premium
-                </Link>
-            </div>
+                ))}
+            </ul>
         </div>
-    </>
+    </div>
 );
 
 export default CommunityLayout;
