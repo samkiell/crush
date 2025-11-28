@@ -26,7 +26,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                     </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                    <div className="bg-gray-50 dark:bg-neutral-800 rounded-2xl rounded-tl-none p-4 px-5 shadow-sm border border-gray-100 dark:border-neutral-700">
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-2xl rounded-tl-none p-4 px-5 shadow-sm border border-border/50 dark:border-neutral-700">
                         <div className="flex items-center justify-between gap-4 mb-2">
                             <span className="font-semibold text-sm text-base-content flex items-center gap-2">
                                 {comment.author?.name || 'Anonymous'}
@@ -69,7 +69,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
 
             {/* Recursive Replies */}
             {replies.length > 0 && (
-                <div className="ml-8 sm:ml-14 border-l-2 border-gray-200 dark:border-neutral-800 pl-6 mt-4 space-y-4">
+                <div className="ml-8 sm:ml-14 border-l-2 border-border/50 dark:border-neutral-800 pl-6 mt-4 space-y-4">
                     {replies.map(reply => (
                         <CommentItem
                             key={reply._id}

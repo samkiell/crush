@@ -7,6 +7,7 @@ import PWAInstallPrompt from "../components/PWAInstallPrompt";
 import OfflineIndicator from "../components/OfflineIndicator";
 import Header from "../components/Header";
 import AuthInitializer from "../components/AuthInitializer";
+import MinimalFooter from "../components/MinimalFooter";
 import Loading from "./loading";
 import { Suspense } from "react";
 
@@ -56,7 +57,7 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="D2C" />
       </head>
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased flex flex-col min-h-screen`}>
         <OfflineIndicator />
         <ThemeWrapper>
           <ReduxProvider>
@@ -65,6 +66,7 @@ export default function RootLayout({ children }) {
             <Suspense fallback={<Loading />}>
               {children}
             </Suspense>
+            <MinimalFooter />
             <ToastProvider />
             <PWAInstallPrompt />
           </ReduxProvider>
