@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, MessageSquare, TrendingUp, Award, Search, Menu, X } from 'lucide-react';
+import { Users, MessageSquare, TrendingUp, Award, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStats, selectCommunityStats } from '@/store/slices/communitySlice';
+import SearchBar from './SearchBar';
 
 const CommunityLayout = ({ children }) => {
     const pathname = usePathname();
@@ -47,15 +48,9 @@ const CommunityLayout = ({ children }) => {
                         </Link>
                     </div>
 
+                    {/* Desktop Search */}
                     <div className="flex-1 max-w-xl hidden md:block">
-                        <div className="relative group">
-                            <input
-                                type="text"
-                                placeholder="Search discussions..."
-                                className="w-full bg-base-200/50 border-transparent focus:bg-white focus:border-primary rounded-2xl py-2.5 pl-11 pr-4 transition-all duration-200 shadow-inner"
-                            />
-                            <Search className="w-5 h-5 absolute left-3.5 top-3 text-base-content/40 group-focus-within:text-primary transition-colors" />
-                        </div>
+                        <SearchBar />
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -66,6 +61,11 @@ const CommunityLayout = ({ children }) => {
                             New Post
                         </Link>
                     </div>
+                </div>
+
+                {/* Mobile Search - Below nav */}
+                <div className="md:hidden border-t border-gray-200 dark:border-neutral-800 px-4 py-3">
+                    <SearchBar />
                 </div>
             </div>
 
