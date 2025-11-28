@@ -5,7 +5,7 @@ import User from '@/lib/models/User';
 
 export async function GET(req, { params }) {
   await dbConnect();
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const post = await CommunityPost.findById(id).populate('author', 'name avatar badges reputation');

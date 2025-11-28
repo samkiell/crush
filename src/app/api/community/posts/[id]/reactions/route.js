@@ -30,6 +30,9 @@ export async function POST(req, { params }) {
   await dbConnect();
   const user = await getUserFromRequest(req);
   
+  // IMPORTANT: Await params in Next.js 14+
+  const { id } = await params;
+  
   // IMPORTANT: params.id is the POST ID from the URL, not the target ID
   // We need to get targetId from the request body
   const body = await req.json();

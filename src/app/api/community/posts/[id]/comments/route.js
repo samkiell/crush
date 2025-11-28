@@ -45,6 +45,9 @@ export async function GET(req, { params }) {
 export async function POST(req, { params }) {
   await dbConnect();
   const user = await getUserFromRequest(req);
+  
+  // IMPORTANT: Await params in Next.js 14+
+  const { id } = await params;
   const { id } = params; // Post ID
 
   if (!user) {
