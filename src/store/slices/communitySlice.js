@@ -31,9 +31,23 @@ export const fetchPostDetails = createAsyncThunk(
 
 export const createPost = createAsyncThunk(
   'community/createPost',
-  async (postData, { rejectWithValue }) => {
+  async (postData, { rejectWithValue, getState }) => {
     try {
-      const response = await axios.post('/api/community/posts', postData);
+      const state = getState();
+      const token = state.auth.token;
+
+      if (!token) {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return rejectWithValue('Authentication required');
+      }
+
+      const response = await axios.post('/api/community/posts', postData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || error.message);
