@@ -1,3 +1,5 @@
+'use client';
+
 import CommunityLayout from '@/components/community/CommunityLayout';
 import HeroSection from '@/components/community/HeroSection';
 import Feed from '@/components/community/Feed';
@@ -5,11 +7,6 @@ import FilterBar from '@/components/community/FilterBar';
 import SearchBar from '@/components/community/SearchBar';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-
-export const metadata = {
-  title: 'Community | CrushEdu',
-  description: 'Connect with fellow learners, ask questions, and share knowledge.',
-};
 
 export default function CommunityPage() {
   return (
