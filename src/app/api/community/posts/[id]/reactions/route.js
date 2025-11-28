@@ -7,7 +7,16 @@ import User from '@/lib/models/User';
 import jwt from 'jsonwebtoken';
 
 const getUserFromRequest = async (req) => {
-  const token = req.cookies.get('token')?.value;
+  let token = req.cookies.get('token')?.value;
+
+  // Check Authorization header if no cookie token
+  if (!token) {
+    const authHeader = req.headers.get('authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
+
   if (!token) return null;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

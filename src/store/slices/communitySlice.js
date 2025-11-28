@@ -70,11 +70,25 @@ export const fetchComments = createAsyncThunk(
 
 export const addComment = createAsyncThunk(
   'community/addComment',
-  async ({ postId, content, parentComment }, { rejectWithValue }) => {
+  async ({ postId, content, parentComment }, { rejectWithValue, getState }) => {
     try {
+      const state = getState();
+      const token = state.auth.token;
+
+      if (!token) {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return rejectWithValue('Authentication required');
+      }
+
       const response = await axios.post(`/api/community/posts/${postId}/comments`, {
         content,
         parentComment,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       return response.data.data;
     } catch (error) {
@@ -85,11 +99,25 @@ export const addComment = createAsyncThunk(
 
 export const toggleReaction = createAsyncThunk(
   'community/toggleReaction',
-  async ({ id, targetType, type }, { rejectWithValue }) => {
+  async ({ id, targetType, type }, { rejectWithValue, getState }) => {
     try {
+      const state = getState();
+      const token = state.auth.token;
+
+      if (!token) {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return rejectWithValue('Authentication required');
+      }
+
       const response = await axios.post(`/api/community/posts/${id}/reactions`, {
         targetType,
         type,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       return { id, targetType, type, action: response.data.action };
     } catch (error) {
@@ -112,13 +140,27 @@ export const fetchStats = createAsyncThunk(
 
 export const reportContent = createAsyncThunk(
   'community/reportContent',
-  async ({ targetType, targetId, reason, description }, { rejectWithValue }) => {
+  async ({ targetType, targetId, reason, description }, { rejectWithValue, getState }) => {
     try {
+      const state = getState();
+      const token = state.auth.token;
+
+      if (!token) {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return rejectWithValue('Authentication required');
+      }
+
       const response = await axios.post('/api/community/reports', {
         targetType,
         targetId,
         reason,
         description,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       return response.data.data;
     } catch (error) {
@@ -265,5 +307,6 @@ export const selectCommunityLoading = (state) => state.community.loading;
 export const selectCommunityError = (state) => state.community.error;
 export const selectCommunityStats = (state) => state.community.stats;
 export const selectCommunityPagination = (state) => state.community.pagination;
+export const selectActionLoading = (state) => state.community.actionLoading;
 
 export default communitySlice.reducer;
