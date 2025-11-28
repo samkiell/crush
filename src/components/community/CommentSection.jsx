@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Reply, Send, Flag } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
-
 import ReportModal from './ReportModal';
+import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
 
 const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
     const replies = allComments.filter(c => c.parentComment === comment._id);
@@ -16,8 +16,8 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
     return (
         <div className="mb-6 group">
             <div className="flex gap-4">
-                <div className="avatar placeholder mt-1">
-                    <div className="bg-gradient-to-br from-neutral to-neutral-focus text-neutral-content rounded-2xl w-10 h-10 shadow-sm">
+                <div className="avatar placeholder mt-1 flex-shrink-0">
+                    <div className="bg-gradient-to-br from-gray-400 to-gray-500 text-white rounded-2xl w-10 h-10 shadow-sm">
                         {comment.author?.avatar ? (
                             <img src={comment.author.avatar} alt={comment.author.name} className="rounded-2xl" />
                         ) : (
@@ -26,38 +26,40 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                     </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                    <div className="bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm rounded-[1.5rem] rounded-tl-none p-4 px-6 inline-block min-w-[200px] shadow-sm border border-white/20 dark:border-white/5">
+                    <div className="bg-gray-50 dark:bg-neutral-800 rounded-2xl rounded-tl-none p-4 px-5 shadow-sm border border-gray-100 dark:border-neutral-700">
                         <div className="flex items-center justify-between gap-4 mb-2">
-                            <span className="font-bold text-sm text-base-content flex items-center gap-2">
+                            <span className="font-semibold text-sm text-base-content flex items-center gap-2">
                                 {comment.author?.name || 'Anonymous'}
                                 {comment.author?.badges?.map((badge, idx) => (
-                                    <span key={idx} className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">{badge}</span>
+                                    <span key={idx} className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+                                        {badge}
+                                    </span>
                                 ))}
                             </span>
-                            <span className="text-xs text-base-content/40 font-medium">
+                            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                                 {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                             </span>
                         </div>
-                        <p className="text-sm text-base-content/80 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
                     </div>
 
                     <div className="flex items-center gap-4 mt-2 ml-2">
                         <button
                             onClick={() => onLike(comment._id)}
-                            className="text-xs font-bold text-base-content/50 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200/50"
+                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
                         >
                             <ThumbsUp className="w-3.5 h-3.5" />
                             {comment.likes > 0 ? `${comment.likes} Likes` : 'Like'}
                         </button>
                         <button
                             onClick={() => onReply(comment)}
-                            className="text-xs font-bold text-base-content/50 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200/50"
+                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
                         >
                             <Reply className="w-3.5 h-3.5" /> Reply
                         </button>
                         <button
                             onClick={() => onReport(comment._id)}
-                            className="text-xs font-bold text-base-content/50 hover:text-error transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 ml-auto opacity-0 group-hover:opacity-100"
+                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-red-600 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 ml-auto opacity-0 group-hover:opacity-100"
                         >
                             <Flag className="w-3.5 h-3.5" /> Report
                         </button>
@@ -67,7 +69,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
 
             {/* Recursive Replies */}
             {replies.length > 0 && (
-                <div className="ml-8 sm:ml-14 border-l-2 border-base-content/5 pl-6 mt-4 space-y-4">
+                <div className="ml-8 sm:ml-14 border-l-2 border-gray-200 dark:border-neutral-800 pl-6 mt-4 space-y-4">
                     {replies.map(reply => (
                         <CommentItem
                             key={reply._id}
@@ -92,6 +94,7 @@ const CommentSection = ({ postId }) => {
     const [replyTo, setReplyTo] = useState(null);
     const [reportModalOpen, setReportModalOpen] = useState(false);
     const [reportTargetId, setReportTargetId] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         if (postId) {
@@ -109,18 +112,31 @@ const CommentSection = ({ postId }) => {
         e.preventDefault();
         if (!newComment.trim()) return;
 
-        await dispatch(addComment({
-            postId,
-            content: newComment,
-            parentComment: replyTo?._id || null,
-        }));
+        setSubmitting(true);
+        try {
+            await dispatch(addComment({
+                postId,
+                content: newComment,
+                parentComment: replyTo?._id || null,
+            })).unwrap();
 
-        setNewComment('');
-        setReplyTo(null);
+            setNewComment('');
+            setReplyTo(null);
+            showSuccessToast('Comment posted!');
+        } catch (error) {
+            showErrorToast(error);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
-    const handleLike = (commentId) => {
-        dispatch(toggleReaction({ id: commentId, targetType: 'Comment', type: 'like' }));
+    const handleLike = async (commentId) => {
+        try {
+            await dispatch(toggleReaction({ id: commentId, targetType: 'Comment', type: 'like' })).unwrap();
+            showSuccessToast('Reaction updated');
+        } catch (error) {
+            showErrorToast(error);
+        }
     };
 
     const handleReport = (commentId) => {
@@ -128,7 +144,7 @@ const CommentSection = ({ postId }) => {
         setReportModalOpen(true);
     };
 
-    // Filter top-level comments (simplified for now, ideally recursive)
+    // Filter top-level comments
     const rootComments = comments.filter(c => !c.parentComment);
 
     return (
@@ -137,32 +153,36 @@ const CommentSection = ({ postId }) => {
 
             {/* Comment Input */}
             {isAuthenticated ? (
-                <div className="bg-white/60 dark:bg-neutral-900/60 backdrop-blur-xl rounded-[2rem] p-6 shadow-lg shadow-black/5 border border-white/20 dark:border-white/5 mb-10">
+                <div className="bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow-sm shadow-black/5 border border-gray-100 dark:border-neutral-800 mb-10">
                     <form onSubmit={handleSubmit} className="flex gap-4">
-                        <div className="avatar placeholder pt-1">
-                            <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-md">
+                        <div className="avatar placeholder pt-1 flex-shrink-0">
+                            <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-sm">
                                 <span>Me</span>
                             </div>
                         </div>
                         <div className="flex-1">
                             {replyTo && (
-                                <div className="text-xs font-medium text-base-content/60 mb-2 flex items-center justify-between bg-base-200/50 p-2 px-3 rounded-xl border border-base-content/5">
-                                    <span>Replying to <b className="text-primary">{replyTo.author?.name}</b></span>
-                                    <button type="button" onClick={() => setReplyTo(null)} className="hover:text-error transition-colors">Cancel</button>
+                                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 flex items-center justify-between bg-gray-100 dark:bg-neutral-800 p-2 px-3 rounded-xl border border-gray-200 dark:border-neutral-700">
+                                    <span>
+                                        Replying to <b className="text-primary">{replyTo.author?.name}</b>
+                                    </span>
+                                    <button type="button" onClick={() => setReplyTo(null)} className="hover:text-red-600 transition-colors">
+                                        Cancel
+                                    </button>
                                 </div>
                             )}
                             <div className="relative group">
                                 <textarea
-                                    className="textarea w-full bg-base-200/30 focus:bg-white dark:focus:bg-black/20 border-transparent focus:border-primary rounded-2xl pr-12 resize-none text-base transition-all duration-200 min-h-[80px] shadow-inner"
+                                    className="textarea w-full bg-gray-50 dark:bg-neutral-800 focus:bg-white dark:focus:bg-neutral-900 border-gray-200 dark:border-neutral-700 focus:border-primary rounded-xl pr-12 resize-none text-base transition-all min-h-[80px]"
                                     placeholder="Add to the discussion..."
                                     rows="3"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
-                                ></textarea>
+                                />
                                 <button
                                     type="submit"
-                                    className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 border-none transition-all duration-200 hover:scale-110"
-                                    disabled={!newComment.trim()}
+                                    className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm shadow-sm hover:shadow-lg border-none transition-all duration-200 hover:scale-110"
+                                    disabled={!newComment.trim() || submitting}
                                 >
                                     <Send className="w-4 h-4" />
                                 </button>
@@ -171,16 +191,20 @@ const CommentSection = ({ postId }) => {
                     </form>
                 </div>
             ) : (
-                <div className="bg-base-200/50 backdrop-blur-sm p-8 rounded-3xl text-center mb-10 border border-base-content/5">
-                    <p className="text-base-content/70 font-medium">
-                        Please <Link href={`/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">login</Link> to join the discussion.
+                <div className="bg-gray-50 dark:bg-neutral-800 p-8 rounded-2xl text-center mb-10 border border-gray-200 dark:border-neutral-700">
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">
+                        Please{' '}
+                        <Link href={`/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">
+                            login
+                        </Link>{' '}
+                        to join the discussion.
                     </p>
                 </div>
             )}
 
             {/* Comments List */}
             <div className="space-y-2">
-                {rootComments.map((comment) => (
+                {rootComments.map(comment => (
                     <CommentItem
                         key={comment._id}
                         comment={comment}
@@ -193,10 +217,10 @@ const CommentSection = ({ postId }) => {
 
                 {comments.length === 0 && (
                     <div className="text-center py-10">
-                        <div className="bg-base-200/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-base-content/30">
+                        <div className="bg-gray-100 dark:bg-neutral-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
                             <MessageSquare className="w-8 h-8" />
                         </div>
-                        <p className="text-base-content/50 font-medium">No comments yet. Be the first to start the conversation!</p>
+                        <p className="text-gray-600 dark:text-gray-400 font-medium">No comments yet. Be the first to start the conversation!</p>
                     </div>
                 )}
             </div>
