@@ -5,3 +5,4 @@ const SkeletonPostCard = () => {
 };
 
 export default SkeletonPostCard;
+    
