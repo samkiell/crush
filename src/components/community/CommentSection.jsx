@@ -201,7 +201,7 @@ const CommentSection = ({ postId }) => {
                 </div>
             ) : (
                 <div className="bg-base-200 p-8 rounded-2xl text-center mb-10 border border-base-300">
-                    <p className="text-gray-700 dark:text-gray-300 font-medium">
+                    <p className="text-base-content/70 font-medium">
                         Please{' '}
                         <Link href={`/auth/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">
                             login
