@@ -26,7 +26,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                     </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-2xl rounded-tl-none p-4 px-5 shadow-sm border border-border/50 dark:border-neutral-700">
+                    <div className="bg-base-200 rounded-2xl rounded-tl-none p-4 px-5 shadow-sm border border-base-300">
                         <div className="flex items-center justify-between gap-4 mb-2">
                             <span className="font-semibold text-sm text-base-content flex items-center gap-2">
                                 {comment.author?.name || 'Anonymous'}
@@ -69,7 +69,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
 
             {/* Recursive Replies */}
             {replies.length > 0 && (
-                <div className="ml-8 sm:ml-14 border-l-2 border-border/50 dark:border-neutral-800 pl-6 mt-4 space-y-4">
+                <div className="ml-8 sm:ml-14 border-l-2 border-base-300 pl-6 mt-4 space-y-4">
                     {replies.map(reply => (
                         <CommentItem
                             key={reply._id}
@@ -162,7 +162,7 @@ const CommentSection = ({ postId }) => {
 
             {/* Comment Input */}
             {isAuthenticated ? (
-                <div className="bg-card dark:bg-neutral-900 rounded-2xl p-6 shadow-sm border border-border/50 dark:border-neutral-800 mb-10">
+                <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 mb-10">
                     <form onSubmit={handleSubmit} className="flex gap-4">
                         <div className="avatar placeholder pt-1 flex-shrink-0">
                             <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-sm">
@@ -171,7 +171,7 @@ const CommentSection = ({ postId }) => {
                         </div>
                         <div className="flex-1">
                             {replyTo && (
-                                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 flex items-center justify-between bg-muted/50 dark:bg-neutral-800 p-2 px-3 rounded-xl border border-border/50 dark:border-neutral-700">
+                                <div className="text-xs font-medium text-base-content/60 mb-2 flex items-center justify-between bg-base-200 p-2 px-3 rounded-xl border border-base-300">
                                     <span>
                                         Replying to <b className="text-primary">{replyTo.author?.name}</b>
                                     </span>
@@ -180,9 +180,9 @@ const CommentSection = ({ postId }) => {
                                     </button>
                                 </div>
                             )}
-                            <div className="relative flex items-center gap-2 p-3 rounded-xl bg-muted/50 dark:bg-neutral-800/50 border border-border dark:border-neutral-700 focus-within:border-primary transition-all">
+                            <div className="relative flex items-center gap-2 p-3 rounded-xl bg-base-200 border border-base-300 focus-within:border-primary transition-all">
                                 <textarea
-                                    className="flex-1 bg-transparent focus:outline-none resize-none text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 min-h-[60px]"
+                                    className="flex-1 bg-transparent focus:outline-none resize-none text-base text-base-content placeholder:text-base-content/50 min-h-[60px]"
                                     placeholder="Add to the discussion..."
                                     rows="2"
                                     value={newComment}
@@ -200,7 +200,7 @@ const CommentSection = ({ postId }) => {
                     </form>
                 </div>
             ) : (
-                <div className="bg-muted/50 dark:bg-neutral-800 p-8 rounded-2xl text-center mb-10 border border-border dark:border-neutral-700">
+                <div className="bg-base-200 p-8 rounded-2xl text-center mb-10 border border-base-300">
                     <p className="text-gray-700 dark:text-gray-300 font-medium">
                         Please{' '}
                         <Link href={`/auth/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">

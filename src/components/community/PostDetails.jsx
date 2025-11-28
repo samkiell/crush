@@ -93,7 +93,7 @@ const PostDetails = ({ postId }) => {
 
     return (
         <div className="space-y-8">
-            <div className="bg-card dark:bg-neutral-900 rounded-3xl shadow-lg border border-border/50 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-base-100 rounded-3xl shadow-lg border border-base-300 overflow-hidden">
                 <div className="p-6 sm:p-10">
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -132,7 +132,7 @@ const PostDetails = ({ postId }) => {
                                     {post.isSolved ? 'Solved' : 'Question'}
                                 </span>
                             )}
-                            <span className="px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 text-xs font-medium">
+                            <span className="px-3 py-1 rounded-full bg-base-200 text-base-content/70 text-xs font-medium">
                                 {post.category}
                             </span>
                         </div>
@@ -161,7 +161,7 @@ const PostDetails = ({ postId }) => {
                         </div>
                     )}
 
-                    <div className="h-px w-full bg-border/50 dark:bg-neutral-800 my-6" />
+                    <div className="h-px w-full bg-base-300 my-6" />
 
                     {/* Actions */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

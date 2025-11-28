@@ -34,7 +34,7 @@ const CommunityLayout = ({ children }) => {
             </div>
 
             {/* Top Navigation */}
-            <div className="sticky top-0 z-50 bg-card/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-border/50 dark:border-white/5 shadow-sm">
+            <div className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-300 shadow-sm">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <button
@@ -64,7 +64,7 @@ const CommunityLayout = ({ children }) => {
                 </div>
 
                 {/* Mobile Search - Below nav */}
-                <div className="md:hidden border-t border-border/50 dark:border-neutral-800 px-4 py-3 bg-card/80 dark:bg-neutral-900/80 backdrop-blur-md z-10 relative">
+                <div className="md:hidden border-t border-base-300 px-4 py-3 bg-base-100/80 backdrop-blur-md z-10 relative">
                     <SearchBar />
                 </div>
             </div>
@@ -76,7 +76,7 @@ const CommunityLayout = ({ children }) => {
                     ${isMobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:shadow-none'}
                 `}>
                     <div className="h-full overflow-y-auto p-6 lg:p-0 lg:sticky lg:top-24 scrollbar-none">
-                        <div className="lg:bg-card/40 lg:dark:bg-neutral-900/40 lg:backdrop-blur-md lg:rounded-3xl lg:p-6 lg:border lg:border-border/50 lg:dark:border-white/5">
+                        <div className="lg:bg-base-100/40 lg:backdrop-blur-md lg:rounded-3xl lg:p-6 lg:border lg:border-base-300">
                             <SidebarContent navItems={navItems} pathname={pathname} setIsMobileMenuOpen={setIsMobileMenuOpen} />
                         </div>
                     </div>
@@ -98,7 +98,7 @@ const CommunityLayout = ({ children }) => {
                 {/* Right Sidebar (Trending/Stats) */}
                 <aside className="hidden xl:block w-80 shrink-0">
                     <div className="sticky top-24 space-y-6">
-                        <div className="bg-card/40 dark:bg-neutral-900/40 backdrop-blur-md rounded-3xl p-6 border border-border/50 dark:border-white/5 shadow-sm">
+                        <div className="bg-base-100/40 backdrop-blur-md rounded-3xl p-6 border border-base-300 shadow-sm">
                             <h3 className="font-bold text-lg flex items-center gap-2 mb-4 text-base-content">
                                 <TrendingUp className="w-5 h-5 text-secondary" />
                                 Trending Topics

@@ -33,7 +33,7 @@ const PostCard = ({ post }) => {
 
     return (
         <Link href={`/community/${post._id}`} className="block">
-            <div className="group bg-card dark:bg-neutral-900 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-border/50 dark:border-neutral-800 hover:scale-[1.01] cursor-pointer">
+            <div className="group bg-base-100 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-base-300 hover:scale-[1.01] cursor-pointer">
                 {/* Header: Author & Meta */}
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ const PostCard = ({ post }) => {
                                 {post.isSolved ? 'Solved' : 'Question'}
                             </span>
                         )}
-                        <span className="px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 text-xs font-medium">
+                        <span className="px-3 py-1 rounded-full bg-base-200 text-base-content/70 text-xs font-medium">
                             {post.category}
                         </span>
                     </div>
@@ -108,20 +108,20 @@ const PostCard = ({ post }) => {
                 )}
 
                 {/* Footer: Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-border/50 dark:border-neutral-800">
+                <div className="flex items-center justify-between pt-4 border-t border-base-300">
                     <div className="flex gap-4">
                         <button
                             onClick={handleLike}
                             className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition-colors group/like"
                         >
-                            <div className="p-2 rounded-full bg-neutral-100 dark:bg-neutral-800 group-hover/like:bg-primary/10 transition-colors">
+                            <div className="p-2 rounded-full bg-base-200 group-hover/like:bg-primary/10 transition-colors">
                                 <ThumbsUp className="w-4 h-4" />
                             </div>
                             <span>{post.likes}</span>
                         </button>
 
                         <div className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                            <div className="p-2 rounded-full bg-neutral-100 dark:bg-neutral-800">
+                            <div className="p-2 rounded-full bg-base-200">
                                 <MessageSquare className="w-4 h-4" />
                             </div>
                             <span>{post.commentsCount}</span>
