@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
-import { Loader2, Send, X } from 'lucide-react';
+import { Loader2, Send, X, Hash, FileText, MessageSquare, HelpCircle } from 'lucide-react';
 import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from '@/utils/toast-helpers';
 
 const RichEditor = () => {
@@ -60,129 +60,181 @@ const RichEditor = () => {
         }
     };
 
+    const titleLength = title.length;
+    const contentLength = content.length;
+    const titleMax = 150;
+
     return (
-        <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-lg shadow-black/10 border border-gray-100 dark:border-neutral-800 max-w-3xl mx-auto overflow-hidden">
-            <div className="p-8 sm:p-10">
+        <div className="min-h-screen py-8">
+            <div className="max-w-4xl mx-auto px-4">
+                {/* Header */}
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold text-base-content mb-2">
-                        Start a Discussion
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400">
-                        Share your knowledge, ask questions, or start a debate.
+                    <h1 className="text-3xl sm:text-4xl font-bold text-base-content mb-3">
+                        Create a Post
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">
+                        Share your knowledge, ask questions, or start a discussion with the community.
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Title */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold text-base-content">Title</span>
-                            <span className="label-text-alt text-gray-500">{title.length}/150</span>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="What's on your mind?"
-                            className="input input-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                            maxLength={150}
-                        />
-                    </div>
-
-                    {/* Category and Tags */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-semibold text-base-content">Category</span>
-                            </label>
-                            <select
-                                className="select select-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all w-full"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                            >
-                                <option value="General">General</option>
-                                <option value="Exam Help">Exam Help</option>
-                                <option value="Study Tips">Study Tips</option>
-                                <option value="Career">Career</option>
-                                <option value="Off-Topic">Off-Topic</option>
-                            </select>
-                        </div>
-
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-semibold text-base-content">Tags</span>
+                {/* Main Form Card */}
+                <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-lg shadow-black/10 border border-gray-100 dark:border-neutral-800 overflow-hidden">
+                    <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+                        {/* Title Input */}
+                        <div className="space-y-2">
+                            <label className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-base-content flex items-center gap-2">
+                                    <FileText className="w-4 h-4" />
+                                    Title
+                                </span>
+                                <span className={`text-xs font-medium ${titleLength > titleMax * 0.9 ? 'text-warning' : 'text-gray-500'}`}>
+                                    {titleLength}/{titleMax}
+                                </span>
                             </label>
                             <input
                                 type="text"
-                                placeholder="e.g. jamb, physics"
-                                className="input input-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all w-full"
-                                value={tags}
-                                onChange={(e) => setTags(e.target.value)}
+                                placeholder="What's your post about?"
+                                className="input w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl text-lg transition-all"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                required
+                                maxLength={titleMax}
                             />
                         </div>
-                    </div>
 
-                    {/* Content */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold text-base-content">Content</span>
-                            <span className="label-text-alt text-gray-500">{content.length} characters</span>
-                        </label>
-                        <textarea
-                            className="textarea textarea-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all min-h-[200px] text-base leading-relaxed resize-y"
-                            placeholder="Share your thoughts, questions, or tips..."
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    {/* Question Checkbox */}
-                    <div className="form-control">
-                        <label className="label cursor-pointer justify-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors">
-                            <input
-                                type="checkbox"
-                                className="checkbox checkbox-primary rounded-lg"
-                                checked={isQuestion}
-                                onChange={(e) => setIsQuestion(e.target.checked)}
-                            />
-                            <div className="flex flex-col">
-                                <span className="font-semibold text-base-content">Ask for Help</span>
-                                <span className="text-xs text-gray-600 dark:text-gray-400">
-                                    Mark this post as a question to get specific answers
-                                </span>
+                        {/* Category & Tags Row */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* Category */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-base-content flex items-center gap-2">
+                                    <MessageSquare className="w-4 h-4" />
+                                    Category
+                                </label>
+                                <select
+                                    className="select w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                >
+                                    <option value="General">General</option>
+                                    <option value="Exam Help">Exam Help</option>
+                                    <option value="Study Tips">Study Tips</option>
+                                    <option value="Career">Career</option>
+                                    <option value="Off-Topic">Off-Topic</option>
+                                </select>
                             </div>
-                        </label>
-                    </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex items-center justify-end gap-3 pt-4">
-                        <button
-                            type="button"
-                            className="btn btn-ghost rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 gap-2"
-                            onClick={() => router.back()}
-                            disabled={actionLoading}
-                        >
-                            <X className="w-4 h-4" />
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="btn btn-primary rounded-xl shadow-sm hover:shadow-lg gap-2 min-w-[140px]"
-                            disabled={actionLoading}
-                        >
-                            {actionLoading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                            ) : (
-                                <>
-                                    <Send className="w-4 h-4" />
-                                    <span>Post</span>
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </form>
+                            {/* Tags */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-base-content flex items-center gap-2">
+                                    <Hash className="w-4 h-4" />
+                                    Tags
+                                    <span className="text-xs font-normal text-gray-500">(comma separated)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="jamb, physics, mathematics"
+                                    className="input w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all"
+                                    value={tags}
+                                    onChange={(e) => setTags(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Content Textarea */}
+                        <div className="space-y-2">
+                            <label className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-base-content">Content</span>
+                                <span className="text-xs font-medium text-gray-500">
+                                    {contentLength} characters
+                                </span>
+                            </label>
+                            <textarea
+                                className="textarea w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all min-h-[250px] text-base leading-relaxed resize-y"
+                                placeholder="Share your thoughts, questions, or tips in detail..."
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        {/* Question Toggle */}
+                        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-5 border border-primary/10">
+                            <label className="flex items-start gap-4 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox checkbox-primary mt-1"
+                                    checked={isQuestion}
+                                    onChange={(e) => setIsQuestion(e.target.checked)}
+                                />
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <HelpCircle className="w-5 h-5 text-primary" />
+                                        <span className="font-semibold text-base-content">Mark as Question</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        Enable this if you're asking for help or need specific answers from the community.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-neutral-800">
+                            <button
+                                type="button"
+                                className="btn btn-ghost rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 gap-2 order-2 sm:order-1"
+                                onClick={() => router.back()}
+                                disabled={actionLoading}
+                            >
+                                <X className="w-4 h-4" />
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn btn-primary rounded-xl shadow-lg hover:shadow-xl gap-2 min-w-[160px] order-1 sm:order-2"
+                                disabled={actionLoading || !title.trim() || !content.trim()}
+                            >
+                                {actionLoading ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        <span>Publishing...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Send className="w-4 h-4" />
+                                        <span>Publish Post</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Tips Card */}
+                <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-3 flex items-center gap-2">
+                        <MessageSquare className="w-5 h-5" />
+                        Tips for a Great Post
+                    </h3>
+                    <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
+                        <li className="flex items-start gap-2">
+                            <span className="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                            <span>Use a clear, descriptive title that summarizes your post</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                            <span className="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                            <span>Add relevant tags to help others find your post</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                            <span className="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                            <span>Be respectful and constructive in your discussions</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                            <span className="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                            <span>Check for similar posts before creating a new one</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     );
