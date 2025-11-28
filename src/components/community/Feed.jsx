@@ -31,7 +31,7 @@ const Feed = () => {
         return () => clearInterval(interval);
     }, [dispatch, page, category, search, sort]);
 
-    if (loading && posts.length === 0) {
+    if (loading) {
         return (
             <div className="space-y-4">
                 {[...Array(5)].map((_, i) => (

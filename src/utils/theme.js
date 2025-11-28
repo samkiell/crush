@@ -13,14 +13,24 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  // Default to "light" for SSR-friendly initial render
-  const [theme, setTheme] = useState("light");
+  // Initialize with the theme that was applied by the blocking script if possible
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem("d2c_theme");
+        return saved || "light";
+      } catch (err) {
+        return "light";
+      }
+    }
+    return "light";
+  });
 
-  // Hydrate from localStorage on client only
+  // Hydrate from localStorage on client only - mostly for ensuring state sync
   useEffect(() => {
     try {
       const saved = localStorage.getItem("d2c_theme");
-      if (saved) setTheme(saved);
+      if (saved && saved !== theme) setTheme(saved);
     } catch (err) {
       // ignore
     }

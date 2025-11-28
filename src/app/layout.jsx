@@ -36,6 +36,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem("d2c_theme");
+                  var theme = saved || "light";
+                  document.documentElement.setAttribute("data-theme", theme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#e8e7e4ff" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
