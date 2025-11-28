@@ -29,20 +29,25 @@ const getUserFromRequest = async (req) => {
 export async function POST(req, { params }) {
   await dbConnect();
   const user = await getUserFromRequest(req);
-  const { id } = params; // Target ID (Post or Comment)
+  
+  // IMPORTANT: params.id is the POST ID from the URL, not the target ID
+  // We need to get targetId from the request body
+  const body = await req.json();
+  const { targetType, type, targetId } = body;
 
   if (!user) {
     return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
   }
 
-  try {
-    const body = await req.json();
-    const { targetType, type } = body; // targetType: 'CommunityPost' or 'Comment'
+  if (!targetId || !targetType) {
+    return NextResponse.json({ success: false, error: 'Missing targetId or targetType' }, { status: 400 });
+  }
 
+  try {
     // Check if already reacted
     const existingReaction = await Reaction.findOne({
       user: user._id,
-      targetId: id,
+      targetId: targetId,
       targetType,
       type,
     });
@@ -54,10 +59,10 @@ export async function POST(req, { params }) {
       // Decrement count and update author reputation
       let targetAuthorId;
       if (targetType === 'CommunityPost') {
-        const post = await CommunityPost.findByIdAndUpdate(id, { $inc: { likes: -1 } });
+        const post = await CommunityPost.findByIdAndUpdate(targetId, { $inc: { likes: -1 } });
         targetAuthorId = post.author;
       } else {
-        const comment = await Comment.findByIdAndUpdate(id, { $inc: { likes: -1 } });
+        const comment = await Comment.findByIdAndUpdate(targetId, { $inc: { likes: -1 } });
         targetAuthorId = comment.author;
       }
 
@@ -71,7 +76,7 @@ export async function POST(req, { params }) {
       // Add reaction
       await Reaction.create({
         user: user._id,
-        targetId: id,
+        targetId: targetId,
         targetType,
         type,
       });
@@ -79,10 +84,10 @@ export async function POST(req, { params }) {
       // Increment count and update author reputation
       let targetAuthorId;
       if (targetType === 'CommunityPost') {
-        const post = await CommunityPost.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+        const post = await CommunityPost.findByIdAndUpdate(targetId, { $inc: { likes: 1 } });
         targetAuthorId = post.author;
       } else {
-        const comment = await Comment.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+        const comment = await Comment.findByIdAndUpdate(targetId, { $inc: { likes: 1 } });
         targetAuthorId = comment.author;
       }
 

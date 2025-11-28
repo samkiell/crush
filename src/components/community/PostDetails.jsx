@@ -25,7 +25,7 @@ const PostDetails = ({ postId }) => {
 
             const interval = setInterval(() => {
                 dispatch(fetchPostDetails({ id: postId, isPolling: true }));
-            }, 15000); // Poll every 15 seconds
+            }, 15000);
 
             return () => clearInterval(interval);
         }
@@ -34,8 +34,18 @@ const PostDetails = ({ postId }) => {
     const handleLike = async () => {
         if (post) {
             try {
-                await dispatch(toggleReaction({ id: post._id, targetType: 'CommunityPost', type: 'like' })).unwrap();
-                showSuccessToast('Reaction updated');
+                const result = await dispatch(toggleReaction({
+                    id: post._id,
+                    targetType: 'CommunityPost',
+                    type: 'like',
+                    targetId: post._id
+                })).unwrap();
+
+                if (result.action === 'added') {
+                    showSuccessToast('Post liked! 👍');
+                } else {
+                    showSuccessToast('Like removed');
+                }
             } catch (error) {
                 showErrorToast(error);
             }
@@ -62,8 +72,8 @@ const PostDetails = ({ postId }) => {
     if (error) {
         return (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6 text-center">
-                <p className="text-red-600 dark:text-red-400 font-semibold">Error loading post: {error}</p>
-                <Link href="/community" className="text-primary hover:underline mt-2 inline-block">
+                <p className="text-red-600 dark:text-red-400 font-semibold mb-3">Error loading post: {error}</p>
+                <Link href="/community" className="btn btn-primary rounded-xl">
                     ← Back to Community
                 </Link>
             </div>
@@ -73,8 +83,8 @@ const PostDetails = ({ postId }) => {
     if (!post) {
         return (
             <div className="bg-gray-50 dark:bg-neutral-800 rounded-2xl p-8 text-center">
-                <p className="text-gray-600 dark:text-gray-400 font-medium">Post not found</p>
-                <Link href="/community" className="text-primary hover:underline mt-2 inline-block">
+                <p className="text-gray-600 dark:text-gray-400 font-medium mb-3">Post not found</p>
+                <Link href="/community" className="btn btn-primary rounded-xl">
                     ← Back to Community
                 </Link>
             </div>
@@ -84,7 +94,7 @@ const PostDetails = ({ postId }) => {
     return (
         <div className="space-y-8">
             <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-lg shadow-black/10 border border-gray-100 dark:border-neutral-800 overflow-hidden">
-                <div className="p-8 sm:p-10">
+                <div className="p-6 sm:p-10">
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                         <div className="flex items-center gap-4">
@@ -129,11 +139,11 @@ const PostDetails = ({ postId }) => {
                     </div>
 
                     {/* Content */}
-                    <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-base-content leading-tight">
+                    <h1 className="text-2xl sm:text-4xl font-bold mb-6 text-base-content leading-tight">
                         {post.title}
                     </h1>
                     <div className="prose prose-lg max-w-none mb-8 text-gray-700 dark:text-gray-300 leading-relaxed">
-                        <p className="whitespace-pre-wrap">{post.content}</p>
+                        <p className="whitespace-pre-wrap text-base sm:text-lg">{post.content}</p>
                     </div>
 
                     {/* Tags */}
@@ -154,8 +164,8 @@ const PostDetails = ({ postId }) => {
                     <div className="h-px w-full bg-gray-200 dark:bg-neutral-800 my-6" />
 
                     {/* Actions */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex gap-4 sm:gap-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="flex flex-wrap gap-3 sm:gap-6">
                             <button
                                 onClick={handleLike}
                                 className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-600 dark:text-gray-400 hover:text-primary transition-all duration-200 group"
@@ -171,7 +181,7 @@ const PostDetails = ({ postId }) => {
                                 </div>
                                 <span className="font-medium">{post.commentsCount} Comments</span>
                             </div>
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default hidden sm:flex">
+                            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
                                 <div className="p-2 rounded-full bg-gray-100 dark:bg-neutral-800">
                                     <Eye className="w-5 h-5" />
                                 </div>

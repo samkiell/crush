@@ -11,10 +11,21 @@ const PostCard = ({ post }) => {
     const dispatch = useDispatch();
 
     const handleLike = async (e) => {
-        e.preventDefault(); // Prevent navigation if clicking like
+        e.preventDefault();
+        e.stopPropagation();
         try {
-            await dispatch(toggleReaction({ id: post._id, targetType: 'CommunityPost', type: 'like' })).unwrap();
-            showSuccessToast('Reaction updated');
+            const result = await dispatch(toggleReaction({
+                id: post._id,
+                targetType: 'CommunityPost',
+                type: 'like',
+                targetId: post._id // Add targetId explicitly
+            })).unwrap();
+
+            if (result.action === 'added') {
+                showSuccessToast('Post liked! 👍');
+            } else {
+                showSuccessToast('Like removed');
+            }
         } catch (error) {
             showErrorToast(error);
         }
@@ -113,7 +124,7 @@ const PostCard = ({ post }) => {
                             <MessageSquare className="w-4 h-4" />
                         </div>
                         <span>{post.commentsCount}</span>
-                    </Link>
+                    </button>
 
                     <div className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                         <div className="p-2 rounded-full bg-gray-100 dark:bg-neutral-800">
