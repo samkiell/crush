@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 const SkeletonPostCard = () => {
     return (
         <div className="bg-base-100 rounded-2xl p-6 shadow-sm shadow-black/5 animate-pulse">
