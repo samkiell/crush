@@ -162,7 +162,7 @@ const CommentSection = ({ postId }) => {
 
             {/* Comment Input */}
             {isAuthenticated ? (
-                <div className="bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow-sm shadow-black/5 border border-gray-100 dark:border-neutral-800 mb-10">
+                <div className="bg-card dark:bg-neutral-900 rounded-2xl p-6 shadow-sm border border-border/50 dark:border-neutral-800 mb-10">
                     <form onSubmit={handleSubmit} className="flex gap-4">
                         <div className="avatar placeholder pt-1 flex-shrink-0">
                             <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-sm">
@@ -171,7 +171,7 @@ const CommentSection = ({ postId }) => {
                         </div>
                         <div className="flex-1">
                             {replyTo && (
-                                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 flex items-center justify-between bg-gray-100 dark:bg-neutral-800 p-2 px-3 rounded-xl border border-gray-200 dark:border-neutral-700">
+                                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 flex items-center justify-between bg-muted/50 dark:bg-neutral-800 p-2 px-3 rounded-xl border border-border/50 dark:border-neutral-700">
                                     <span>
                                         Replying to <b className="text-primary">{replyTo.author?.name}</b>
                                     </span>
@@ -180,17 +180,17 @@ const CommentSection = ({ postId }) => {
                                     </button>
                                 </div>
                             )}
-                            <div className="relative group">
+                            <div className="relative flex items-center gap-2 p-3 rounded-xl bg-muted/50 dark:bg-neutral-800/50 border border-border dark:border-neutral-700 focus-within:border-primary transition-all">
                                 <textarea
-                                    className="textarea w-full bg-gray-50 dark:bg-neutral-800 focus:bg-white dark:focus:bg-neutral-900 border-gray-200 dark:border-neutral-700 focus:border-primary rounded-xl pr-12 resize-none text-base transition-all min-h-[80px]"
+                                    className="flex-1 bg-transparent focus:outline-none resize-none text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 min-h-[60px]"
                                     placeholder="Add to the discussion..."
-                                    rows="3"
+                                    rows="2"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
                                 <button
                                     type="submit"
-                                    className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm shadow-sm hover:shadow-lg border-none transition-all duration-200 hover:scale-110"
+                                    className="self-end btn btn-circle btn-primary btn-sm shadow-sm hover:shadow-lg border-none transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={!newComment.trim() || submitting}
                                 >
                                     <Send className="w-4 h-4" />
@@ -200,7 +200,7 @@ const CommentSection = ({ postId }) => {
                     </form>
                 </div>
             ) : (
-                <div className="bg-gray-50 dark:bg-neutral-800 p-8 rounded-2xl text-center mb-10 border border-gray-200 dark:border-neutral-700">
+                <div className="bg-muted/50 dark:bg-neutral-800 p-8 rounded-2xl text-center mb-10 border border-border dark:border-neutral-700">
                     <p className="text-gray-700 dark:text-gray-300 font-medium">
                         Please{' '}
                         <Link href={`/auth/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">
