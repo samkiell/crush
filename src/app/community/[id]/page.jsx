@@ -2,18 +2,20 @@ import CommunityLayout from '@/components/community/CommunityLayout';
 import PostDetails from '@/components/community/PostDetails';
 
 export async function generateMetadata({ params }) {
-    // Ideally fetch post title here for dynamic metadata
+    // Await params in Next.js 14+
+    const { id } = await params;
     return {
         title: 'Discussion | CrushEdu',
     };
 }
 
-export default function PostPage({ params }) {
-    const { id } = params;
+export default async function PostPage({ params }) {
+    // Await params in Next.js 14+
+    const { id } = await params;
 
     return (
         <CommunityLayout>
-            <div className="max-w-4xl mx-auto pb-10">
+            <div className="max-w-4xl mx-auto pb-10 px-4">
                 <PostDetails postId={id} />
             </div>
         </CommunityLayout>

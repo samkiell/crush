@@ -38,7 +38,7 @@ export const createPost = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          window.location.href = '/auth/login';
         }
         return rejectWithValue('Authentication required');
       }
@@ -77,7 +77,7 @@ export const addComment = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          window.location.href = '/auth/login';
         }
         return rejectWithValue('Authentication required');
       }
@@ -99,27 +99,28 @@ export const addComment = createAsyncThunk(
 
 export const toggleReaction = createAsyncThunk(
   'community/toggleReaction',
-  async ({ id, targetType, type }, { rejectWithValue, getState }) => {
+  async ({ id, targetType, type, targetId }, { rejectWithValue, getState }) => {
     try {
       const state = getState();
       const token = state.auth.token;
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          window.location.href = '/auth/login';
         }
-        return rejectWithValue('Authentication required');
+        return rejectWithValue('required');
       }
 
       const response = await axios.post(`/api/community/posts/${id}/reactions`, {
         targetType,
         type,
+        targetId: targetId || id, // Use targetId if provided, otherwise use id
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      return { id, targetType, type, action: response.data.action };
+      return { id: targetId || id, targetType, type, action: response.data.action };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || error.message);
     }
@@ -147,7 +148,7 @@ export const reportContent = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          window.location.href = '/auth/login';
         }
         return rejectWithValue('Authentication required');
       }

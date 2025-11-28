@@ -102,7 +102,7 @@ const CommentSection = ({ postId }) => {
 
             const interval = setInterval(() => {
                 dispatch(fetchComments({ postId, isPolling: true }));
-            }, 15000); // Poll every 15 seconds
+            }, 15000);
 
             return () => clearInterval(interval);
         }
@@ -132,8 +132,18 @@ const CommentSection = ({ postId }) => {
 
     const handleLike = async (commentId) => {
         try {
-            await dispatch(toggleReaction({ id: commentId, targetType: 'Comment', type: 'like' })).unwrap();
-            showSuccessToast('Reaction updated');
+            const result = await dispatch(toggleReaction({
+                id: commentId,
+                targetType: 'Comment',
+                type: 'like',
+                targetId: commentId
+            })).unwrap();
+
+            if (result.action === 'added') {
+                showSuccessToast('Comment liked! 👍');
+            } else {
+                showSuccessToast('Like removed');
+            }
         } catch (error) {
             showErrorToast(error);
         }
@@ -144,7 +154,6 @@ const CommentSection = ({ postId }) => {
         setReportModalOpen(true);
     };
 
-    // Filter top-level comments
     const rootComments = comments.filter(c => !c.parentComment);
 
     return (
@@ -194,7 +203,7 @@ const CommentSection = ({ postId }) => {
                 <div className="bg-gray-50 dark:bg-neutral-800 p-8 rounded-2xl text-center mb-10 border border-gray-200 dark:border-neutral-700">
                     <p className="text-gray-700 dark:text-gray-300 font-medium">
                         Please{' '}
-                        <Link href={`/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">
+                        <Link href={`/auth/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">
                             login
                         </Link>{' '}
                         to join the discussion.
