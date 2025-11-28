@@ -50,7 +50,7 @@ const PostDetails = ({ postId }) => {
     if (!post) return null;
 
     return (
-    return (
+
         <div className="space-y-8">
             <div className="relative bg-white/60 dark:bg-neutral-900/60 backdrop-blur-xl rounded-[2rem] shadow-xl shadow-black/5 border border-white/20 dark:border-white/5 overflow-hidden">
                 {/* Decorative Gradient */}
@@ -86,8 +86,8 @@ const PostDetails = ({ postId }) => {
                         <div className="flex gap-2">
                             {post.isQuestion && (
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${post.isSolved
-                                        ? 'bg-success/10 text-success'
-                                        : 'bg-warning/10 text-warning'
+                                    ? 'bg-success/10 text-success'
+                                    : 'bg-warning/10 text-warning'
                                     }`}>
                                     {post.isSolved ? 'Solved' : 'Question'}
                                 </span>

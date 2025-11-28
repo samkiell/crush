@@ -14,51 +14,52 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
     const replies = allComments.filter(c => c.parentComment === comment._id);
 
     return (
-        <div className="mb-4">
-            <div className="flex gap-3">
-                <div className="avatar placeholder">
-                    <div className="bg-neutral text-neutral-content rounded-full w-8 h-8">
+        <div className="mb-6 group">
+            <div className="flex gap-4">
+                <div className="avatar placeholder mt-1">
+                    <div className="bg-gradient-to-br from-neutral to-neutral-focus text-neutral-content rounded-2xl w-10 h-10 shadow-sm">
                         {comment.author?.avatar ? (
-                            <img src={comment.author.avatar} alt={comment.author.name} />
+                            <img src={comment.author.avatar} alt={comment.author.name} className="rounded-2xl" />
                         ) : (
-                            <span className="text-xs">{comment.author?.name?.charAt(0) || 'U'}</span>
+                            <span className="text-sm font-bold">{comment.author?.name?.charAt(0) || 'U'}</span>
                         )}
                     </div>
                 </div>
-                <div className="flex-1">
-                    <div className="bg-base-200 rounded-2xl p-3 px-4 inline-block min-w-[200px]">
-                        <div className="flex items-center justify-between gap-4 mb-1">
-                            <span className="font-bold text-sm flex items-center gap-2">
+                <div className="flex-1 min-w-0">
+                    <div className="bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm rounded-[1.5rem] rounded-tl-none p-4 px-6 inline-block min-w-[200px] shadow-sm border border-white/20 dark:border-white/5">
+                        <div className="flex items-center justify-between gap-4 mb-2">
+                            <span className="font-bold text-sm text-base-content flex items-center gap-2">
                                 {comment.author?.name || 'Anonymous'}
                                 {comment.author?.badges?.map((badge, idx) => (
-                                    <span key={idx} className="badge badge-xs badge-primary">{badge}</span>
+                                    <span key={idx} className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">{badge}</span>
                                 ))}
                             </span>
-                            <span className="text-xs text-base-content/50">
+                            <span className="text-xs text-base-content/40 font-medium">
                                 {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                             </span>
                         </div>
-                        <p className="text-sm text-base-content/90 whitespace-pre-wrap">{comment.content}</p>
+                        <p className="text-sm text-base-content/80 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
                     </div>
-                    <div className="flex items-center gap-4 mt-1 ml-2 text-xs text-base-content/60">
+
+                    <div className="flex items-center gap-4 mt-2 ml-2">
                         <button
                             onClick={() => onLike(comment._id)}
-                            className="hover:text-primary font-medium flex items-center gap-1"
+                            className="text-xs font-bold text-base-content/50 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200/50"
                         >
-                            <ThumbsUp className="w-3 h-3" />
-                            {comment.likes > 0 && <span>{comment.likes}</span>} Like
+                            <ThumbsUp className="w-3.5 h-3.5" />
+                            {comment.likes > 0 ? `${comment.likes} Likes` : 'Like'}
                         </button>
                         <button
                             onClick={() => onReply(comment)}
-                            className="hover:text-primary font-medium flex items-center gap-1"
+                            className="text-xs font-bold text-base-content/50 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200/50"
                         >
-                            <Reply className="w-3 h-3" /> Reply
+                            <Reply className="w-3.5 h-3.5" /> Reply
                         </button>
                         <button
                             onClick={() => onReport(comment._id)}
-                            className="hover:text-error font-medium flex items-center gap-1 ml-auto"
+                            className="text-xs font-bold text-base-content/50 hover:text-error transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 ml-auto opacity-0 group-hover:opacity-100"
                         >
-                            <Flag className="w-3 h-3" /> Report
+                            <Flag className="w-3.5 h-3.5" /> Report
                         </button>
                     </div>
                 </div>
@@ -66,7 +67,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
 
             {/* Recursive Replies */}
             {replies.length > 0 && (
-                <div className="ml-8 sm:ml-12 border-l-2 border-base-200 pl-4 mt-2">
+                <div className="ml-8 sm:ml-14 border-l-2 border-base-content/5 pl-6 mt-4 space-y-4">
                     {replies.map(reply => (
                         <CommentItem
                             key={reply._id}
@@ -131,28 +132,28 @@ const CommentSection = ({ postId }) => {
     const rootComments = comments.filter(c => !c.parentComment);
 
     return (
-        <div className="card bg-base-100 shadow-sm border border-base-200">
-            <div className="card-body p-6">
-                <h3 className="font-bold text-lg mb-4">Discussion ({comments.length})</h3>
+        <div className="mt-8">
+            <h3 className="text-xl font-bold mb-6 px-2">Discussion ({comments.length})</h3>
 
-                {/* Comment Input */}
-                {isAuthenticated ? (
-                    <form onSubmit={handleSubmit} className="mb-8 flex gap-3">
-                        <div className="avatar placeholder">
-                            <div className="bg-neutral text-neutral-content rounded-full w-10">
+            {/* Comment Input */}
+            {isAuthenticated ? (
+                <div className="bg-white/60 dark:bg-neutral-900/60 backdrop-blur-xl rounded-[2rem] p-6 shadow-lg shadow-black/5 border border-white/20 dark:border-white/5 mb-10">
+                    <form onSubmit={handleSubmit} className="flex gap-4">
+                        <div className="avatar placeholder pt-1">
+                            <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-md">
                                 <span>Me</span>
                             </div>
                         </div>
                         <div className="flex-1">
                             {replyTo && (
-                                <div className="text-xs text-base-content/60 mb-2 flex items-center justify-between bg-base-200 p-2 rounded">
-                                    <span>Replying to <b>{replyTo.author?.name}</b></span>
-                                    <button type="button" onClick={() => setReplyTo(null)} className="hover:text-error">Cancel</button>
+                                <div className="text-xs font-medium text-base-content/60 mb-2 flex items-center justify-between bg-base-200/50 p-2 px-3 rounded-xl border border-base-content/5">
+                                    <span>Replying to <b className="text-primary">{replyTo.author?.name}</b></span>
+                                    <button type="button" onClick={() => setReplyTo(null)} className="hover:text-error transition-colors">Cancel</button>
                                 </div>
                             )}
-                            <div className="relative">
+                            <div className="relative group">
                                 <textarea
-                                    className="textarea textarea-bordered w-full pr-12 resize-none"
+                                    className="textarea w-full bg-base-200/30 focus:bg-white dark:focus:bg-black/20 border-transparent focus:border-primary rounded-2xl pr-12 resize-none text-base transition-all duration-200 min-h-[80px] shadow-inner"
                                     placeholder="Add to the discussion..."
                                     rows="3"
                                     value={newComment}
@@ -160,7 +161,7 @@ const CommentSection = ({ postId }) => {
                                 ></textarea>
                                 <button
                                     type="submit"
-                                    className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm"
+                                    className="absolute bottom-3 right-3 btn btn-circle btn-primary btn-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 border-none transition-all duration-200 hover:scale-110"
                                     disabled={!newComment.trim()}
                                 >
                                     <Send className="w-4 h-4" />
@@ -168,31 +169,36 @@ const CommentSection = ({ postId }) => {
                             </div>
                         </div>
                     </form>
-                ) : (
-                    <div className="bg-base-200 p-6 rounded-lg text-center mb-8">
-                        <p className="text-base-content/70">
-                            Please <Link href={`/login?redirect=/community/${postId}`} className="link link-primary font-bold">login</Link> to join the discussion.
-                        </p>
+                </div>
+            ) : (
+                <div className="bg-base-200/50 backdrop-blur-sm p-8 rounded-3xl text-center mb-10 border border-base-content/5">
+                    <p className="text-base-content/70 font-medium">
+                        Please <Link href={`/login?redirect=/community/${postId}`} className="text-primary hover:underline font-bold">login</Link> to join the discussion.
+                    </p>
+                </div>
+            )}
+
+            {/* Comments List */}
+            <div className="space-y-2">
+                {rootComments.map((comment) => (
+                    <CommentItem
+                        key={comment._id}
+                        comment={comment}
+                        allComments={comments}
+                        onReply={setReplyTo}
+                        onLike={handleLike}
+                        onReport={handleReport}
+                    />
+                ))}
+
+                {comments.length === 0 && (
+                    <div className="text-center py-10">
+                        <div className="bg-base-200/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-base-content/30">
+                            <MessageSquare className="w-8 h-8" />
+                        </div>
+                        <p className="text-base-content/50 font-medium">No comments yet. Be the first to start the conversation!</p>
                     </div>
                 )}
-
-                {/* Comments List */}
-                <div className="space-y-2">
-                    {rootComments.map((comment) => (
-                        <CommentItem
-                            key={comment._id}
-                            comment={comment}
-                            allComments={comments}
-                            onReply={setReplyTo}
-                            onLike={handleLike}
-                            onReport={handleReport}
-                        />
-                    ))}
-
-                    {comments.length === 0 && (
-                        <p className="text-center text-base-content/50 py-4">No comments yet. Be the first!</p>
-                    )}
-                </div>
             </div>
 
             <ReportModal
