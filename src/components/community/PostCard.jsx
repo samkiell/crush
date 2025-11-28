@@ -71,6 +71,30 @@ const PostCard = ({ post }) => {
                 <h3 className="text-xl font-semibold text-base-content mb-2 leading-tight group-hover:text-primary transition-colors">
                     {post.title}
                 </h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4">
+                    {post.content}
+                </p>
+            </Link>
+
+            {/* Tags */}
+            {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {post.tags.map((tag, index) => (
+                        <Link
+                            key={index}
+                            href={`/community/tags/${tag}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs font-medium text-primary bg-primary/5 px-3 py-1 rounded-xl border border-primary/10 hover:bg-primary/10 transition-colors"
+                        >
+                            #{tag}
+                        </Link>
+                    ))}
+                </div>
+            )}
+
+            {/* Footer: Actions */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-neutral-800">
+                <div className="flex gap-4">
                     <button
                         onClick={handleLike}
                         className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition-colors group/like"
@@ -120,8 +144,8 @@ const PostCard = ({ post }) => {
                         <path d="m12 5 7 7-7 7" />
                     </svg>
                 </Link>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 };
 
