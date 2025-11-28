@@ -37,30 +37,31 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="modal-box relative">
-                <button onClick={onClose} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 
-                <h3 className="font-bold text-lg flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-warning" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-white/5 w-full max-w-md p-6 relative">
+                <button onClick={onClose} className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">✕</button>
+
+                <h3 className="font-bold text-xl flex items-center gap-2 mb-6 text-base-content">
+                    <AlertTriangle className="w-6 h-6 text-warning" />
                     Report Content
                 </h3>
 
                 {success ? (
                     <div className="py-8 text-center text-success">
-                        <p className="font-bold">Report submitted successfully.</p>
-                        <p className="text-sm">Thank you for helping keep our community safe.</p>
+                        <p className="font-bold text-lg">Report submitted successfully.</p>
+                        <p className="text-base-content/70 mt-2">Thank you for helping keep our community safe.</p>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="py-4 space-y-4">
-                        {error && <div className="alert alert-error text-sm py-2">{error}</div>}
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {error && <div className="alert alert-error text-sm py-2 rounded-xl">{error}</div>}
 
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Reason</span>
+                            <label className="label pl-1">
+                                <span className="label-text font-bold text-base-content/70">Reason</span>
                             </label>
                             <select
-                                className="select select-bordered w-full"
+                                className="select select-bordered w-full bg-base-200/50 rounded-xl focus:border-primary focus:outline-none"
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                             >
@@ -73,20 +74,20 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId }) => {
                         </div>
 
                         <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Description (Optional)</span>
+                            <label className="label pl-1">
+                                <span className="label-text font-bold text-base-content/70">Description (Optional)</span>
                             </label>
                             <textarea
-                                className="textarea textarea-bordered h-24"
+                                className="textarea textarea-bordered h-24 bg-base-200/50 rounded-xl focus:border-primary focus:outline-none resize-none"
                                 placeholder="Please provide more details..."
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                             ></textarea>
                         </div>
 
-                        <div className="modal-action">
-                            <button type="button" onClick={onClose} className="btn btn-ghost">Cancel</button>
-                            <button type="submit" className="btn btn-error" disabled={loading}>
+                        <div className="flex justify-end gap-3 mt-6">
+                            <button type="button" onClick={onClose} className="btn btn-ghost rounded-xl">Cancel</button>
+                            <button type="submit" className="btn btn-error rounded-xl shadow-lg shadow-error/20" disabled={loading}>
                                 {loading ? 'Submitting...' : 'Submit Report'}
                             </button>
                         </div>
