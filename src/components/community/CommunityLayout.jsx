@@ -34,7 +34,7 @@ const CommunityLayout = ({ children }) => {
             </div>
 
             {/* Top Navigation */}
-            <div className="sticky top-0 z-50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-sm">
+            <div className="sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-white/20 dark:border-white/5 shadow-sm">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <button
@@ -64,7 +64,7 @@ const CommunityLayout = ({ children }) => {
                 </div>
 
                 {/* Mobile Search - Below nav */}
-                <div className="md:hidden border-t border-gray-200 dark:border-neutral-800 px-4 py-3">
+                <div className="md:hidden border-t border-gray-200 dark:border-neutral-800 px-4 py-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md z-10 relative">
                     <SearchBar />
                 </div>
             </div>

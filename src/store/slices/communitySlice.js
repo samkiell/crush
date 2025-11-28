@@ -256,8 +256,23 @@ const communitySlice = createSlice({
 
     // Fetch Comments
     builder
+      .addCase(fetchComments.pending, (state, action) => {
+        // Don't clear comments during polling to prevent flicker
+        if (!action.meta.arg?.isPolling) {
+          state.error = null;
+        }
+      })
       .addCase(fetchComments.fulfilled, (state, action) => {
-        state.comments = action.payload;
+        // Only update if we have data to prevent clearing on empty response
+        if (action.payload && Array.isArray(action.payload)) {
+          state.comments = action.payload;
+        }
+      })
+      .addCase(fetchComments.rejected, (state, action) => {
+        // Don't clear comments on error, just log it
+        if (!action.meta.arg?.isPolling) {
+          state.error = action.payload;
+        }
       });
 
     // Add Comment

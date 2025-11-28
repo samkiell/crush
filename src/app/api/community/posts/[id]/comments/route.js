@@ -29,7 +29,7 @@ const getUserFromRequest = async (req) => {
 
 export async function GET(req, { params }) {
   await dbConnect();
-  const { id } = params; // Post ID
+  const { id } = await params; // Post ID - await params in Next.js 14+
 
   try {
     const comments = await Comment.find({ post: id })

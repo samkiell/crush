@@ -125,8 +125,8 @@ const PostDetails = ({ postId }) => {
                             {post.isQuestion && (
                                 <span
                                     className={`px-3 py-1 rounded-full text-xs font-semibold ${post.isSolved
-                                            ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
-                                            : 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400'
+                                        ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
+                                        : 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400'
                                         }`}
                                 >
                                     {post.isSolved ? 'Solved' : 'Question'}
@@ -165,30 +165,24 @@ const PostDetails = ({ postId }) => {
 
                     {/* Actions */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex flex-wrap gap-3 sm:gap-6">
+                        <div className="flex flex-row items-center flex-wrap gap-3 sm:gap-4">
                             <button
                                 onClick={handleLike}
-                                className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-600 dark:text-gray-400 hover:text-primary transition-all duration-200 group"
+                                className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-600 dark:text-gray-400 hover:text-primary transition-all duration-200 group"
                             >
-                                <div className="p-2 rounded-full bg-gray-100 dark:bg-neutral-800 group-hover:bg-primary/10 transition-colors">
-                                    <ThumbsUp className="w-5 h-5" />
-                                </div>
+                                <ThumbsUp className="w-5 h-5" />
                                 <span className="font-medium">{post.likes} Likes</span>
                             </button>
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
-                                <div className="p-2 rounded-full bg-gray-100 dark:bg-neutral-800">
-                                    <MessageSquare className="w-5 h-5" />
-                                </div>
+                            <div className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
+                                <MessageSquare className="w-5 h-5" />
                                 <span className="font-medium">{post.commentsCount} Comments</span>
                             </div>
-                            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
-                                <div className="p-2 rounded-full bg-gray-100 dark:bg-neutral-800">
-                                    <Eye className="w-5 h-5" />
-                                </div>
+                            <div className="hidden sm:flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 cursor-default">
+                                <Eye className="w-5 h-5" />
                                 <span className="font-medium">{post.views} Views</span>
                             </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex flex-row items-center gap-2">
                             <button
                                 onClick={handleShare}
                                 className="btn btn-ghost btn-circle hover:bg-gray-100 dark:hover:bg-neutral-800"
