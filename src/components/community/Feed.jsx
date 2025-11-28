@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts, selectCommunityPosts, selectCommunityLoading, selectCommunityError } from '@/store/slices/communitySlice';
 import PostCard from './PostCard';
 import SkeletonPostCard from './skeletons/SkeletonPostCard';
-import { Loader2 } from 'lucide-react';
+import { showErrorToast } from '@/utils/toast-helpers';
 
 const Feed = () => {
     const dispatch = useDispatch();
@@ -31,20 +31,19 @@ const Feed = () => {
         return () => clearInterval(interval);
     }, [dispatch, page, category, search, sort]);
 
+    // Show error toast when error occurs
+    useEffect(() => {
+        if (error) {
+            showErrorToast(error);
+        }
+    }, [error]);
+
     if (loading) {
         return (
             <div className="space-y-4">
                 {[...Array(5)].map((_, i) => (
                     <SkeletonPostCard key={i} />
                 ))}
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="alert alert-error">
-                <span>Error: {error}</span>
             </div>
         );
     }
@@ -56,8 +55,33 @@ const Feed = () => {
             ))}
 
             {posts.length === 0 && !loading && (
-                <div className="text-center py-10 text-base-content/60">
-                    <p>No discussions yet. Be the first to start one!</p>
+                <div className="text-center py-16 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm shadow-black/5">
+                    <div className="max-w-md mx-auto px-6">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-neutral-800 rounded-2xl flex items-center justify-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="32"
+                                height="32"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="text-gray-400"
+                            >
+                                <path d="M12 2h9" />
+                                <path d="M6 8h8" />
+                                <path d="M3 12h5" />
+                                <path d="M3 16h11" />
+                                <path d="M3 20h11" />
+                            </svg>
+                        </div>
+                        <h3 className="text-lg font-semibold text-base-content mb-2">No discussions yet</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Be the first to start a conversation in the community!
+                        </p>
+                    </div>
                 </div>
             )}
         </div>

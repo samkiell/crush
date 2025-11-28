@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const FilterBar = () => {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const currentSort = searchParams.get('sort') || 'latest';
 
     const filters = [
@@ -14,24 +14,31 @@ const FilterBar = () => {
         { id: 'unsolved', label: 'Unsolved' },
     ];
 
+    const handleFilterClick = (filterId) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('sort', filterId);
+        params.delete('page'); // Reset to page 1 when changing sort
+        router.push(`/community?${params.toString()}`);
+    };
+
     return (
-        <div className="flex items-center gap-2 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md p-1.5 rounded-2xl border border-white/20 dark:border-white/5 shadow-sm">
+        <div className="flex items-center gap-2 bg-gray-100 dark:bg-neutral-800 p-1.5 rounded-2xl shadow-sm shadow-black/5">
             {filters.map((filter) => {
                 const isActive = currentSort === filter.id;
                 return (
-                    <Link
+                    <button
                         key={filter.id}
-                        href={`/community?sort=${filter.id}`}
+                        onClick={() => handleFilterClick(filter.id)}
                         className={`
-                            px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
-                            ${isActive
-                                ? 'bg-white dark:bg-neutral-800 text-primary shadow-sm'
-                                : 'text-base-content/60 hover:text-base-content hover:bg-white/50 dark:hover:bg-white/5'
+              px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+              ${isActive
+                                ? 'bg-white dark:bg-neutral-900 text-primary shadow-sm'
+                                : 'text-gray-600 dark:text-gray-400 hover:text-base-content hover:bg-white/50 dark:hover:bg-neutral-700'
                             }
-                        `}
+            `}
                     >
                         {filter.label}
-                    </Link>
+                    </button>
                 );
             })}
         </div>
