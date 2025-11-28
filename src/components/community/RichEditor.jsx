@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createPost, selectCommunityError } from '@/store/slices/communitySlice';
+import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Send, X } from 'lucide-react';
+import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from '@/utils/toast-helpers';
 
 const RichEditor = () => {
     const dispatch = useDispatch();
     const router = useRouter();
-    const error = useSelector(selectCommunityError);
+    const actionLoading = useSelector(selectActionLoading);
     const isAuthenticated = useSelector(selectIsAuthenticated);
 
     useEffect(() => {
@@ -24,7 +25,6 @@ const RichEditor = () => {
     const [category, setCategory] = useState('General');
     const [tags, setTags] = useState('');
     const [isQuestion, setIsQuestion] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
 
     if (!isAuthenticated) {
         return null;
@@ -32,58 +32,57 @@ const RichEditor = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!title.trim() || !content.trim()) return;
+        if (!title.trim() || !content.trim()) {
+            showErrorToast('Please fill in both title and content');
+            return;
+        }
 
-        setSubmitting(true);
+        const toastId = showLoadingToast('Creating your post...');
 
-        // Process tags
-        const tagList = tags.split(',').map(t => t.trim()).filter(t => t);
+        try {
+            // Process tags
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t);
 
-        const result = await dispatch(createPost({
-            title,
-            content,
-            category,
-            tags: tagList,
-            isQuestion,
-        }));
+            await dispatch(createPost({
+                title,
+                content,
+                category,
+                tags: tagList,
+                isQuestion,
+            })).unwrap();
 
-        setSubmitting(false);
-
-        if (!result.error) {
+            dismissToast(toastId);
+            showSuccessToast('Post created successfully! 🎉');
             router.push('/community');
+        } catch (error) {
+            dismissToast(toastId);
+            showErrorToast(error);
         }
     };
 
     return (
-
-        <div className="relative bg-white/60 dark:bg-neutral-900/60 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-black/10 border border-white/20 dark:border-white/5 max-w-3xl mx-auto overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-accent"></div>
-
+        <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-lg shadow-black/10 border border-gray-100 dark:border-neutral-800 max-w-3xl mx-auto overflow-hidden">
             <div className="p-8 sm:p-10">
-                <div className="mb-8 text-center">
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary inline-block">
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold text-base-content mb-2">
                         Start a Discussion
                     </h2>
-                    <p className="text-base-content/60 mt-2">
+                    <p className="text-gray-600 dark:text-gray-400">
                         Share your knowledge, ask questions, or start a debate.
                     </p>
                 </div>
 
-                {error && (
-                    <div className="alert alert-error mb-6 rounded-2xl shadow-sm">
-                        <span>{error}</span>
-                    </div>
-                )}
-
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Title */}
                     <div className="form-control">
-                        <label className="label pl-1">
-                            <span className="label-text font-bold text-base-content/70">Title</span>
+                        <label className="label">
+                            <span className="label-text font-semibold text-base-content">Title</span>
+                            <span className="label-text-alt text-gray-500">{title.length}/150</span>
                         </label>
                         <input
                             type="text"
                             placeholder="What's on your mind?"
-                            className="input input-lg bg-white/50 dark:bg-black/20 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/40 rounded-2xl transition-all duration-200 shadow-inner"
+                            className="input input-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
@@ -91,13 +90,14 @@ const RichEditor = () => {
                         />
                     </div>
 
+                    {/* Category and Tags */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="form-control">
-                            <label className="label pl-1">
-                                <span className="label-text font-bold text-base-content/70">Category</span>
+                            <label className="label">
+                                <span className="label-text font-semibold text-base-content">Category</span>
                             </label>
                             <select
-                                className="select select-lg bg-white/50 dark:bg-black/20 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/40 rounded-2xl transition-all duration-200 shadow-inner w-full"
+                                className="select select-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all w-full"
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             >
@@ -110,34 +110,37 @@ const RichEditor = () => {
                         </div>
 
                         <div className="form-control">
-                            <label className="label pl-1">
-                                <span className="label-text font-bold text-base-content/70">Tags</span>
+                            <label className="label">
+                                <span className="label-text font-semibold text-base-content">Tags</span>
                             </label>
                             <input
                                 type="text"
                                 placeholder="e.g. jamb, physics"
-                                className="input input-lg bg-white/50 dark:bg-black/20 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/40 rounded-2xl transition-all duration-200 shadow-inner w-full"
+                                className="input input-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all w-full"
                                 value={tags}
                                 onChange={(e) => setTags(e.target.value)}
                             />
                         </div>
                     </div>
 
+                    {/* Content */}
                     <div className="form-control">
-                        <label className="label pl-1">
-                            <span className="label-text font-bold text-base-content/70">Content</span>
+                        <label className="label">
+                            <span className="label-text font-semibold text-base-content">Content</span>
+                            <span className="label-text-alt text-gray-500">{content.length} characters</span>
                         </label>
                         <textarea
-                            className="textarea textarea-lg bg-white/50 dark:bg-black/20 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/40 rounded-2xl transition-all duration-200 shadow-inner min-h-[200px] text-base leading-relaxed"
+                            className="textarea textarea-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all min-h-[200px] text-base leading-relaxed resize-y"
                             placeholder="Share your thoughts, questions, or tips..."
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             required
-                        ></textarea>
+                        />
                     </div>
 
+                    {/* Question Checkbox */}
                     <div className="form-control">
-                        <label className="label cursor-pointer justify-start gap-4 p-4 rounded-2xl bg-base-200/30 hover:bg-base-200/50 transition-colors border border-transparent hover:border-primary/20">
+                        <label className="label cursor-pointer justify-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors">
                             <input
                                 type="checkbox"
                                 className="checkbox checkbox-primary rounded-lg"
@@ -145,29 +148,37 @@ const RichEditor = () => {
                                 onChange={(e) => setIsQuestion(e.target.checked)}
                             />
                             <div className="flex flex-col">
-                                <span className="font-bold text-base-content">Ask for Help</span>
-                                <span className="text-xs text-base-content/60">Mark this post as a question to get specific answers</span>
+                                <span className="font-semibold text-base-content">Ask for Help</span>
+                                <span className="text-xs text-gray-600 dark:text-gray-400">
+                                    Mark this post as a question to get specific answers
+                                </span>
                             </div>
                         </label>
                     </div>
 
-                    <div className="flex items-center justify-end gap-4 pt-4">
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-end gap-3 pt-4">
                         <button
                             type="button"
-                            className="btn btn-ghost rounded-xl hover:bg-base-200/50"
+                            className="btn btn-ghost rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 gap-2"
                             onClick={() => router.back()}
+                            disabled={actionLoading}
                         >
+                            <X className="w-4 h-4" />
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="btn btn-primary btn-lg rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 min-w-[160px]"
-                            disabled={submitting}
+                            className="btn btn-primary rounded-xl shadow-sm hover:shadow-lg gap-2 min-w-[140px]"
+                            disabled={actionLoading}
                         >
-                            {submitting ? (
-                                <Loader2 className="w-6 h-6 animate-spin" />
+                            {actionLoading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
                             ) : (
-                                'Post Discussion'
+                                <>
+                                    <Send className="w-4 h-4" />
+                                    <span>Post</span>
+                                </>
                             )}
                         </button>
                     </div>
