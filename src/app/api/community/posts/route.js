@@ -33,11 +33,15 @@ export async function GET(req) {
   const sort = searchParams.get('sort') || 'latest'; // latest, popular, unsolved
   const category = searchParams.get('category');
   const search = searchParams.get('search');
+  const tag = searchParams.get('tag'); // New: filter by tag
 
   const query = {};
   if (category) query.category = category;
   if (search) {
     query.$text = { $search: search };
+  }
+  if (tag) {
+    query.tags = tag; // Filter posts that include this tag
   }
 
   let sortOption = { createdAt: -1 };

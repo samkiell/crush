@@ -4,10 +4,10 @@ import axios from 'axios';
 // Async Thunks
 export const fetchPosts = createAsyncThunk(
   'community/fetchPosts',
-  async ({ page = 1, limit = 10, sort = 'latest', category = '', search = '' }, { rejectWithValue }) => {
+  async ({ page = 1, limit = 10, sort = 'latest', category = '', search = '', tag = '' }, { rejectWithValue }) => {
     try {
       const response = await axios.get('/api/community/posts', {
-        params: { page, limit, sort, category, search },
+        params: { page, limit, sort, category, search, tag },
       });
       return response.data;
     } catch (error) {
