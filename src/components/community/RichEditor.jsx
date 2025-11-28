@@ -179,24 +179,24 @@ const RichEditor = () => {
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-neutral-800">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-3 sm:pt-4 border-t border-gray-200 dark:border-neutral-800">
                             <button
                                 type="button"
-                                className="btn btn-ghost rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 gap-2 order-2 sm:order-1"
+                                className="btn btn-ghost rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 gap-2 order-2 sm:order-1 flex items-center justify-center"
                                 onClick={() => router.back()}
                                 disabled={actionLoading}
                             >
                                 <X className="w-4 h-4" />
-                                Cancel
+                                <span>Cancel</span>
                             </button>
                             <button
                                 type="submit"
-                                className="btn btn-primary rounded-xl shadow-lg hover:shadow-xl gap-2 min-w-[160px] order-1 sm:order-2"
+                                className="btn btn-primary rounded-xl shadow-lg hover:shadow-xl gap-2 min-w-[160px] order-1 sm:order-2 flex items-center justify-center"
                                 disabled={actionLoading || !title.trim() || !content.trim()}
                             >
                                 {actionLoading ? (
                                     <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        <Loader2 className="w-4 h-4 animate-spin" />
                                         <span>Publishing...</span>
                                     </>
                                 ) : (

@@ -33,23 +33,34 @@ const SearchBar = () => {
     return (
         <form onSubmit={handleSearch} className="relative w-full">
             <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                {/* Clear button on the left (only shows when there's text) */}
+                {searchQuery && (
+                    <button
+                        type="button"
+                        onClick={clearSearch}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors z-10"
+                        aria-label="Clear search"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                )}
+
                 <input
                     type="text"
                     placeholder="Search discussions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="input w-full pl-12 pr-12 bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 focus:border-primary rounded-xl transition-all"
+                    className={`input w-full ${searchQuery ? 'pl-10' : 'pl-4'} pr-12 bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 focus:border-primary rounded-xl transition-all`}
                 />
-                {searchQuery && (
-                    <button
-                        type="button"
-                        onClick={clearSearch}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
-                )}
+
+                {/* Search button on the right (always visible and functional) */}
+                <button
+                    type="submit"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                    aria-label="Search"
+                >
+                    <Search className="w-5 h-5" />
+                </button>
             </div>
         </form>
     );
