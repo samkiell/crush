@@ -3,118 +3,67 @@
 ## ✅ COMPLETED: All Components Now Use DaisyUI Theme Tokens
 
 ### Problem
-The community UI was not changing colors when switching between light/dark themes. Hard-coded colors like `bg-white`, `bg-gray-100`, `text-gray-600` were used instead of theme-aware tokens.
+The community UI was not changing colors when switching between light/dark themes.
+1. Hard-coded colors were used.
+2. **`dark:` classes were interfering** with DaisyUI's theme system. Since `darkMode` was not configured to 'class', `dark:` classes were triggered by system preference, overriding the in-app theme selection.
 
 ### Solution
-Replaced all hard-coded colors with **DaisyUI theme tokens** that automatically change based on the active theme (light/dark/eye-care).
+1. Replaced all hard-coded colors with **DaisyUI theme tokens** (`bg-base-100`, `text-base-content`).
+2. **Removed ALL `dark:` classes** from modified components to rely solely on DaisyUI's `data-theme` attribute.
 
 ---
 
 ## Color Token Mapping
 
-| Old (Hard-coded) | New (Theme-aware) | Purpose |
-|------------------|-------------------|---------|
-| `bg-white` | `bg-base-100` | Main card backgrounds |
-| `bg-gray-50` | `bg-base-200` | Light surface backgrounds |
-| `bg-gray-100` | `bg-base-200` | Button/icon backgrounds |
-| `border-gray-100` | `border-base-300` | Card borders |
-| `border-gray-200` | `border-base-300` | Dividers |
-| `text-gray-500` | `text-base-content/60` | Secondary text |
-| `text-gray-600` | `text-base-content/70` | Tertiary text |
-| `text-gray-700` | `text-base-content/80` | Body text |
+| Old (Hard-coded / Dark Mode) | New (Theme-aware) | Purpose |
+|------------------------------|-------------------|---------|
+| `bg-white` / `dark:bg-neutral-900` | `bg-base-100` | Main card backgrounds |
+| `bg-gray-50` / `dark:bg-neutral-800` | `bg-base-200` | Light surface backgrounds |
+| `text-gray-600` / `dark:text-gray-400` | `text-base-content/70` | Secondary text |
+| `border-gray-200` / `dark:border-neutral-700` | `border-base-300` | Borders |
+| `bg-red-50` / `dark:bg-red-900/20` | `bg-error/10` | Error backgrounds |
+| `text-red-600` / `dark:text-red-400` | `text-error` | Error text |
 
 ---
 
-## Files Updated
+## Files Updated & Cleaned
 
 ### 1. **PostCard.jsx**
-- ✅ Card background: `bg-white` → `bg-base-100`
-- ✅ Category badge: `bg-gray-100` → `bg-base-200`
-- ✅ Borders: `border-gray-100` → `border-base-300`
-- ✅ Icon backgrounds: `bg-gray-100` → `bg-base-200`
-- ✅ Text colors: `text-gray-*` → `text-base-content/*`
+- Removed `dark:bg-neutral-900`, `dark:text-gray-400`, etc.
+- Used `bg-success/10` and `bg-warning/10` for status badges.
 
 ### 2. **PostDetails.jsx**
-- ✅ Main card: `bg-white` → `bg-base-100`
-- ✅ Category badge: `bg-gray-100` → `bg-base-200`
-- ✅ Divider: `bg-gray-200` → `bg-base-300`
-- ✅ Text colors: `text-gray-*` → `text-base-content/*`
-- ✅ Hover states: `hover:bg-gray-100` → `hover:bg-base-200`
+- Removed `dark:bg-red-900/20`, `dark:text-red-400` (Error states).
+- Removed `dark:bg-neutral-800` (Not found state).
+- Updated share/report buttons to use theme tokens.
 
 ### 3. **CommentSection.jsx**
-- ✅ Comment bubbles: `bg-gray-50` → `bg-base-200`
-- ✅ Input container: `bg-white` → `bg-base-100`
-- ✅ Input field: `bg-gray-50` → `bg-base-200`
-- ✅ Borders: `border-gray-*` → `border-base-300`
-- ✅ Text colors: `text-gray-*` → `text-base-content/*`
-- ✅ Reply indicator: `bg-gray-100` → `bg-base-200`
-- ✅ Login prompt: `bg-gray-50` → `bg-base-200`
+- Removed `dark:text-gray-400` from report button.
+- Removed `dark:bg-neutral-800` from empty state.
 
 ### 4. **CommunityLayout.jsx**
-- ✅ Navbar: `bg-white/80` → `bg-base-100/80`
-- ✅ Mobile search: `bg-white/80` → `bg-base-100/80`
-- ✅ Sidebar: `bg-white/40` → `bg-base-100/40`
-- ✅ Trending sidebar: `bg-white/40` → `bg-base-100/40`
-- ✅ Borders: `border-white/20` → `border-base-300`
+- Removed `dark:hover:bg-white/5` from trending topics.
 
 ### 5. **MinimalFooter.jsx**
-- ✅ Background: `bg-white/50` → `bg-base-100/50`
-- ✅ Border: `border-gray-*` → `border-base-300`
-- ✅ Text: `text-gray-*` → `text-base-content/*`
-
----
-
-## DaisyUI Theme Tokens Reference
-
-Based on your `tailwind.config.js`:
-
-### Light Theme
-- `base-100`: `#FFFFFF` (white)
-- `base-200`: `#F8F9FA` (light gray)
-- `base-300`: `#E9ECEF` (border gray)
-- `base-content`: `#212529` (dark text)
-
-### Dark Theme
-- `base-100`: `#121212` (dark background)
-- `base-200`: `#1A1A1A` (slightly lighter)
-- `base-300`: `#222222` (borders)
-- `base-content`: `#E0E0E0` (light text)
-
-### Eye-Care Theme
-- `base-100`: `#F5F2E8` (cream)
-- `base-200`: `#E8E3D6` (light beige)
-- `base-300`: `#DCD6C7` (beige border)
-- `base-content`: `#3A362C` (dark brown text)
+- Validated clean (no `dark:` classes).
 
 ---
 
 ## Testing Checklist
 
-✅ **Light Theme**
-- Cards should have white backgrounds
-- Text should be dark and readable
-- Borders should be light gray
+✅ **Theme Switching**
+- Toggle between Light / Dark / Eye-Care in the app.
+- **Verify:** Colors change immediately without needing a page reload.
+- **Verify:** System preference (OS dark mode) does NOT override the selected app theme.
 
-✅ **Dark Theme**
-- Cards should have dark backgrounds
-- Text should be light and readable
-- Borders should be subtle
-
-✅ **Eye-Care Theme**
-- Cards should have cream/beige backgrounds
-- Text should be dark brown
-- Overall warm, comfortable appearance
+✅ **Visual Consistency**
+- Light mode: White cards, dark text.
+- Dark mode: Dark cards, light text.
+- Eye-Care mode: Cream cards, brown text.
 
 ---
 
 ## Result
 
-🎉 **All community components now properly respond to theme changes!**
-
-When you switch themes in your app, all colors will automatically update:
-- Backgrounds adapt (white → dark → cream)
-- Text adapts (dark → light → brown)
-- Borders adapt (gray → dark → beige)
-- All elements maintain proper contrast and readability
-
-No more hard-coded colors! Everything uses DaisyUI's theme system.
+🎉 **Theme switching now works perfectly!**
+By removing the conflicting `dark:` classes, the UI now fully respects the `data-theme` attribute set by the `ThemeWrapper`, ensuring the user sees exactly the theme they selected.

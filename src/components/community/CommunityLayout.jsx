@@ -109,7 +109,7 @@ const CommunityLayout = ({ children }) => {
                                         <li key={index}>
                                             <Link
                                                 href={`/community?search=${topic}`}
-                                                className="block p-3 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors group"
+                                                className="block p-3 rounded-xl hover:bg-base-200 transition-colors group"
                                             >
                                                 <span className="font-medium text-base-content/80 group-hover:text-primary transition-colors">#{topic}</span>
                                             </Link>

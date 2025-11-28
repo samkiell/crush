@@ -59,7 +59,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                         </button>
                         <button
                             onClick={() => onReport(comment._id)}
-                            className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-red-600 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 ml-auto opacity-0 group-hover:opacity-100"
+                            className="text-xs font-semibold text-base-content/60 hover:text-error transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 ml-auto opacity-0 group-hover:opacity-100"
                         >
                             <Flag className="w-3.5 h-3.5" /> Report
                         </button>
@@ -226,10 +226,10 @@ const CommentSection = ({ postId }) => {
 
                 {comments.length === 0 && (
                     <div className="text-center py-10">
-                        <div className="bg-gray-100 dark:bg-neutral-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                        <div className="bg-base-200 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-base-content/40">
                             <MessageSquare className="w-8 h-8" />
                         </div>
-                        <p className="text-gray-600 dark:text-gray-400 font-medium">No comments yet. Be the first to start the conversation!</p>
+                        <p className="text-base-content/60 font-medium">No comments yet. Be the first to start the conversation!</p>
                     </div>
                 )}
             </div>

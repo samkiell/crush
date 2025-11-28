@@ -71,8 +71,8 @@ const PostDetails = ({ postId }) => {
 
     if (error) {
         return (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6 text-center">
-                <p className="text-red-600 dark:text-red-400 font-semibold mb-3">Error loading post: {error}</p>
+            <div className="bg-error/10 border border-error/20 rounded-2xl p-6 text-center">
+                <p className="text-error font-semibold mb-3">Error loading post: {error}</p>
                 <Link href="/community" className="btn btn-primary rounded-xl">
                     ← Back to Community
                 </Link>
@@ -82,8 +82,8 @@ const PostDetails = ({ postId }) => {
 
     if (!post) {
         return (
-            <div className="bg-gray-50 dark:bg-neutral-800 rounded-2xl p-8 text-center">
-                <p className="text-gray-600 dark:text-gray-400 font-medium mb-3">Post not found</p>
+            <div className="bg-base-200 rounded-2xl p-8 text-center">
+                <p className="text-base-content/60 font-medium mb-3">Post not found</p>
                 <Link href="/community" className="btn btn-primary rounded-xl">
                     ← Back to Community
                 </Link>
@@ -125,8 +125,8 @@ const PostDetails = ({ postId }) => {
                             {post.isQuestion && (
                                 <span
                                     className={`px-3 py-1 rounded-full text-xs font-semibold ${post.isSolved
-                                        ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
-                                        : 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400'
+                                        ? 'bg-success/10 text-success'
+                                        : 'bg-warning/10 text-warning'
                                         }`}
                                 >
                                     {post.isSolved ? 'Solved' : 'Question'}
@@ -185,17 +185,17 @@ const PostDetails = ({ postId }) => {
                         <div className="flex flex-row items-center gap-2">
                             <button
                                 onClick={handleShare}
-                                className="btn btn-ghost btn-circle hover:bg-gray-100 dark:hover:bg-neutral-800"
+                                className="btn btn-ghost btn-circle hover:bg-base-200"
                                 title="Share"
                             >
-                                <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                                <Share2 className="w-5 h-5 text-base-content/70" />
                             </button>
                             <button
-                                className="btn btn-ghost btn-circle hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
+                                className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error"
                                 title="Report"
                                 onClick={() => setIsReportModalOpen(true)}
                             >
-                                <Flag className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                                <Flag className="w-5 h-5 text-base-content/70" />
                             </button>
                         </div>
                     </div>
