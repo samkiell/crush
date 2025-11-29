@@ -98,7 +98,7 @@ const BottomNav = () => {
                                     {/* Notification Badge */}
                                     {item.badge > 0 && (
                                         <span
-                                            className="absolute -top-1 -right-1 z-10 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[9px] font-bold text-white bg-error rounded-full shadow-sm"
+                                            className="absolute -top-2 -right-2 z-10 flex items-center justify-center min-w-[20px] h-[20px] px-1 text-[10px] font-bold text-white bg-red-500 border-[2px] border-base-100 rounded-full shadow-sm"
                                             aria-label={`${item.badge} unread notifications`}
                                         >
                                             {item.badge > 99 ? '99+' : item.badge}
