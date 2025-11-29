@@ -135,9 +135,10 @@ const PostDetails = ({ postId }) => {
             </Link>
 
             {/* Main Post Content */}
-            <article className="bg-base-100 rounded-2xl shadow-sm border border-base-300 overflow-hidden mb-8">
+            {/* Main Post Content */}
+            <article className="bg-base-100 rounded-2xl shadow-sm border border-base-300 mb-8">
                 {/* Post Header */}
-                <div className="p-6 sm:p-8 border-b border-base-300 bg-base-200/30">
+                <div className="p-6 sm:p-8 border-b border-base-300 bg-base-200/30 rounded-t-2xl">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex items-center gap-4">
                             <div className="avatar placeholder">
@@ -166,11 +167,17 @@ const PostDetails = ({ postId }) => {
                             </div>
                         </div>
 
-                        <div className="dropdown dropdown-end">
-                            <button tabIndex={0} className="btn btn-ghost btn-circle btn-sm">
+                        <details className="dropdown dropdown-end">
+                            <summary className="btn btn-ghost btn-circle btn-sm">
                                 <MoreHorizontal className="w-5 h-5" />
-                            </button>
-                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200">
+                            </summary>
+                            <ul
+                                className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
+                                onClick={(e) => {
+                                    const details = e.currentTarget.closest('details');
+                                    if (details) details.removeAttribute('open');
+                                }}
+                            >
                                 <li>
                                     <button onClick={handleShare} className="flex items-center gap-2">
                                         <Share2 className="w-4 h-4" /> Share
@@ -189,7 +196,7 @@ const PostDetails = ({ postId }) => {
                                     </li>
                                 )}
                             </ul>
-                        </div>
+                        </details>
                     </div>
 
                     <h1 className="text-2xl sm:text-3xl font-bold text-base-content mb-4 leading-tight">
@@ -214,7 +221,7 @@ const PostDetails = ({ postId }) => {
                 </div>
 
                 {/* Post Body */}
-                <div className="p-6 sm:p-8">
+                <div className="p-6 sm:p-8 rounded-b-2xl">
                     <div className="prose prose-base max-w-none text-base-content/80 mb-8">
                         <p className="whitespace-pre-wrap leading-relaxed">{post.content}</p>
                     </div>
