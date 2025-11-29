@@ -45,11 +45,19 @@ export async function POST(request, { params }) {
     }
     
     // Check if already a member
-    if (room.members.includes(userId)) {
-      return NextResponse.json(
-        { success: false, error: 'Already a member of this room' },
-        { status: 400 }
-      );
+    const isMember = room.members.some(memberId => memberId.toString() === userId);
+    
+    if (isMember) {
+      const populatedRoom = await ChatRoom.findById(id)
+        .populate('creator', 'username avatar')
+        .populate('members', 'username avatar')
+        .lean();
+
+      return NextResponse.json({
+        success: true,
+        data: populatedRoom,
+        message: 'Already a member',
+      });
     }
     
     // Check max members limit
