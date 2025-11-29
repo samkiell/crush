@@ -33,12 +33,12 @@ export default function handler(req, res) {
       socket.to(message.room).emit('receive_message', message);
     });
 
-    socket.on('typing_start', ({ roomId, username }) => {
-      socket.to(roomId).emit('typing_start', { roomId, username, userId: socket.id });
+    socket.on('typing_start', ({ roomId, name }) => {
+      socket.to(roomId).emit('typing_start', { roomId, name, userId: socket.id });
     });
 
-    socket.on('typing_stop', ({ roomId, username }) => {
-      socket.to(roomId).emit('typing_stop', { roomId, username, userId: socket.id });
+    socket.on('typing_stop', ({ roomId, name }) => {
+      socket.to(roomId).emit('typing_stop', { roomId, name, userId: socket.id });
     });
 
     socket.on('disconnect', () => {

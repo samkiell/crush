@@ -19,7 +19,7 @@ export default function MessageInput({ roomId, onSendMessage }) {
 
         if (!isTyping) {
             setIsTyping(true);
-            socket.emit('typing_start', { roomId, username: user.username });
+            socket.emit('typing_start', { roomId, name: user.name });
         }
 
         if (typingTimeoutRef.current) {
@@ -28,7 +28,7 @@ export default function MessageInput({ roomId, onSendMessage }) {
 
         typingTimeoutRef.current = setTimeout(() => {
             setIsTyping(false);
-            socket.emit('typing_stop', { roomId, username: user.username });
+            socket.emit('typing_stop', { roomId, name: user.name });
         }, 2000);
     };
 
@@ -51,7 +51,7 @@ export default function MessageInput({ roomId, onSendMessage }) {
         // Stop typing indicator immediately
         if (isTyping) {
             setIsTyping(false);
-            socket?.emit('typing_stop', { roomId, username: user.username });
+            socket?.emit('typing_stop', { roomId, name: user.name });
             if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         }
     };
