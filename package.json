@@ -38,6 +38,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/node": "24.10.1",
     "@types/react": "19.2.6",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "tailwindcss": "^4",
     "typescript": "5.9.3"
