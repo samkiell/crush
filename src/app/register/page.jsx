@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser, clearError } from '../../../store/slices/authSlice';
+import { registerUser, clearError } from '../../store/slices/authSlice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Footer from '../../../components/Footer';
+import Footer from '../../components/Footer';
 import { User, Mail, Lock, ArrowRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { showErrorToast, showRegistrationSuccessToast } from '../../../utils/toast-helpers';
+import { showErrorToast, showRegistrationSuccessToast } from '../../utils/toast-helpers';
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ export default function RegisterPage() {
             // Show success toast and redirect to login
             showRegistrationSuccessToast();
             setTimeout(() => {
-                router.push('/auth/login');
+                router.push('/login');
             }, 1000);
         }
     }, [registerSuccess, loading, error, router]);

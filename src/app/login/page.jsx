@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { loginUser, clearError } from '../../../store/slices/authSlice';
-import Footer from '../../../components/Footer';
+import { loginUser, clearError } from '../../store/slices/authSlice';
+import Footer from '../../components/Footer';
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
-import { showErrorToast, showWelcomeToast } from '../../../utils/toast-helpers';
+import { showErrorToast, showWelcomeToast } from '../../utils/toast-helpers';
 
 export default function LoginPage() {
   const dispatch = useDispatch();
