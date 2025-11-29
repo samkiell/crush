@@ -35,9 +35,12 @@ export async function POST(request, { params }) {
     const { id } = await params;
     const userId = decoded.userId;
     
+    console.log(`[JOIN] Attempting to join room: ${id} by user: ${userId}`);
+
     const room = await ChatRoom.findById(id);
     
     if (!room) {
+      console.log(`[JOIN] Room not found for ID: ${id}`);
       return NextResponse.json(
         { success: false, error: 'Chat room not found' },
         { status: 404 }
