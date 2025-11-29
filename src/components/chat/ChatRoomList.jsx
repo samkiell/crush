@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Users, Search, Plus } from 'lucide-react';
+import { Search, Plus, MessageSquarePlus } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function ChatRoomList({
@@ -26,9 +26,10 @@ export default function ChatRoomList({
                 <h2 className="text-xl font-bold">Chats</h2>
                 <button
                     onClick={onCreateRoom}
-                    className="btn btn-circle btn-ghost btn-sm"
+                    className="btn btn-sm btn-primary gap-2"
                 >
-                    <Plus size={20} />
+                    <Plus size={16} />
+                    <span className="hidden sm:inline">New Room</span>
                 </button>
             </div>
 
@@ -61,8 +62,22 @@ export default function ChatRoomList({
                         ))}
                     </div>
                 ) : filteredRooms.length === 0 ? (
-                    <div className="p-8 text-center text-base-content/40">
-                        <p>No rooms found</p>
+                    <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                        <div className="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4">
+                            <MessageSquarePlus className="w-8 h-8 text-base-content/40" />
+                        </div>
+                        <h3 className="font-bold text-lg mb-2">No rooms found</h3>
+                        <p className="text-base-content/60 text-sm mb-6">
+                            {searchQuery ? 'Try a different search term' : 'Get the conversation started!'}
+                        </p>
+                        {!searchQuery && (
+                            <button
+                                onClick={onCreateRoom}
+                                className="btn btn-primary"
+                            >
+                                Create a Room
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="divide-y divide-base-200/50">

@@ -71,7 +71,13 @@ export default function ChatPage() {
                             <MessageCircle size={48} className="text-base-content/30" />
                         </div>
                         <h3 className="text-xl font-bold mb-2">Select a conversation</h3>
-                        <p>Choose a room from the left or create a new one.</p>
+                        <p className="mb-6">Choose a room from the left or create a new one.</p>
+                        <button
+                            onClick={() => setIsCreateModalOpen(true)}
+                            className="btn btn-primary btn-outline"
+                        >
+                            Create New Room
+                        </button>
                     </div>
                 )}
             </div>
