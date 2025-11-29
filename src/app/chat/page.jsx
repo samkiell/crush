@@ -12,6 +12,7 @@ export default function ChatPage() {
     const dispatch = useDispatch();
     const { rooms, activeRoom, loading } = useSelector((state) => state.chat);
     const { user } = useSelector((state) => state.auth);
+    const isAdmin = user?.role === 'admin';
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     useEffect(() => {
@@ -72,12 +73,14 @@ export default function ChatPage() {
                         </div>
                         <h3 className="text-xl font-bold mb-2">Select a conversation</h3>
                         <p className="mb-6">Choose a room from the left or create a new one.</p>
-                        <button
-                            onClick={() => setIsCreateModalOpen(true)}
-                            className="btn btn-primary btn-outline"
-                        >
-                            Create New Room
-                        </button>
+                        {isAdmin && (
+                            <button
+                                onClick={() => setIsCreateModalOpen(true)}
+                                className="btn btn-primary btn-outline"
+                            >
+                                Create New Room
+                            </button>
+                        )}
                     </div>
                 )}
             </div>
