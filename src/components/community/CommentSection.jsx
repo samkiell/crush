@@ -74,16 +74,16 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                         >
                             <Reply className="w-3.5 h-3.5" /> Reply
                         </button>
-                        <div className="dropdown dropdown-end ml-auto">
-                            <div tabIndex={0} role="button" className="btn btn-ghost btn-xs btn-circle text-base-content/60">
+                        <details className="dropdown dropdown-end ml-auto">
+                            <summary className="btn btn-ghost btn-xs btn-circle text-base-content/60 list-none">
                                 <MoreVertical className="w-4 h-4" />
-                            </div>
-                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32 border border-base-200">
+                            </summary>
+                            <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32 border border-base-200">
                                 <li>
                                     <button
                                         onClick={(e) => {
                                             onReport(comment._id);
-                                            e.currentTarget.closest('.dropdown').querySelector('[role="button"]').blur();
+                                            e.currentTarget.closest('details').removeAttribute('open');
                                         }}
                                         className="text-xs text-base-content/80 hover:text-error"
                                     >
@@ -95,7 +95,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                                         <button
                                             onClick={(e) => {
                                                 onDelete(comment._id);
-                                                e.currentTarget.closest('.dropdown').querySelector('[role="button"]').blur();
+                                                e.currentTarget.closest('details').removeAttribute('open');
                                             }}
                                             className="text-xs text-error hover:bg-error/10"
                                         >
@@ -104,7 +104,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                                     </li>
                                 )}
                             </ul>
-                        </div>
+                        </details>
                     </div>
                 </div>
             </div>
