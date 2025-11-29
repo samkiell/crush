@@ -34,10 +34,10 @@ const CommunityPostSchema = new mongoose.Schema({
     enum: ['General', 'Exam Help', 'Study Tips', 'Career', 'Off-Topic'],
     default: 'General',
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   views: {
     type: Number,
     default: 0,

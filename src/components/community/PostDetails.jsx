@@ -265,7 +265,7 @@ const PostDetails = ({ postId }) => {
                         >
                             <ThumbsUp className={`w-5 h-5 ${hasLiked ? 'fill-current' : ''}`} />
                             {hasLiked ? 'Liked' : 'Like'}
-                            <span className="badge badge-sm bg-base-100/20 border-0">{post.likes}</span>
+                            <span className="badge badge-sm bg-base-100/20 border-0">{post.likes?.length || 0}</span>
                         </button>
 
                         <div className="flex items-center gap-2 text-base-content/60 px-2">

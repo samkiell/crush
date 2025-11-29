@@ -62,10 +62,10 @@ export async function POST(req, { params }) {
       // Decrement count and update author reputation
       let targetAuthorId;
       if (targetType === 'CommunityPost') {
-        const post = await CommunityPost.findByIdAndUpdate(targetId, { $inc: { likes: -1 } });
+        const post = await CommunityPost.findByIdAndUpdate(targetId, { $pull: { likes: user._id } });
         targetAuthorId = post.author;
       } else {
-        const comment = await Comment.findByIdAndUpdate(targetId, { $inc: { likes: -1 } });
+        const comment = await Comment.findByIdAndUpdate(targetId, { $pull: { likes: user._id } });
         targetAuthorId = comment.author;
       }
 
@@ -87,10 +87,10 @@ export async function POST(req, { params }) {
       // Increment count and update author reputation
       let targetAuthorId;
       if (targetType === 'CommunityPost') {
-        const post = await CommunityPost.findByIdAndUpdate(targetId, { $inc: { likes: 1 } });
+        const post = await CommunityPost.findByIdAndUpdate(targetId, { $addToSet: { likes: user._id } });
         targetAuthorId = post.author;
       } else {
-        const comment = await Comment.findByIdAndUpdate(targetId, { $inc: { likes: 1 } });
+        const comment = await Comment.findByIdAndUpdate(targetId, { $addToSet: { likes: user._id } });
         targetAuthorId = comment.author;
       }
 

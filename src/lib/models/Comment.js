@@ -30,10 +30,10 @@ const CommentSchema = new mongoose.Schema({
     ref: 'Comment',
     default: null, // If null, it's a top-level comment
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   isSolution: {
     type: Boolean,
     default: false,

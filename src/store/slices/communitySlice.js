@@ -121,7 +121,7 @@ export const toggleReaction = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      return { id: targetId || id, targetType, type, action: response.data.action };
+      return { id: targetId || id, targetType, type, action: response.data.action, userId: state.auth.user?._id };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || error.message);
     }
@@ -326,21 +326,36 @@ const communitySlice = createSlice({
     // Toggle Reaction
     builder
       .addCase(toggleReaction.fulfilled, (state, action) => {
-        const { id, targetType, action: reactionAction } = action.payload;
-        const change = reactionAction === 'added' ? 1 : -1;
+        const { id, targetType, action: reactionAction, userId } = action.payload;
 
         if (targetType === 'CommunityPost') {
           // Update in posts list
           const post = state.posts.find(p => p._id === id);
-          if (post) post.likes += change;
+          if (post) {
+             if (reactionAction === 'added') {
+               if (!post.likes.includes(userId)) post.likes.push(userId);
+             } else {
+               post.likes = post.likes.filter(uid => uid !== userId);
+             }
+          }
           
           // Update in current post
           if (state.currentPost && state.currentPost._id === id) {
-            state.currentPost.likes += change;
+             if (reactionAction === 'added') {
+               if (!state.currentPost.likes.includes(userId)) state.currentPost.likes.push(userId);
+             } else {
+               state.currentPost.likes = state.currentPost.likes.filter(uid => uid !== userId);
+             }
           }
         } else if (targetType === 'Comment') {
           const comment = state.comments.find(c => c._id === id);
-          if (comment) comment.likes += change;
+          if (comment) {
+             if (reactionAction === 'added') {
+               if (!comment.likes.includes(userId)) comment.likes.push(userId);
+             } else {
+               comment.likes = comment.likes.filter(uid => uid !== userId);
+             }
+          }
         }
       });
 
