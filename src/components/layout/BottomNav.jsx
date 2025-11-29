@@ -3,20 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
-import {
-    HomeIcon as HomeOutline,
-    DocumentTextIcon as DocumentOutline,
-    UserGroupIcon as CommunityOutline,
-    ChatBubbleLeftRightIcon as ChatOutline,
-    UserCircleIcon as ProfileOutline
-} from '@heroicons/react/24/outline';
-import {
-    HomeIcon as HomeFilled,
-    DocumentTextIcon as DocumentFilled,
-    UserGroupIcon as CommunityFilled,
-    ChatBubbleLeftRightIcon as ChatFilled,
-    UserCircleIcon as ProfileFilled
-} from '@heroicons/react/24/solid';
+import { Home, FileText, MessageCircle, Users, User } from 'lucide-react';
 
 const BottomNav = () => {
     const pathname = usePathname();

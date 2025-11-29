@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    const { loading, error } = useSelector((state) => state.auth);
+    const { loading, error, isAuthenticated, user } = useSelector((state) => state.auth);
 
     useEffect(() => {
         setMounted(true);
@@ -31,6 +31,13 @@ export default function RegisterPage() {
             dispatch(clearError());
         };
     }, [dispatch]);
+
+    // Redirect authenticated users to dashboard
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            router.push('/dashboard');
+        }
+    }, [isAuthenticated, user, router]);
 
     // Watch for registration success
     const [registerSuccess, setRegisterSuccess] = useState(false);
