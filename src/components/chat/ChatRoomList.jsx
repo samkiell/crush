@@ -14,6 +14,7 @@ export default function ChatRoomList({
 }) {
     const { user } = useSelector((state) => state.auth);
     const [searchQuery, setSearchQuery] = useState('');
+    const isAdmin = user?.role === 'admin';
 
     const filteredRooms = rooms.filter((room) =>
         room.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -24,13 +25,15 @@ export default function ChatRoomList({
             {/* Header */}
             <div className="p-4 border-b border-base-200 flex items-center justify-between sticky top-0 bg-base-100 z-10">
                 <h2 className="text-xl font-bold">Chats</h2>
-                <button
-                    onClick={onCreateRoom}
-                    className="btn btn-sm btn-primary gap-2"
-                >
-                    <Plus size={16} />
-                    <span className="hidden sm:inline">New Room</span>
-                </button>
+                {isAdmin && (
+                    <button
+                        onClick={onCreateRoom}
+                        className="btn btn-sm btn-primary gap-2"
+                    >
+                        <Plus size={16} />
+                        <span className="hidden sm:inline">New Room</span>
+                    </button>
+                )}
             </div>
 
             {/* Search */}
@@ -70,7 +73,7 @@ export default function ChatRoomList({
                         <p className="text-base-content/60 text-sm mb-6">
                             {searchQuery ? 'Try a different search term' : 'Get the conversation started!'}
                         </p>
-                        {!searchQuery && (
+                        {!searchQuery && isAdmin && (
                             <button
                                 onClick={onCreateRoom}
                                 className="btn btn-primary"

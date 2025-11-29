@@ -1,22 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import ChatRoom from '@/models/ChatRoom';
-import jwt from 'jsonwebtoken';
-
-// Helper to verify JWT
-const verifyToken = (request) => {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
-  }
-  
-  const token = authHeader.split(' ')[1];
-  try {
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    return null;
-  }
-};
+import { authorizeAdmin } from '@/lib/auth';
 
 // GET - Fetch all chat rooms
 export async function GET(request) {
@@ -66,12 +51,14 @@ export async function POST(request) {
   try {
     await dbConnect();
     
-    // Verify authentication
-    const decoded = verifyToken(request);
-    if (!decoded) {
+    // Verify authentication and admin role
+    let user;
+    try {
+      user = await authorizeAdmin(request);
+    } catch (error) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
+        { success: false, error: error.message || 'Forbidden' },
+        { status: 403 }
       );
     }
     
@@ -92,9 +79,9 @@ export async function POST(request) {
       description,
       type: type || 'public',
       subject: subject || 'General',
-      creator: decoded.id || decoded.userId,
-      admins: [decoded.id || decoded.userId],
-      members: [decoded.id || decoded.userId],
+      creator: user._id,
+      admins: [user._id],
+      members: [user._id],
       settings: settings || {},
     });
     

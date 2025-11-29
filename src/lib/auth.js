@@ -32,3 +32,11 @@ export async function protect(req) {
     throw new Error('Not authorized, no token');
   }
 }
+
+export async function authorizeAdmin(req) {
+  const user = await protect(req);
+  if (user && user.role === 'admin') {
+    return user;
+  }
+  throw new Error('Not authorized as an admin');
+}
