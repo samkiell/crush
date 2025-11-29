@@ -192,7 +192,7 @@ const PostDetails = ({ postId }) => {
                         <div className="flex flex-row items-center gap-1 sm:gap-2 shrink-0">
                             <button
                                 onClick={handleShare}
-                                className="btn btn-ghost btn-circle btn-sm sm:btn-md hover:bg-base-200"
+                                className="btn btn-ghost btn-circle btn-sm sm:btn-md hover:bg-base-200 mr-1 sm:mr-0"
                                 title="Share"
                             >
                                 <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-base-content/70" />
