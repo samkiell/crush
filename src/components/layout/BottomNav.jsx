@@ -36,18 +36,18 @@ const BottomNav = () => {
             badge: 0
         },
         {
-            name: 'Community',
-            href: '/community',
-            iconOutline: CommunityOutline,
-            iconFilled: CommunityFilled,
-            badge: 12 // Example: unread posts
-        },
-        {
             name: 'Chat',
             href: '/chat',
             iconOutline: ChatOutline,
             iconFilled: ChatFilled,
             badge: 3 // Example: unread messages
+        },
+        {
+            name: 'Community',
+            href: '/community',
+            iconOutline: CommunityOutline,
+            iconFilled: CommunityFilled,
+            badge: 12 // Example: unread posts
         },
         {
             name: 'Profile',
