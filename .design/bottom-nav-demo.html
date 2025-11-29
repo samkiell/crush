@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bottom Navigation Demo - Crush Exam Prep</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <style>
+    /* Custom animations */
+    @keyframes pulse-badge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .badge-pulse {
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+
+    /* Smooth theme transitions */
+    * {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Mock content area */
+    .content-area {
+      min-height: calc(100vh - 64px);
+      padding-bottom: 80px; /* Account for bottom nav */
+    }
+  </style>
+</head>
+<body class="bg-base-200">
+  
+  <!-- Theme Switcher -->
+  <div class="fixed top-4 right-4 z-50 flex gap-2">
+    <button onclick="setTheme('light')" class="btn btn-sm btn-circle" title="Light Mode">
+      ☀️
+    </button>
+    <button onclick="setTheme('dark')" class="btn btn-sm btn-circle" title="Dark Mode">
+      🌙
+    </button>
+    <button onclick="setTheme('dim')" class="btn btn-sm btn-circle" title="Dim Mode">
+      🌆
+    </button>
+  </div>
+
+  <!-- Mock Content Area -->
+  <div class="content-area p-6">
+    <div class="max-w-screen-xl mx-auto">
+      <h1 class="text-4xl font-bold text-base-content mb-4">Bottom Navigation Demo</h1>
+      <p class="text-base-content/70 mb-8">
+        Tap the navigation items below to see the active state transitions. Try different themes using the buttons above.
+      </p>
+
+      <!-- Demo Cards -->
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">📱 Mobile-First</h2>
+            <p>Optimized for thumb-zone accessibility with 48×48px touch targets</p>
+          </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">🎨 Theme Adaptive</h2>
+            <p>Seamlessly transitions between light, dark, and dim modes</p>
+          </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">🔔 Real-time Badges</h2>
+            <p>Community (12) and Chat (3) show notification counts</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specifications Table -->
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold text-base-content mb-4">Technical Specifications</h2>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra bg-base-100">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Value</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Container Height</td>
+                <td>64px</td>
+                <td>Plus safe area inset for iOS</td>
+              </tr>
+              <tr>
+                <td>Icon Size</td>
+                <td>24×24px</td>
+                <td>Heroicons outline/solid</td>
+              </tr>
+              <tr>
+                <td>Label Size</td>
+                <td>10px (inactive) / 11px (active)</td>
+                <td>Font-weight: 500/600</td>
+              </tr>
+              <tr>
+                <td>Touch Target</td>
+                <td>48×64px</td>
+                <td>WCAG 2.1 AA compliant</td>
+              </tr>
+              <tr>
+                <td>Backdrop Blur</td>
+                <td>12px</td>
+                <td>Glassmorphism effect</td>
+              </tr>
+              <tr>
+                <td>Badge Size</td>
+                <td>18px diameter</td>
+                <td>Max: 99+</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav 
+    role="navigation" 
+    aria-label="Main Navigation"
+    class="fixed bottom-0 left-0 right-0 z-50"
+  >
+    <!-- Main Navigation Container -->
+    <div class="h-16 bg-base-100/95 backdrop-blur-xl border-t border-base-300 shadow-[0_-2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
+      <div class="flex items-center justify-around h-full max-w-screen-xl mx-auto px-2">
+        
+        <!-- Home Tab -->
+        <button 
+          onclick="setActiveTab('home')"
+          id="tab-home"
+          class="nav-item flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ease-out active:scale-95 hover:opacity-100 opacity-100"
+          aria-label="Home - Navigate to dashboard"
+          aria-current="page"
+        >
+          <div class="relative">
+            <svg class="w-6 h-6 text-primary -translate-y-0.5 transition-all duration-200" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+              <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+            </svg>
+          </div>
+          <span class="mt-1 text-[10px] text-primary font-semibold transition-all duration-150">Home</span>
+        </button>
+
+        <!-- Past Questions Tab -->
+        <button 
+          onclick="setActiveTab('questions')"
+          id="tab-questions"
+          class="nav-item flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ease-out active:scale-95 hover:opacity-100 opacity-70"
+          aria-label="Past Questions - Navigate to question bank"
+        >
+          <div class="relative">
+            <svg class="w-6 h-6 text-base-content/60 transition-all duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          </div>
+          <span class="mt-1 text-[10px] text-base-content/60 font-medium transition-all duration-150">Questions</span>
+        </button>
+
+        <!-- Community Tab -->
+        <button 
+          onclick="setActiveTab('community')"
+          id="tab-community"
+          class="nav-item flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ease-out active:scale-95 hover:opacity-100 opacity-70"
+          aria-label="Community - Navigate to community discussions"
+        >
+          <div class="relative">
+            <svg class="w-6 h-6 text-base-content/60 transition-all duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+            </svg>
+            <!-- Notification Badge -->
+            <span class="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[9px] font-bold text-white bg-error rounded-full badge-pulse">
+              12
+            </span>
+          </div>
+          <span class="mt-1 text-[10px] text-base-content/60 font-medium transition-all duration-150">Community</span>
+        </button>
+
+        <!-- Chat Tab -->
+        <button 
+          onclick="setActiveTab('chat')"
+          id="tab-chat"
+          class="nav-item flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ease-out active:scale-95 hover:opacity-100 opacity-70"
+          aria-label="Chat - Navigate to messages"
+        >
+          <div class="relative">
+            <svg class="w-6 h-6 text-base-content/60 transition-all duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+            </svg>
+            <!-- Notification Badge -->
+            <span class="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[9px] font-bold text-white bg-error rounded-full badge-pulse">
+              3
+            </span>
+          </div>
+          <span class="mt-1 text-[10px] text-base-content/60 font-medium transition-all duration-150">Chat</span>
+        </button>
+
+        <!-- Profile Tab -->
+        <button 
+          onclick="setActiveTab('profile')"
+          id="tab-profile"
+          class="nav-item flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ease-out active:scale-95 hover:opacity-100 opacity-70"
+          aria-label="Profile - Navigate to your profile"
+        >
+          <div class="relative">
+            <svg class="w-6 h-6 text-base-content/60 transition-all duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <span class="mt-1 text-[10px] text-base-content/60 font-medium transition-all duration-150">Profile</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- iOS Safe Area Bottom Padding -->
+    <div class="h-[env(safe-area-inset-bottom)] bg-base-100"></div>
+  </nav>
+
+  <script>
+    // Theme switching
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
+    // Tab switching with smooth transitions
+    function setActiveTab(tabName) {
+      const tabs = ['home', 'questions', 'community', 'chat', 'profile'];
+      
+      tabs.forEach(tab => {
+        const element = document.getElementById(`tab-${tab}`);
+        const icon = element.querySelector('svg');
+        const label = element.querySelector('span');
+        
+        if (tab === tabName) {
+          // Active state
+          element.classList.remove('opacity-70');
+          element.classList.add('opacity-100');
+          element.setAttribute('aria-current', 'page');
+          
+          icon.classList.remove('text-base-content/60');
+          icon.classList.add('text-primary', '-translate-y-0.5');
+          
+          label.classList.remove('text-base-content/60', 'font-medium');
+          label.classList.add('text-primary', 'font-semibold');
+          
+          // Switch to filled icon
+          if (tab === 'home') {
+            icon.setAttribute('fill', 'currentColor');
+          }
+        } else {
+          // Inactive state
+          element.classList.remove('opacity-100');
+          element.classList.add('opacity-70');
+          element.removeAttribute('aria-current');
+          
+          icon.classList.remove('text-primary', '-translate-y-0.5');
+          icon.classList.add('text-base-content/60');
+          
+          label.classList.remove('text-primary', 'font-semibold');
+          label.classList.add('text-base-content/60', 'font-medium');
+          
+          // Switch to outline icon
+          if (tab === 'home') {
+            icon.setAttribute('fill', 'none');
+          }
+        }
+      });
+    }
+
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        const tabs = ['home', 'questions', 'community', 'chat', 'profile'];
+        const currentTab = tabs.find(tab => 
+          document.getElementById(`tab-${tab}`).getAttribute('aria-current') === 'page'
+        );
+        const currentIndex = tabs.indexOf(currentTab);
+        
+        let newIndex;
+        if (e.key === 'ArrowLeft') {
+          newIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+        } else {
+          newIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+        }
+        
+        setActiveTab(tabs[newIndex]);
+        document.getElementById(`tab-${tabs[newIndex]}`).focus();
+      }
+    });
+  </script>
+
+</body>
+</html>
