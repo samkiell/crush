@@ -77,7 +77,7 @@ const Contact = () => {
                                 <div>
                                     <h3 className="text-lg font-semibold text-base-content mb-1">Office</h3>
                                     <p className="text-base-content/70">Come say hello at our office HQ.</p>
-                                    <p className="text-base-content/70">Oduduwa Estate, Ile-Ife, Osun State</p>
+                                    <p className="text-base-content/70">7, Oduduwa Estate, Ile-Ife, Osun State</p>
                                 </div>
                             </div>
 
