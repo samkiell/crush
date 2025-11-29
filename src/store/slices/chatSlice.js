@@ -1,18 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const API_URL = '/api/chat';
 
 // Helper to get token
 const getAuthHeader = () => {
-  if (typeof window !== 'undefined') {
-    const token = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('token='))
-      ?.split('=')[1];
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
-  return {};
+  const token = Cookies.get('auth_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
 // Async thunks

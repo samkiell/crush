@@ -43,8 +43,8 @@ export default function ChatPage() {
         <div className="fixed inset-0 top-[64px] bg-base-100 flex">
             {/* Sidebar / List View */}
             <div className={`
-                w-full md:w-[380px] lg:w-[420px] h-full border-r border-base-200 flex-shrink-0
-                ${activeRoom ? 'hidden md:block' : 'block'}
+                w-full md:w-[380px] lg:w-[420px] h-full border-r border-base-200 flex-shrink-0 flex flex-col
+                ${activeRoom ? 'hidden md:flex' : 'flex'}
             `}>
                 <ChatRoomList
                     rooms={rooms}
