@@ -75,10 +75,10 @@ export const dismissToast = (toastId) => {
 };
 
 /**
- * Dismiss all toasts
+ * Show registration success toast notification
  */
-export const dismissAllToasts = () => {
-  toast.dismiss();
+export const showRegistrationSuccessToast = (message) => {
+  return showSuccessToast(message);
 };
 
 /**
