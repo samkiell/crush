@@ -4,9 +4,8 @@ import CommunityPost from '@/lib/models/CommunityPost';
 import User from '@/lib/models/User';
 
 export async function GET() {
-  await dbConnect();
-
   try {
+    await dbConnect();
     const totalPosts = await CommunityPost.countDocuments();
     const totalUsers = await User.countDocuments();
     // Get top contributors (users with highest reputation)

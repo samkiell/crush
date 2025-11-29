@@ -26,7 +26,6 @@ const getUserFromRequest = async (req) => {
 };
 
 export async function GET(req) {
-  await dbConnect();
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = parseInt(searchParams.get('limit')) || 10;
@@ -52,6 +51,7 @@ export async function GET(req) {
   }
 
   try {
+    await dbConnect();
     const posts = await CommunityPost.find(query)
       .sort(sortOption)
       .skip((page - 1) * limit)
