@@ -98,9 +98,11 @@ const PostDetails = ({ postId }) => {
     }
 
     if (error) {
+        // Error is handled by global toast interceptor
+        // We just show a generic fallback or return null to avoid breaking layout
         return (
-            <div className="bg-error/10 border border-error/20 rounded-2xl p-6 text-center">
-                <p className="text-error font-semibold mb-3">Error loading post: {error}</p>
+            <div className="bg-base-200 rounded-2xl p-8 text-center">
+                <p className="text-base-content/60 font-medium mb-3">Unable to load content.</p>
                 <Link href="/community" className="btn btn-primary rounded-xl">
                     ← Back to Community
                 </Link>
