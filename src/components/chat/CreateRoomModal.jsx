@@ -47,7 +47,6 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                 },
             });
 
-            // Reset form
             setFormData({
                 name: '',
                 description: '',
@@ -65,26 +64,24 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
     if (!isOpen) return null;
 
     return (
-        <div className="modal modal-open">
-            <div className="modal-box max-w-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-base-100 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-2xl">Create Chat Room</h3>
+                <div className="flex items-center justify-between p-4 border-b border-base-200">
+                    <h3 className="font-bold text-lg">Create New Room</h3>
                     <button
                         onClick={onClose}
                         className="btn btn-ghost btn-sm btn-circle"
                     >
-                        <X className="w-5 h-5" />
+                        <X size={20} />
                     </button>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="p-6 space-y-5">
                     {/* Room Name */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold">Room Name *</span>
-                        </label>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Room Name</label>
                         <input
                             type="text"
                             name="name"
@@ -93,98 +90,90 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                             placeholder="e.g., JAMB 2025 Study Group"
                             className="input input-bordered w-full"
                             required
+                            autoFocus
                         />
                     </div>
 
                     {/* Description */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold">Description</span>
-                        </label>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Description</label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
-                            placeholder="Brief description of the room..."
-                            className="textarea textarea-bordered w-full"
-                            rows={3}
+                            placeholder="What is this room for?"
+                            className="textarea textarea-bordered w-full h-20 resize-none"
                         />
                     </div>
 
                     {/* Room Type */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold">Room Type *</span>
-                        </label>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Room Type</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             {ROOM_TYPES.map((type) => (
                                 <label
                                     key={type.value}
-                                    className={`cursor-pointer border-2 rounded-lg p-4 transition-all ${formData.type === type.value
-                                            ? 'border-primary bg-primary/10'
-                                            : 'border-base-300 hover:border-primary/50'
-                                        }`}
+                                    className={`
+                                        cursor-pointer border rounded-xl p-3 flex flex-col gap-1 transition-all
+                                        ${formData.type === type.value
+                                            ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                                            : 'border-base-200 hover:border-base-300'
+                                        }
+                                    `}
                                 >
-                                    <input
-                                        type="radio"
-                                        name="type"
-                                        value={type.value}
-                                        checked={formData.type === type.value}
-                                        onChange={handleChange}
-                                        className="radio radio-primary radio-sm"
-                                    />
-                                    <div className="ml-2">
-                                        <p className="font-semibold text-sm">{type.label}</p>
-                                        <p className="text-xs text-base-content/60">{type.description}</p>
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-semibold text-sm">{type.label}</span>
+                                        <input
+                                            type="radio"
+                                            name="type"
+                                            value={type.value}
+                                            checked={formData.type === type.value}
+                                            onChange={handleChange}
+                                            className="radio radio-primary radio-xs"
+                                        />
                                     </div>
+                                    <span className="text-xs text-base-content/60 leading-tight">
+                                        {type.description}
+                                    </span>
                                 </label>
                             ))}
                         </div>
                     </div>
 
-                    {/* Subject */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold">Subject *</span>
-                        </label>
-                        <select
-                            name="subject"
-                            value={formData.subject}
-                            onChange={handleChange}
-                            className="select select-bordered w-full"
-                            required
-                        >
-                            {SUBJECTS.map((subject) => (
-                                <option key={subject} value={subject}>
-                                    {subject}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    {/* Subject & Max Members Row */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <label className="text-sm font-medium">Subject</label>
+                            <select
+                                name="subject"
+                                value={formData.subject}
+                                onChange={handleChange}
+                                className="select select-bordered w-full"
+                            >
+                                {SUBJECTS.map((subject) => (
+                                    <option key={subject} value={subject}>
+                                        {subject}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    {/* Max Members */}
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-semibold">Max Members</span>
-                        </label>
-                        <input
-                            type="number"
-                            name="maxMembers"
-                            value={formData.maxMembers}
-                            onChange={handleChange}
-                            min="2"
-                            max="500"
-                            className="input input-bordered w-full"
-                        />
-                        <label className="label">
-                            <span className="label-text-alt text-base-content/60">
-                                Maximum number of members allowed in this room
-                            </span>
-                        </label>
+                        <div className="space-y-1">
+                            <label className="text-sm font-medium">Max Members</label>
+                            <input
+                                type="number"
+                                name="maxMembers"
+                                value={formData.maxMembers}
+                                onChange={handleChange}
+                                min="2"
+                                max="500"
+                                className="input input-bordered w-full"
+                            />
+                        </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="modal-action">
+                    <div className="pt-4 flex justify-end gap-3">
                         <button
                             type="button"
                             onClick={onClose}
@@ -195,22 +184,14 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                         </button>
                         <button
                             type="submit"
-                            className="btn btn-primary"
+                            className="btn btn-primary px-8"
                             disabled={isSubmitting || !formData.name.trim()}
                         >
-                            {isSubmitting ? (
-                                <>
-                                    <span className="loading loading-spinner loading-sm"></span>
-                                    Creating...
-                                </>
-                            ) : (
-                                'Create Room'
-                            )}
+                            {isSubmitting ? 'Creating...' : 'Create Room'}
                         </button>
                     </div>
                 </form>
             </div>
-            <div className="modal-backdrop" onClick={onClose}></div>
         </div>
     );
 }
