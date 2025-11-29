@@ -3,36 +3,6 @@ import dbConnect from '@/lib/db';
 import ChatRoom from '@/models/ChatRoom';
 import { authorizeAdmin, protect } from '@/lib/auth';
 
-// GET - Fetch all chat rooms
-export async function GET(request) {
-  try {
-    // Ensure the request is from an authenticated user
-    const user = await protect(request);
-    await dbConnect();
-    
-    const { searchParams } = new URL(request.url);
-  }
-}
-
-// POST - Create a new chat room
-export async function POST(request) {
-  try {
-    await dbConnect();
-    
-    // Verify authentication and admin role
-    // First, ensure the request is from an authenticated user
-    const authUser = await protect(request);
-    let user;
-    try {
-      // Only admins are allowed to create rooms
-      user = await authorizeAdmin(request);
-
-    } catch (error) {
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import ChatRoom from '@/models/ChatRoom';
-import { authorizeAdmin, protect } from '@/lib/auth';
-
 // GET - Fetch all chat rooms for the authenticated user
 export async function GET(request) {
   try {
@@ -68,8 +38,9 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     await dbConnect();
-    // Verify authentication and admin role
-    const authUser = await protect(request);
+
+    // Ensure request is from an authenticated user
+    await protect(request);
     let user;
     try {
       user = await authorizeAdmin(request);
@@ -77,15 +48,12 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: error.message || 'Forbidden' }, { status: 403 });
     }
 
-    const body = await request.json();
-    const { name, description, type, subject, settings } = body;
+    const { name, description, type, subject, settings } = await request.json();
 
-    // Validate required fields
     if (!name) {
       return NextResponse.json({ success: false, error: 'Room name is required' }, { status: 400 });
     }
 
-    // Create new room
     const newRoom = await ChatRoom.create({
       name,
       description,
