@@ -26,8 +26,8 @@ export default function ChatWindow({ room, onBack }) {
     const roomMessages = messages[room._id] || [];
     const roomTypingUsers = typingUsers[room._id] || [];
 
-    const isMember = room.members?.some(
-        (member) => (member._id || member) === user?.id
+    const isMember = Array.isArray(room.members) && room.members.some(
+        (member) => member && ((member._id || member) === (user?._id || user?.id))
     );
 
     useEffect(() => {
@@ -78,7 +78,7 @@ export default function ChatWindow({ room, onBack }) {
                 <h2 className="text-2xl font-bold mb-2">{room.name}</h2>
                 <p className="text-base-content/60 max-w-xs mb-8">{room.description}</p>
 
-                <button onClick={handleJoinRoom} className="btn btn-primary btn-lg w-full max-w-xs gap-2 rounded-2xl">
+                <button onClick={handleJoinRoom} className="btn btn-primary btn-lg w-full max-w-xs gap-2 rounded-2xl flex items-center justify-center">
                     <UserPlus size={20} />
                     Join to Chat
                 </button>
