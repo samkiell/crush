@@ -91,20 +91,6 @@ export default function MessageList({ messages, loading, roomId, typingUsers }) 
                 <div className="flex items-center gap-2 ml-10 mt-2">
                     <div className="bg-base-200 px-3 py-2 rounded-full rounded-tl-none">
                         <div className="flex gap-1">
-                            <span className="w-1.5 h-1.5 bg-base-content/40 rounded-full animate-bounce"></span>
-                            <span className="w-1.5 h-1.5 bg-base-content/40 rounded-full animate-bounce delay-75"></span>
-                            <span className="w-1.5 h-1.5 bg-base-content/40 rounded-full animate-bounce delay-150"></span>
                         </div>
-                    </div>
-                    <span className="text-xs text-base-content/40">
-                        {typingUsers.length === 1
-                            ? `${typingUsers[0].username} is typing...`
-                            : 'Multiple people typing...'}
-                    </span>
-                </div>
-            )}
-
-            <div ref={bottomRef} />
-        </div>
-    );
+                        );
 }
