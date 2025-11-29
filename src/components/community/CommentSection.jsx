@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated, selectUser } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical, Loader2 } from 'lucide-react';
+import axios from 'axios';
 
 import Link from 'next/link';
 import ReportModal from './ReportModal';
@@ -187,15 +188,27 @@ const CommentSection = ({ postId }) => {
 
         setSubmitting(true);
         try {
+            // Upload attachments first
+            const uploadedAttachments = [];
+            if (attachments.length > 0) {
+                for (const att of attachments) {
+                    const formData = new FormData();
+                    formData.append('file', att.file);
+                    formData.append('type', 'comments');
+
+                    const response = await axios.post('/api/media/upload', formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+
+                    uploadedAttachments.push(response.data);
+                }
+            }
+
             await dispatch(addComment({
                 postId,
                 content: newComment,
                 parentComment: replyTo?._id || null,
-                attachments: attachments.map(a => ({
-                    type: a.type,
-                    data: a.preview,
-                    name: a.name
-                }))
+                attachments: uploadedAttachments
             })).unwrap();
 
             setNewComment('');
@@ -320,7 +333,7 @@ const CommentSection = ({ postId }) => {
                                         className="btn btn-circle btn-primary btn-sm shadow-sm hover:shadow-lg border-none transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
                                         disabled={(!newComment.trim() && attachments.length === 0) || submitting}
                                     >
-                                        <Send className="w-4 h-4" />
+                                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                                     </button>
                                 </div>
                             </div>

@@ -12,6 +12,7 @@ export async function GET(req) {
       email: user.email,
       role: user.role,
       examType: user.examType,
+      avatar: user.avatar,
       stats: {
         totalQuestions: 0,
         completedExams: 0,
@@ -28,7 +29,7 @@ export async function PUT(req) {
   try {
     const user = await protect(req);
     await dbConnect();
-    const { name, email, password, examType } = await req.json();
+    const { name, email, password, examType, avatar, avatarPublicId } = await req.json();
 
     const updatedUser = await User.findById(user._id);
 
@@ -36,6 +37,8 @@ export async function PUT(req) {
     if (email) updatedUser.email = email;
     if (examType) updatedUser.examType = examType;
     if (password) updatedUser.password = password;
+    if (avatar) updatedUser.avatar = avatar;
+    if (avatarPublicId) updatedUser.avatarPublicId = avatarPublicId;
 
     await updatedUser.save();
 
@@ -45,6 +48,7 @@ export async function PUT(req) {
       email: updatedUser.email,
       role: updatedUser.role,
       examType: updatedUser.examType,
+      avatar: updatedUser.avatar,
     });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 401 });
