@@ -119,7 +119,7 @@ const PostDetails = ({ postId }) => {
         );
     }
 
-    const hasLiked = post.likes?.includes(user?._id); // Assuming likes is an array of user IDs, adjust if it's just a count or different structure
+    const hasLiked = Array.isArray(post.likes) && post.likes.includes(user?._id);
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -265,7 +265,7 @@ const PostDetails = ({ postId }) => {
                         >
                             <ThumbsUp className={`w-5 h-5 ${hasLiked ? 'fill-current' : ''}`} />
                             {hasLiked ? 'Liked' : 'Like'}
-                            <span className="badge badge-sm bg-base-100/20 border-0">{post.likes?.length || 0}</span>
+                            <span className="badge badge-sm bg-base-100/20 border-0">{Array.isArray(post.likes) ? post.likes.length : (post.likes || 0)}</span>
                         </button>
 
                         <div className="flex items-center gap-2 text-base-content/60 px-2">

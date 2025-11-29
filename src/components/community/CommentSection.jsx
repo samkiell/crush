@@ -74,7 +74,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                             className="text-xs font-semibold text-base-content/60 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200"
                         >
                             <ThumbsUp className="w-3.5 h-3.5" />
-                            {comment.likes?.length > 0 ? `${comment.likes.length} Likes` : 'Like'}
+                            {Array.isArray(comment.likes) ? (comment.likes.length > 0 ? `${comment.likes.length} Likes` : 'Like') : (comment.likes > 0 ? `${comment.likes} Likes` : 'Like')}
                         </button>
                         <button
                             onClick={() => onReply(comment)}

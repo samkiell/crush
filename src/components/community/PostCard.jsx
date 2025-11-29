@@ -155,7 +155,7 @@ const PostCard = ({ post }) => {
                                 <div className="p-2 rounded-full bg-base-200 group-hover/like:bg-primary/10 transition-colors">
                                     <ThumbsUp className="w-4 h-4" />
                                 </div>
-                                <span>{post.likes?.length || 0}</span>
+                                <span>{Array.isArray(post.likes) ? post.likes.length : (post.likes || 0)}</span>
                             </button>
 
                             <div className="flex items-center gap-2 text-sm font-medium text-base-content/70">
