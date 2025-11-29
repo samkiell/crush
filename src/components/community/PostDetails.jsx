@@ -165,44 +165,44 @@ const PostDetails = ({ postId }) => {
 
                     {/* Actions */}
                     {/* Actions */}
-                    <div className="flex flex-row items-center justify-between gap-4">
-                        <div className="flex flex-row items-center gap-2 sm:gap-4 overflow-x-auto scrollbar-none">
+                    <div className="flex flex-row items-center justify-between gap-2 sm:gap-4">
+                        <div className="flex flex-row items-center gap-1 sm:gap-4">
                             <button
                                 onClick={handleLike}
-                                className="flex flex-row items-center gap-2 px-3 sm:px-4 py-2 rounded-xl hover:bg-base-200 text-base-content/70 hover:text-primary transition-all duration-200 group shrink-0"
+                                className="flex flex-row items-center gap-1.5 px-2 sm:px-4 py-2 rounded-xl hover:bg-base-200 text-base-content/70 hover:text-primary transition-all duration-200 group shrink-0"
                             >
-                                <ThumbsUp className="w-5 h-5" />
+                                <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span className="font-medium text-sm sm:text-base">
                                     {post.likes} <span className="hidden sm:inline">Likes</span>
                                 </span>
                             </button>
-                            <div className="flex flex-row items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-base-content/70 cursor-default shrink-0">
-                                <MessageSquare className="w-5 h-5" />
+                            <div className="flex flex-row items-center gap-1.5 px-2 sm:px-4 py-2 rounded-xl text-base-content/70 cursor-default shrink-0">
+                                <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span className="font-medium text-sm sm:text-base">
                                     {post.commentsCount} <span className="hidden sm:inline">Comments</span>
                                 </span>
                             </div>
-                            <div className="flex flex-row items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-base-content/70 cursor-default shrink-0">
-                                <Eye className="w-5 h-5" />
+                            <div className="flex flex-row items-center gap-1.5 px-2 sm:px-4 py-2 rounded-xl text-base-content/70 cursor-default shrink-0">
+                                <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span className="font-medium text-sm sm:text-base">
                                     {post.views} <span className="hidden sm:inline">Views</span>
                                 </span>
                             </div>
                         </div>
-                        <div className="flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-1 sm:gap-2 shrink-0">
                             <button
                                 onClick={handleShare}
-                                className="btn btn-ghost btn-circle hover:bg-base-200"
+                                className="btn btn-ghost btn-circle btn-sm sm:btn-md hover:bg-base-200"
                                 title="Share"
                             >
-                                <Share2 className="w-5 h-5 text-base-content/70" />
+                                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-base-content/70" />
                             </button>
                             <button
-                                className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error"
+                                className="btn btn-ghost btn-circle btn-sm sm:btn-md hover:bg-error/10 hover:text-error"
                                 title="Report"
                                 onClick={() => setIsReportModalOpen(true)}
                             >
-                                <Flag className="w-5 h-5 text-base-content/70" />
+                                <Flag className="w-4 h-4 sm:w-5 sm:h-5 text-base-content/70" />
                             </button>
                         </div>
                     </div>
