@@ -28,7 +28,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const { showErrorToast } = require('@/utils/toast');
+    const { showErrorToast } = require('@/utils/toast-helpers');
     
     // Extract error message
     let message = 'Something went wrong. Please try again.';
