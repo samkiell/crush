@@ -13,6 +13,11 @@ export async function POST(req) {
     // Authenticate user
     await protect(req);
 
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.error('Cloudinary credentials missing');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+
     const formData = await req.formData();
     const file = formData.get('file');
     const type = formData.get('type') || 'posts'; // posts, comments, replies, profiles
