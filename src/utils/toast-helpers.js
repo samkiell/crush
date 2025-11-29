@@ -80,3 +80,10 @@ export const dismissToast = (toastId) => {
 export const dismissAllToasts = () => {
   toast.dismiss();
 };
+
+/**
+ * Show welcome toast notification
+ */
+export const showWelcomeToast = (username) => {
+  return showSuccessToast(`Welcome back, ${username}!`);
+};
