@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchComments, addComment, selectCommunityComments, toggleReaction } from '@/store/slices/communitySlice';
-import { selectIsAuthenticated } from '@/store/slices/authSlice';
+import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
+import { selectIsAuthenticated, selectUser } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import ReportModal from './ReportModal';
 import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
 
-const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
+const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete, currentUser }) => {
     const replies = allComments.filter(c => c.parentComment === comment._id);
 
     return (
@@ -79,6 +79,14 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                         >
                             <Flag className="w-3.5 h-3.5" /> Report
                         </button>
+                        {currentUser && (currentUser._id === comment.author?._id || currentUser.role === 'admin') && (
+                            <button
+                                onClick={() => onDelete(comment._id)}
+                                className="text-xs font-semibold text-error hover:text-red-700 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 opacity-0 group-hover:opacity-100"
+                            >
+                                <Trash2 className="w-3.5 h-3.5" /> Delete
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -94,6 +102,8 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                             onReply={onReply}
                             onLike={onLike}
                             onReport={onReport}
+                            onDelete={onDelete}
+                            currentUser={currentUser}
                         />
                     ))}
                 </div>
@@ -106,6 +116,7 @@ const CommentSection = ({ postId }) => {
     const dispatch = useDispatch();
     const comments = useSelector(selectCommunityComments);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const user = useSelector(selectUser);
     const [newComment, setNewComment] = useState('');
     const [replyTo, setReplyTo] = useState(null);
     const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -202,6 +213,16 @@ const CommentSection = ({ postId }) => {
     const handleReport = (commentId) => {
         setReportTargetId(commentId);
         setReportModalOpen(true);
+    };
+
+    const handleDelete = async (commentId) => {
+        if (!confirm('Are you sure you want to delete this comment?')) return;
+        try {
+            await dispatch(deleteComment(commentId)).unwrap();
+            showSuccessToast('Comment deleted');
+        } catch (error) {
+            showErrorToast(error);
+        }
     };
 
     const rootComments = comments
@@ -310,6 +331,8 @@ const CommentSection = ({ postId }) => {
                         onReply={setReplyTo}
                         onLike={handleLike}
                         onReport={handleReport}
+                        onDelete={handleDelete}
+                        currentUser={user}
                     />
                 ))}
 

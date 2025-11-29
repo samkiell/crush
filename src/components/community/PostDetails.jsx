@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPostDetails, selectCurrentPost, selectCommunityLoading, selectCommunityError, toggleReaction } from '@/store/slices/communitySlice';
+import { fetchPostDetails, selectCurrentPost, selectCommunityLoading, selectCommunityError, toggleReaction, deletePost } from '@/store/slices/communitySlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Eye, MessageSquare, Share2, Flag, FileText } from 'lucide-react';
+import { ThumbsUp, Eye, MessageSquare, Share2, Flag, FileText, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { selectUser } from '@/store/slices/authSlice';
 import CommentSection from './CommentSection';
 import SkeletonPostDetails from './skeletons/SkeletonPostDetails';
 import ReportModal from './ReportModal';
@@ -13,7 +15,9 @@ import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
 
 const PostDetails = ({ postId }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const post = useSelector(selectCurrentPost);
+    const user = useSelector(selectUser);
     const loading = useSelector(selectCommunityLoading);
     const error = useSelector(selectCommunityError);
 
@@ -62,6 +66,18 @@ const PostDetails = ({ postId }) => {
         } else {
             navigator.clipboard.writeText(window.location.href);
             showSuccessToast('Link copied to clipboard!');
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
+
+        try {
+            await dispatch(deletePost(post._id)).unwrap();
+            showSuccessToast('Post deleted successfully');
+            router.push('/community');
+        } catch (error) {
+            showErrorToast(error);
         }
     };
 
@@ -222,6 +238,15 @@ const PostDetails = ({ postId }) => {
                             >
                                 <Flag className="w-4 h-4 sm:w-5 sm:h-5 text-base-content/70" />
                             </button>
+                            {user && (user._id === post.author?._id || user.role === 'admin') && (
+                                <button
+                                    className="btn btn-ghost btn-circle btn-sm sm:btn-md hover:bg-error/10 hover:text-error ml-1 sm:ml-0"
+                                    title="Delete Post"
+                                    onClick={handleDelete}
+                                >
+                                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-error" />
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
