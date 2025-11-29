@@ -38,7 +38,7 @@ export const createPost = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+          window.location.href = '/login';
         }
         return rejectWithValue('Authentication required');
       }
@@ -77,7 +77,7 @@ export const addComment = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+          window.location.href = '/login';
         }
         return rejectWithValue('Authentication required');
       }
@@ -107,7 +107,7 @@ export const toggleReaction = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+          window.location.href = '/login';
         }
         return rejectWithValue('required');
       }
@@ -149,7 +149,7 @@ export const reportContent = createAsyncThunk(
 
       if (!token) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+          window.location.href = '/login';
         }
         return rejectWithValue('Authentication required');
       }
