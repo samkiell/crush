@@ -168,12 +168,12 @@ const PostDetails = ({ postId }) => {
                             {post.attachments.map((att, idx) => (
                                 <div key={idx} className="relative rounded-2xl overflow-hidden border border-base-300 max-w-[300px] max-h-[300px] group cursor-pointer hover:shadow-lg transition-all">
                                     {att.type.startsWith('image/') ? (
-                                        <img src={att.data} alt="Attachment" className="w-full h-full object-cover" />
+                                        <img src={att.url} alt="Attachment" className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="p-6 bg-base-200 flex flex-col items-center justify-center gap-3 min-w-[150px] min-h-[150px]">
+                                        <a href={att.url} target="_blank" rel="noopener noreferrer" className="p-6 bg-base-200 flex flex-col items-center justify-center gap-3 min-w-[150px] min-h-[150px] w-full h-full hover:bg-base-300 transition-colors">
                                             <FileText className="w-10 h-10 text-primary" />
                                             <span className="text-sm font-medium text-base-content/80 truncate max-w-[120px]">{att.name}</span>
-                                        </div>
+                                        </a>
                                     )}
                                 </div>
                             ))}

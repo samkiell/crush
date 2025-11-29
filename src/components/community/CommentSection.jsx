@@ -48,12 +48,12 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                                 {comment.attachments.map((att, idx) => (
                                     <div key={idx} className="relative rounded-xl overflow-hidden border border-base-300 max-w-[200px] max-h-[200px]">
                                         {att.type.startsWith('image/') ? (
-                                            <img src={att.data} alt="Attachment" className="w-full h-full object-cover" />
+                                            <img src={att.url} alt="Attachment" className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="p-4 bg-base-200 flex items-center gap-2">
+                                            <a href={att.url} target="_blank" rel="noopener noreferrer" className="p-4 bg-base-200 flex items-center gap-2 w-full h-full hover:bg-base-300 transition-colors">
                                                 <FileText className="w-5 h-5" />
                                                 <span className="text-xs truncate max-w-[100px]">{att.name}</span>
-                                            </div>
+                                            </a>
                                         )}
                                     </div>
                                 ))}
@@ -194,7 +194,7 @@ const CommentSection = ({ postId }) => {
                 for (const att of attachments) {
                     const formData = new FormData();
                     formData.append('file', att.file);
-                    formData.append('type', 'comments');
+                    formData.append('type', replyTo ? 'replies' : 'comments');
 
                     const response = await axios.post('/api/media/upload', formData, {
                         headers: { 'Content-Type': 'multipart/form-data' }

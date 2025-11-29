@@ -57,6 +57,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'localhost',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
   },
