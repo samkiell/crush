@@ -152,172 +152,158 @@ const Header = () => {
               {theme === 'light' && <Sun className="w-5 h-5" />}
               {theme === 'dark' && <Moon className="w-5 h-5" />}
               {theme === 'eye-care' && <Eye className="w-5 h-5" />}
-            </button>
-
-            {isAuthenticated && (
-              <>
-                {/* Notification Bell */}
-                <button className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 relative">
-                  <Bell className="w-5 h-5" />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-base-100 animate-pulse"></span>
-                </button>
-
-                {/* User Dropdown (Desktop) */}
-                <div className="hidden md:flex items-center gap-2 ml-2" ref={profileRef}>
-                  <div className="relative">
-                    <button
-                      onClick={toggleProfile}
-                      className="btn btn-ghost btn-circle avatar"
+              onClick={toggleProfile}
+              className="btn btn-ghost btn-circle avatar"
                     >
-                      <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105 active:scale-95 overflow-hidden">
-                        {user?.avatar ? (
-                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
-                            {user?.name?.charAt(0).toUpperCase() || 'U'}
-                          </div>
-                        )}
-                      </div>
-                    </button>
-
-                    <AnimatePresence>
-                      {isProfileOpen && (
-                        <motion.ul
-                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute right-0 mt-3 z-[1] p-2 shadow-2xl bg-base-100 rounded-box w-52 gap-1 border border-base-content/5 origin-top-right"
-                        >
-                          <li className="menu-title px-4 py-2">
-                            <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
-                          </li>
-                          <li>
-                            <Link
-                              href="/profile"
-                              onClick={() => setIsProfileOpen(false)}
-                              className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
-                            >
-                              <User className="w-4 h-4" />
-                              Profile
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/settings"
-                              onClick={() => setIsProfileOpen(false)}
-                              className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
-                            >
-                              <Settings className="w-4 h-4" />
-                              Settings
-                            </Link>
-                          </li>
-                          <div className="divider my-1 before:bg-base-content/5 after:bg-base-content/5"></div>
-                          <li>
-                            <button
-                              onClick={() => {
-                                setIsProfileOpen(false);
-                                handleLogout();
-                              }}
-                              className="flex items-center gap-3 py-2 px-4 rounded-lg text-error hover:bg-error/10 active:bg-error/20 w-full text-left"
-                            >
-                              <LogOut className="w-4 h-4" />
-                              Logout
-                            </button>
-                          </li>
-                        </motion.ul>
-                      )}
-                    </AnimatePresence>
+              <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105 active:scale-95 overflow-hidden">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
+                    {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                </div>
-              </>
-            )}
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="btn btn-ghost btn-circle md:hidden z-50 relative hover:bg-base-content/10"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                )}
+              </div>
             </button>
+
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.ul
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-3 z-[1] p-2 shadow-2xl bg-base-100 rounded-box w-52 gap-1 border border-base-content/5 origin-top-right"
+                >
+                  <li className="menu-title px-4 py-2">
+                    <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
+                  </li>
+                  <li>
+                    <Link
+                      href="/profile"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
+                    >
+                      <User className="w-4 h-4" />
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/settings"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
+                    >
+                      <Settings className="w-4 h-4" />
+                      Settings
+                    </Link>
+                  </li>
+                  <div className="divider my-1 before:bg-base-content/5 after:bg-base-content/5"></div>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        handleLogout();
+                      }}
+                      className="flex items-center gap-3 py-2 px-4 rounded-lg text-error hover:bg-error/10 active:bg-error/20 w-full text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </li>
+                </motion.ul>
+              )}
+            </AnimatePresence>
           </div>
         </div>
-      </header>
+      </>
+            )}
 
-      {/* Mobile Menu Drawer */}
-      <AnimatePresence>
-        {isMenuOpen && (
+      {/* Mobile Menu Toggle */}
+      <button
+        className="btn btn-ghost btn-circle md:hidden z-50 relative hover:bg-base-content/10"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+    </div >
+        </div >
+      </header >
+
+  {/* Mobile Menu Drawer */ }
+  < AnimatePresence >
+  { isMenuOpen && (
           <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-            />
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setIsMenuOpen(false)}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+      />
 
-            {/* Drawer */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-neutral text-neutral-content shadow-2xl z-50 md:hidden overflow-y-auto border-l border-white/10"
-            >
-              <div className="flex flex-col h-full">
-                <div className="p-6 border-b border-white/10">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-10 h-10">
-                        <Image src="/logo-dark.png" fill alt="D2C Logo" className="object-contain" />
-                      </div>
-                      <span className="text-xl font-bold text-white">D2C</span>
-                      <div className="flex-1 p-4 overflow-y-auto">
-                        <div className="flex flex-col gap-2">
-                          <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Menu</span>
-                          {(isAuthenticated ? navLinks : guestLinks).map((link) => (
-                            <NavItem key={link.name} link={link} mobile={true} />
-                          ))}
-                        </div>
+      {/* Drawer */}
+      <motion.div
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-neutral text-neutral-content shadow-2xl z-50 md:hidden overflow-y-auto border-l border-white/10"
+      >
+        <div className="flex flex-col h-full">
+          <div className="p-6 border-b border-white/10">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10">
+                  <Image src="/logo-dark.png" fill alt="D2C Logo" className="object-contain" />
+                </div>
+                <span className="text-xl font-bold text-white">D2C</span>
+                <div className="flex-1 p-4 overflow-y-auto">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Menu</span>
+                    {(isAuthenticated ? navLinks : guestLinks).map((link) => (
+                      <NavItem key={link.name} link={link} mobile={true} />
+                    ))}
+                  </div>
 
-                        {isAuthenticated && (
-                          <>
-                            <div className="divider my-6 before:bg-white/10 after:bg-white/10"></div>
-                            <div className="flex flex-col gap-2">
-                              <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Settings</span>
-                              <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
-                              <button
-                                onClick={() => {
-                                  setIsMenuOpen(false);
-                                  handleLogout();
-                                }}
-                                className="flex items-center justify-between p-4 rounded-xl hover:bg-error/10 text-error transition-all group mt-2"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div className="p-2 rounded-lg bg-error/10 group-hover:bg-error/20 transition-colors">
-                                    <LogOut className="w-5 h-5" />
-                                  </div>
-                                  <span className="font-medium">Logout</span>
-                                </div>
-                              </button>
+                  {isAuthenticated && (
+                    <>
+                      <div className="divider my-6 before:bg-white/10 after:bg-white/10"></div>
+                      <div className="flex flex-col gap-2">
+                        <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Settings</span>
+                        <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
+                        <button
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            handleLogout();
+                          }}
+                          className="flex items-center justify-between p-4 rounded-xl hover:bg-error/10 text-error transition-all group mt-2"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-error/10 group-hover:bg-error/20 transition-colors">
+                              <LogOut className="w-5 h-5" />
                             </div>
-                          </>
-                        )}
+                            <span className="font-medium">Logout</span>
+                          </div>
+                        </button>
                       </div>
+                    </>
+                  )}
+                </div>
 
-                      <div className="p-6 border-t border-white/10 bg-white/5">
-                        <p className="text-xs text-center text-white/40">
-                          &copy; 2025 Crush EduPlace Intl.
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                </>
+                <div className="p-6 border-t border-white/10 bg-white/5">
+                  <p className="text-xs text-center text-white/40">
+                    &copy; 2025 Crush EduPlace Intl.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
-              </AnimatePresence>
-            </>
-            );
+        </AnimatePresence>
+      </>
+      );
 };
 
-            export default Header;
+      export default Header;
