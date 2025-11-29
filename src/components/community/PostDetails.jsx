@@ -168,8 +168,8 @@ const PostDetails = ({ postId }) => {
                         </div>
 
                         <details className="dropdown dropdown-end">
-                            <summary className="btn btn-ghost btn-circle btn-sm">
-                                <MoreHorizontal className="w-5 h-5" />
+                            <summary className="m-1 btn bg-transparent border-none shadow-none hover:bg-transparent p-0 h-auto min-h-0">
+                                <MoreHorizontal className="w-6 h-6 text-base-content/60" />
                             </summary>
                             <ul
                                 className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
