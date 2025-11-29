@@ -125,7 +125,7 @@ export default function RegisterPage() {
                                     <span className="label-text font-medium text-base-content/80">Full Name</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/70 group-focus-within:text-primary transition-colors">
                                         <User className="h-5 w-5" />
                                     </div>
                                     <input
@@ -146,7 +146,7 @@ export default function RegisterPage() {
                                     <span className="label-text font-medium text-base-content/80">Email Address</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/70 group-focus-within:text-primary transition-colors">
                                         <Mail className="h-5 w-5" />
                                     </div>
                                     <input
@@ -167,7 +167,7 @@ export default function RegisterPage() {
                                     <span className="label-text font-medium text-base-content/80">Password</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/70 group-focus-within:text-primary transition-colors">
                                         <Lock className="h-5 w-5" />
                                     </div>
                                     <input
@@ -182,7 +182,7 @@ export default function RegisterPage() {
                                     />
                                     <button
                                         type="button"
-                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/40 hover:text-primary transition-colors focus:outline-none"
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/70 hover:text-primary transition-colors focus:outline-none"
                                         onClick={() => setShowPassword(!showPassword)}
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -196,7 +196,7 @@ export default function RegisterPage() {
                                     <span className="label-text font-medium text-base-content/80">Confirm Password</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/70 group-focus-within:text-primary transition-colors">
                                         <CheckCircle2 className="h-5 w-5" />
                                     </div>
                                     <input
@@ -210,7 +210,7 @@ export default function RegisterPage() {
                                     />
                                     <button
                                         type="button"
-                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/40 hover:text-primary transition-colors focus:outline-none"
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/70 hover:text-primary transition-colors focus:outline-none"
                                         onClick={() => setShowPassword(!showPassword)}
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
