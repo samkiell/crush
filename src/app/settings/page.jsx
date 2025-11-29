@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { selectUser, selectIsAuthenticated, updateProfile } from '@/store/slices/authSlice';
+import { selectUser, selectIsAuthenticated, updateProfile, selectToken } from '@/store/slices/authSlice';
 import { Loader2, Camera, Save, User, Mail, BookOpen, Shield } from 'lucide-react';
 import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from '@/utils/toast-helpers';
 import axios from 'axios';
@@ -13,6 +13,7 @@ export default function SettingsPage() {
     const router = useRouter();
     const user = useSelector(selectUser);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const token = useSelector(selectToken);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -67,7 +68,10 @@ export default function SettingsPage() {
                 formData.append('type', 'profiles');
 
                 const uploadRes = await axios.post('/api/media/upload', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
 
                 avatarUrl = uploadRes.data.url;

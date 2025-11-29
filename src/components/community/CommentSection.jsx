@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
-import { selectIsAuthenticated, selectUser } from '@/store/slices/authSlice';
+import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
+import { selectIsAuthenticated, selectUser, selectToken } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical, Loader2 } from 'lucide-react';
 import axios from 'axios';
@@ -136,6 +137,7 @@ const CommentSection = ({ postId }) => {
     const comments = useSelector(selectCommunityComments);
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const user = useSelector(selectUser);
+    const token = useSelector(selectToken);
     const [newComment, setNewComment] = useState('');
     const [replyTo, setReplyTo] = useState(null);
     const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -197,7 +199,10 @@ const CommentSection = ({ postId }) => {
                     formData.append('type', replyTo ? 'replies' : 'comments');
 
                     const response = await axios.post('/api/media/upload', formData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
 
                     uploadedAttachments.push(response.data);

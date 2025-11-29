@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
-import { selectIsAuthenticated } from '@/store/slices/authSlice';
+import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
+import { selectIsAuthenticated, selectToken } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Loader2, Send, X, Hash, FileText, MessageSquare, HelpCircle, ImagePlus } from 'lucide-react';
@@ -14,6 +15,7 @@ const RichEditor = () => {
     const router = useRouter();
     const actionLoading = useSelector(selectActionLoading);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const token = useSelector(selectToken);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -82,7 +84,10 @@ const RichEditor = () => {
                     formData.append('type', 'posts');
 
                     const response = await axios.post('/api/media/upload', formData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
 
                     uploadedAttachments.push(response.data);
