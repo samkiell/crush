@@ -43,8 +43,8 @@ export async function GET(request) {
     }
     
     const rooms = await ChatRoom.find(query)
-      .populate('creator', 'username avatar')
-      .populate('lastMessage.sender', 'username avatar')
+      .populate('creator', 'name avatar')
+      .populate('lastMessage.sender', 'name avatar')
       .sort({ 'lastMessage.timestamp': -1, createdAt: -1 })
       .lean();
     
@@ -99,7 +99,7 @@ export async function POST(request) {
     });
     
     const populatedRoom = await ChatRoom.findById(newRoom._id)
-      .populate('creator', 'username avatar')
+      .populate('creator', 'name avatar')
       .lean();
     
     return NextResponse.json({

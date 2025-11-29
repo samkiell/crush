@@ -23,7 +23,7 @@ export default function DashboardHeader({ user }) {
                                 Dashboard
                             </h1>
                             <p className="text-sm text-base-content/60">
-                                Welcome back, {user?.username || 'Student'}!
+                                Welcome back, {user?.name?.split(' ')[0] || 'Student'}!
                             </p>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ export default function DashboardHeader({ user }) {
                         <div className="avatar placeholder">
                             <div className="bg-primary text-primary-content rounded-full w-8 h-8 md:w-10 md:h-10">
                                 <span className="text-sm md:text-base font-semibold">
-                                    {user?.username?.charAt(0).toUpperCase() || 'U'}
+                                    {user?.name?.charAt(0).toUpperCase() || 'U'}
                                 </span>
                             </div>
                         </div>
