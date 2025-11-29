@@ -11,7 +11,6 @@ import {
 import { usersAPI } from '@/services/api';
 
 // Import new dashboard components
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import HeroBanner from '@/components/dashboard/HeroBanner';
 import DailyPlanSection from '@/components/dashboard/DailyPlanSection';
 import AIInsightsPanel from '@/components/dashboard/AIInsightsPanel';
