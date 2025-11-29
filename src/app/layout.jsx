@@ -8,6 +8,7 @@ import OfflineIndicator from "../components/OfflineIndicator";
 import Header from "../components/Header";
 import AuthInitializer from "../components/AuthInitializer";
 import MinimalFooter from "../components/MinimalFooter";
+import BottomNav from "../components/layout/BottomNav";
 import Loading from "./loading";
 import { Suspense } from "react";
 
@@ -67,6 +68,7 @@ export default function RootLayout({ children }) {
               {children}
             </Suspense>
             <MinimalFooter />
+            <BottomNav />
             <ToastProvider />
             <PWAInstallPrompt />
           </ReduxProvider>
