@@ -19,7 +19,7 @@ const RichEditor = () => {
 
     useEffect(() => {
         if (!isAuthenticated) {
-            router.push('/auth/login?redirect=/community/create');
+            router.push('/login?redirect=/community/create');
         }
     }, [isAuthenticated, router]);
 

@@ -138,8 +138,8 @@ const Header = () => {
                 <>
                   {guestLinks.map((link) => <NavItem key={link.name} link={link} />)}
                   <div className="w-px h-6 bg-base-content/10 mx-2"></div>
-                  <Link href="/auth/login" className="btn btn-ghost btn-sm font-medium hover:bg-base-content/10">Login</Link>
-                  <Link href="/auth/register" className="btn btn-primary btn-sm text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">Get Started</Link>
+                  <Link href="/login" className="btn btn-ghost btn-sm font-medium hover:bg-base-content/10">Login</Link>
+                  <Link href="/register" className="btn btn-primary btn-sm text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">Get Started</Link>
                 </>
               )}
             </nav>
@@ -306,8 +306,8 @@ const Header = () => {
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
-                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-white/20 text-white hover:bg-white hover:text-neutral hover:border-white">Login</Link>
-                      <Link href="/auth/register" onClick={() => setIsMenuOpen(false)} className="btn btn-primary btn-sm w-full text-white">Signup</Link>
+                      <Link href="/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-white/20 text-white hover:bg-white hover:text-neutral hover:border-white">Login</Link>
+                      <Link href="/register" onClick={() => setIsMenuOpen(false)} className="btn btn-primary btn-sm w-full text-white">Signup</Link>
                     </div>
                   )}
                 </div>
