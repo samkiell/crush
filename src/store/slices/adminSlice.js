@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '@/services/api';
 
 // Async Thunks
 export const fetchReports = createAsyncThunk(
   'admin/fetchReports',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/api/admin/reports');
+      const response = await api.get('/admin/reports');
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch reports');
@@ -18,7 +18,7 @@ export const updateReportStatus = createAsyncThunk(
   'admin/updateReportStatus',
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      const response = await axios.patch(`/api/admin/reports/${id}`, { status });
+      const response = await api.patch(`/admin/reports/${id}`, { status });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to update report');
