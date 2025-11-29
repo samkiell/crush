@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated, selectUser } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2 } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import ReportModal from './ReportModal';
 import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
@@ -73,20 +73,25 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                         >
                             <Reply className="w-3.5 h-3.5" /> Reply
                         </button>
-                        <button
-                            onClick={() => onReport(comment._id)}
-                            className="text-xs font-semibold text-base-content/60 hover:text-error transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 ml-auto"
-                        >
-                            <Flag className="w-3.5 h-3.5" /> Report
-                        </button>
-                        {currentUser && (currentUser._id === comment.author?._id || currentUser.role === 'admin') && (
-                            <button
-                                onClick={() => onDelete(comment._id)}
-                                className="text-xs font-semibold text-error hover:text-red-700 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10"
-                            >
-                                <Trash2 className="w-3.5 h-3.5" /> Delete
-                            </button>
-                        )}
+                        <div className="dropdown dropdown-end ml-auto">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-xs btn-circle text-base-content/60">
+                                <MoreVertical className="w-4 h-4" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32 border border-base-200">
+                                <li>
+                                    <button onClick={() => onReport(comment._id)} className="text-xs text-base-content/80 hover:text-error">
+                                        <Flag className="w-3.5 h-3.5" /> Report
+                                    </button>
+                                </li>
+                                {currentUser && (currentUser._id === comment.author?._id || currentUser.role === 'admin') && (
+                                    <li>
+                                        <button onClick={() => onDelete(comment._id)} className="text-xs text-error hover:bg-error/10">
+                                            <Trash2 className="w-3.5 h-3.5" /> Delete
+                                        </button>
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
