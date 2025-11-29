@@ -1,4 +1,26 @@
-import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import ChatRoom from '@/models/ChatRoom';
+import jwt from 'jsonwebtoken';
+
+// Helper to verify JWT (checks Authorization header and auth_token cookie)
+const verifyToken = (request) => {
+  // Try Authorization header first
+  let token = null;
+  const authHeader = request.headers.get('authorization');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+  // Fallback to auth_token cookie
+  if (!token) {
+    token = request.cookies.get('auth_token')?.value;
+  }
+  if (!token) return null;
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
+};
 
 // POST - Join a chat room
 export async function POST(request, { params }) {
