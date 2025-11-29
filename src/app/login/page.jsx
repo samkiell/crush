@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { loginUser, clearError } from '../../store/slices/authSlice';
 import Footer from '../../components/Footer';
-import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { showErrorToast, showWelcomeToast } from '../../utils/toast-helpers';
 
 export default function LoginPage() {
@@ -15,8 +15,10 @@ export default function LoginPage() {
   const { loading, error, isAuthenticated, user } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    rememberMe: false
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [mounted, setMounted] = useState(false);
   const loginAttempted = useRef(false);
 
@@ -59,9 +61,10 @@ export default function LoginPage() {
   }, [error]);
 
   const handleChange = (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     });
   };
 
@@ -133,23 +136,41 @@ export default function LoginPage() {
                     <Lock className="h-5 w-5" />
                   </div>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="••••••••"
-                    className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                    className="input input-bordered w-full pl-11 pr-12 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                     value={formData.password}
                     onChange={handleChange}
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/40 hover:text-primary transition-colors focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
-                <label className="label px-4 mt-1">
+
+                <div className="flex items-center justify-between px-4 mt-2">
+                  <label className="cursor-pointer flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="rememberMe"
+                      checked={formData.rememberMe}
+                      onChange={handleChange}
+                      className="checkbox checkbox-primary checkbox-sm rounded-md"
+                    />
+                    <span className="label-text font-medium text-base-content/80 text-sm">Remember me</span>
+                  </label>
                   <Link
                     href="/forgot-password"
-                    className="label-text-alt link link-primary hover:link-hover font-medium ml-auto"
+                    className="label-text-alt link link-primary hover:link-hover font-medium"
                   >
                     Forgot password?
                   </Link>
-                </label>
+                </div>
               </div>
 
               <button

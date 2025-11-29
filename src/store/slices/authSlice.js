@@ -11,8 +11,12 @@ const COOKIE_OPTIONS = {
 };
 
 // Helper functions for token management
-const saveToken = (token) => {
-  Cookies.set(TOKEN_COOKIE_NAME, token, COOKIE_OPTIONS);
+const saveToken = (token, rememberMe = true) => {
+  const options = {
+    ...COOKIE_OPTIONS,
+    expires: rememberMe ? 30 : undefined, // 30 days if remember me, else session cookie
+  };
+  Cookies.set(TOKEN_COOKIE_NAME, token, options);
 };
 
 const getToken = () => {
@@ -42,11 +46,12 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/api/auth/login', credentials);
+      const { rememberMe, ...loginData } = credentials;
+      const response = await axios.post('/api/auth/login', loginData);
       const { token, ...user } = response.data;
       
       // Save token to cookie
-      saveToken(token);
+      saveToken(token, rememberMe);
       
       return { user, token };
     } catch (error) {
