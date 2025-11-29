@@ -4,56 +4,33 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { Check, CheckCheck } from 'lucide-react';
-
-const MessageItem = ({ message, isOwn, showAvatar, showHeader }) => {
-    return (
-        <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'} mb-1 group`}>
-            {showHeader && !isOwn && (
-                <span className="text-xs text-base-content/50 ml-10 mb-1">
-                    {message.sender.username}
-                </span>
-            )}
-
-            <div className="flex items-end gap-2 max-w-[85%]">
-                {!isOwn && (
-                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-base-300">
-                        {showAvatar ? (
-                            <img
-                                src={message.sender.avatar || `https://ui-avatars.com/api/?name=${message.sender.username}&background=random`}
-                                alt={message.sender.username}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <div className="w-full h-full" />
-                        )}
-                    </div>
                 )}
 
-                <div
-                    className={`
+<div
+    className={`
                         px-4 py-2 rounded-2xl text-[15px] leading-relaxed break-words relative
                         ${isOwn
-                            ? 'bg-primary text-primary-content rounded-tr-sm'
-                            : 'bg-base-200 text-base-content rounded-tl-sm'
-                        }
+            ? 'bg-primary text-primary-content rounded-tr-sm'
+            : 'bg-base-200 text-base-content rounded-tl-sm'
+        }
                     `}
-                >
-                    {message.content}
+>
+    {message.content}
 
-                    <div className={`
+    <div className={`
                         text-[10px] flex items-center justify-end gap-1 mt-1 opacity-70
                         ${isOwn ? 'text-primary-content/80' : 'text-base-content/50'}
                     `}>
-                        {format(new Date(message.createdAt), 'HH:mm')}
-                        {isOwn && (
-                            <span>
-                                {message.readBy?.length > 0 ? <CheckCheck size={12} /> : <Check size={12} />}
-                            </span>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
+        {format(new Date(message.createdAt), 'HH:mm')}
+        {isOwn && (
+            <span>
+                {message.readBy?.length > 0 ? <CheckCheck size={12} /> : <Check size={12} />}
+            </span>
+        )}
+    </div>
+</div>
+            </div >
+        </div >
     );
 };
 

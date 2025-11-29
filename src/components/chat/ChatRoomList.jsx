@@ -115,7 +115,7 @@ export default function ChatRoomList({
                                             {room.lastMessage?.content ? (
                                                 <>
                                                     <span className="font-medium text-base-content/80">
-                                                        {room.lastMessage.sender?.username === user?.username ? 'You' : room.lastMessage.sender?.username}:
+                                                        {room.lastMessage.sender?.name === user?.name ? 'You' : room.lastMessage.sender?.name}:
                                                     </span>{' '}
                                                     {room.lastMessage.content}
                                                 </>

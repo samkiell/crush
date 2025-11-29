@@ -46,7 +46,7 @@ export async function GET(request) {
     }
     
     const messages = await ChatMessage.find(query)
-      .populate('sender', 'username avatar')
+      .populate('sender', 'name avatar')
       .populate('replyTo', 'content sender')
       .sort({ createdAt: -1 })
       .limit(limit)
@@ -134,7 +134,7 @@ export async function POST(request) {
     await room.save();
     
     const populatedMessage = await ChatMessage.findById(newMessage._id)
-      .populate('sender', 'username avatar')
+      .populate('sender', 'name avatar')
       .populate('replyTo', 'content sender')
       .lean();
     
