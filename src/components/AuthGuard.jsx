@@ -10,7 +10,7 @@ export default function AuthGuard({ children }) {
 
     useEffect(() => {
         if (!loading && !isAuthenticated) {
-            router.push('/auth/login');
+            router.push('/login');
         }
     }, [isAuthenticated, loading, router]);
 

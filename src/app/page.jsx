@@ -21,7 +21,7 @@ export default function Home() {
                     </p>
 
                     <div className="flex justify-center gap-4">
-                        <Link href="/auth/register" className="btn btn-primary px-10 py-3 rounded-xl shadow-md text-grey">
+                        <Link href="/register" className="btn btn-primary px-10 py-3 rounded-xl shadow-md text-grey">
                             Get Started
                         </Link>
 
@@ -90,7 +90,7 @@ export default function Home() {
                     Join thousands of students achieving outstanding results.
                 </p>
 
-                <Link href="/auth/register" className="btn btn-primary px-12 py-4 rounded-xl shadow-lg text-grey">
+                <Link href="/register" className="btn btn-primary px-12 py-4 rounded-xl shadow-lg text-grey">
                     Start Your Journey Today
                 </Link>
             </section>

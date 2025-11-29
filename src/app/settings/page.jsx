@@ -24,7 +24,7 @@ export default function SettingsPage() {
 
     useEffect(() => {
         if (!isAuthenticated) {
-            router.push('/auth/login');
+            router.push('/login');
         } else if (user) {
             setName(user.name || '');
             setEmail(user.email || '');

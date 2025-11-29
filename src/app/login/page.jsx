@@ -144,7 +144,7 @@ export default function LoginPage() {
                 </div>
                 <label className="label px-4 mt-1">
                   <Link
-                    href="/auth/forgot-password"
+                    href="/forgot-password"
                     className="label-text-alt link link-primary hover:link-hover font-medium ml-auto"
                   >
                     Forgot password?
@@ -180,7 +180,7 @@ export default function LoginPage() {
             <div className="text-center">
               <p className="text-base-content/70">
                 Don't have an account?{' '}
-                <Link href="/auth/register" className="link link-primary font-bold hover:link-hover transition-colors">
+                <Link href="/register" className="link link-primary font-bold hover:link-hover transition-colors">
                   Create Account
                 </Link>
               </p>
