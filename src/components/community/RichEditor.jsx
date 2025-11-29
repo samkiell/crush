@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
-import { Loader2, Send, X, Hash, FileText, MessageSquare, HelpCircle } from 'lucide-react';
+import { Loader2, Send, X, Hash, FileText, MessageSquare, HelpCircle, ImagePlus } from 'lucide-react';
 import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from '@/utils/toast-helpers';
 
 const RichEditor = () => {
@@ -25,6 +25,34 @@ const RichEditor = () => {
     const [category, setCategory] = useState('General');
     const [tags, setTags] = useState('');
     const [isQuestion, setIsQuestion] = useState(false);
+    const [attachments, setAttachments] = useState([]);
+
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+        files.forEach(file => {
+            if (file.size > MAX_SIZE) {
+                showErrorToast(`File ${file.name} is too large (Max 5MB)`);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAttachments(prev => [...prev, {
+                    file,
+                    preview: reader.result,
+                    type: file.type,
+                    name: file.name
+                }]);
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const removeAttachment = (index) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index));
+    };
 
     if (!isAuthenticated) {
         return null;
@@ -32,8 +60,12 @@ const RichEditor = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!title.trim() || !content.trim()) {
-            showErrorToast('Please fill in both title and content');
+        if (!title.trim()) {
+            showErrorToast('Please enter a title for your post');
+            return;
+        }
+        if (!content.trim()) {
+            showErrorToast('Please add some content to your post');
             return;
         }
 
@@ -49,6 +81,11 @@ const RichEditor = () => {
                 category,
                 tags: tagList,
                 isQuestion,
+                attachments: attachments.map(a => ({
+                    type: a.type,
+                    data: a.preview, // Base64 string
+                    name: a.name
+                }))
             })).unwrap();
 
             dismissToast(toastId);
@@ -178,11 +215,55 @@ const RichEditor = () => {
                             </label>
                         </div>
 
+                        {/* Media Upload */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-base-content flex items-center gap-2">
+                                <FileText className="w-4 h-4" />
+                                Attachments
+                            </label>
+                            <div className="flex flex-wrap gap-4">
+                                {attachments.map((file, index) => (
+                                    <div key={index} className="relative w-24 h-24 rounded-xl overflow-hidden border border-base-300 group">
+                                        {file.type.startsWith('image/') ? (
+                                            <img src={file.preview} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-base-200 text-base-content/50">
+                                                <FileText className="w-8 h-8" />
+                                            </div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeAttachment(index)}
+                                            className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    </div>
+                                ))}
+                                <label className="w-24 h-24 rounded-xl border-2 border-dashed border-base-300 hover:border-primary hover:bg-base-200/50 flex flex-col items-center justify-center cursor-pointer transition-all group">
+                                    <div className="p-2 rounded-full bg-base-200 group-hover:bg-primary/10 text-base-content/50 group-hover:text-primary transition-colors">
+                                        <ImagePlus className="w-5 h-5" />
+                                    </div>
+                                    <span className="text-xs mt-1 text-base-content/60 font-medium">Add Media</span>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/*,video/*,application/pdf"
+                                        className="hidden"
+                                        onChange={handleFileSelect}
+                                    />
+                                </label>
+                            </div>
+                            <p className="text-xs text-base-content/60">
+                                Supported: Images, Videos, PDF (Max 5MB each)
+                            </p>
+                        </div>
+
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-3 sm:pt-4 border-t border-gray-200 dark:border-neutral-800">
                             <button
                                 type="button"
-                                className="btn btn-ghost rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 gap-2 order-2 sm:order-1 flex items-center justify-center"
+                                className="btn btn-ghost rounded-xl hover:bg-base-200 gap-2 order-2 sm:order-1 flex items-center justify-center"
                                 onClick={() => router.back()}
                                 disabled={actionLoading}
                             >
@@ -192,7 +273,7 @@ const RichEditor = () => {
                             <button
                                 type="submit"
                                 className="btn btn-primary rounded-xl shadow-lg hover:shadow-xl gap-2 min-w-[160px] order-1 sm:order-2 flex items-center justify-center"
-                                disabled={actionLoading || !title.trim() || !content.trim()}
+                                disabled={actionLoading}
                             >
                                 {actionLoading ? (
                                     <>

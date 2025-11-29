@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Reply, Send, Flag, MessageSquare } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText } from 'lucide-react';
 import Link from 'next/link';
 import ReportModal from './ReportModal';
 import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
@@ -41,6 +41,22 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport }) => {
                             </span>
                         </div>
                         <p className="text-sm text-base-content/80 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
+                        {comment.attachments && comment.attachments.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-3">
+                                {comment.attachments.map((att, idx) => (
+                                    <div key={idx} className="relative rounded-xl overflow-hidden border border-base-300 max-w-[200px] max-h-[200px]">
+                                        {att.type.startsWith('image/') ? (
+                                            <img src={att.data} alt="Attachment" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="p-4 bg-base-200 flex items-center gap-2">
+                                                <FileText className="w-5 h-5" />
+                                                <span className="text-xs truncate max-w-[100px]">{att.name}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex items-center gap-4 mt-2 ml-2">
@@ -95,6 +111,34 @@ const CommentSection = ({ postId }) => {
     const [reportModalOpen, setReportModalOpen] = useState(false);
     const [reportTargetId, setReportTargetId] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [attachments, setAttachments] = useState([]);
+
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+        files.forEach(file => {
+            if (file.size > MAX_SIZE) {
+                showErrorToast(`File ${file.name} is too large (Max 5MB)`);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAttachments(prev => [...prev, {
+                    file,
+                    preview: reader.result,
+                    type: file.type,
+                    name: file.name
+                }]);
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const removeAttachment = (index) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index));
+    };
 
     useEffect(() => {
         if (postId) {
@@ -118,9 +162,15 @@ const CommentSection = ({ postId }) => {
                 postId,
                 content: newComment,
                 parentComment: replyTo?._id || null,
+                attachments: attachments.map(a => ({
+                    type: a.type,
+                    data: a.preview,
+                    name: a.name
+                }))
             })).unwrap();
 
             setNewComment('');
+            setAttachments([]);
             setReplyTo(null);
             showSuccessToast('Comment posted!');
         } catch (error) {
@@ -180,21 +230,58 @@ const CommentSection = ({ postId }) => {
                                     </button>
                                 </div>
                             )}
-                            <div className="relative flex items-center gap-2 p-3 rounded-xl bg-base-200 border border-base-300 focus-within:border-primary transition-all">
+                            <div className="flex flex-col gap-2 p-3 rounded-xl bg-base-200 border border-base-300 focus-within:border-primary transition-all">
                                 <textarea
-                                    className="flex-1 bg-transparent focus:outline-none resize-none text-base text-base-content placeholder:text-base-content/50 min-h-[60px]"
+                                    className="w-full bg-transparent focus:outline-none resize-none text-base text-base-content placeholder:text-base-content/50 min-h-[60px]"
                                     placeholder="Add to the discussion..."
                                     rows="2"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
-                                <button
-                                    type="submit"
-                                    className="self-end btn btn-circle btn-primary btn-sm shadow-sm hover:shadow-lg border-none transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={!newComment.trim() || submitting}
-                                >
-                                    <Send className="w-4 h-4" />
-                                </button>
+
+                                {/* Attachments Preview */}
+                                {attachments.length > 0 && (
+                                    <div className="flex flex-wrap gap-2 mb-2">
+                                        {attachments.map((file, index) => (
+                                            <div key={index} className="relative w-16 h-16 rounded-lg overflow-hidden border border-base-300 group">
+                                                {file.type.startsWith('image/') ? (
+                                                    <img src={file.preview} alt="Preview" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center bg-base-100">
+                                                        <FileText className="w-6 h-6 text-base-content/50" />
+                                                    </div>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeAttachment(index)}
+                                                    className="absolute top-0.5 right-0.5 bg-black/50 text-white rounded-full p-0.5 hover:bg-red-500 transition-colors"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="flex justify-between items-center">
+                                    <label className="btn btn-circle btn-ghost btn-sm text-base-content/60 hover:text-primary">
+                                        <ImagePlus className="w-5 h-5" />
+                                        <input
+                                            type="file"
+                                            multiple
+                                            accept="image/*,video/*,application/pdf"
+                                            className="hidden"
+                                            onChange={handleFileSelect}
+                                        />
+                                    </label>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-circle btn-primary btn-sm shadow-sm hover:shadow-lg border-none transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled={(!newComment.trim() && attachments.length === 0) || submitting}
+                                    >
+                                        <Send className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>

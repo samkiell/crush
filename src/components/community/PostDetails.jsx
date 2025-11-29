@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPostDetails, selectCurrentPost, selectCommunityLoading, selectCommunityError, toggleReaction } from '@/store/slices/communitySlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { ThumbsUp, Eye, MessageSquare, Share2, Flag } from 'lucide-react';
+import { ThumbsUp, Eye, MessageSquare, Share2, Flag, FileText } from 'lucide-react';
 import Link from 'next/link';
 import CommentSection from './CommentSection';
 import SkeletonPostDetails from './skeletons/SkeletonPostDetails';
@@ -145,6 +145,24 @@ const PostDetails = ({ postId }) => {
                     <div className="prose prose-lg max-w-none mb-8 text-base-content/80 leading-relaxed">
                         <p className="whitespace-pre-wrap text-base sm:text-lg">{post.content}</p>
                     </div>
+
+                    {/* Attachments */}
+                    {post.attachments && post.attachments.length > 0 && (
+                        <div className="flex flex-wrap gap-4 mb-8">
+                            {post.attachments.map((att, idx) => (
+                                <div key={idx} className="relative rounded-2xl overflow-hidden border border-base-300 max-w-[300px] max-h-[300px] group cursor-pointer hover:shadow-lg transition-all">
+                                    {att.type.startsWith('image/') ? (
+                                        <img src={att.data} alt="Attachment" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="p-6 bg-base-200 flex flex-col items-center justify-center gap-3 min-w-[150px] min-h-[150px]">
+                                            <FileText className="w-10 h-10 text-primary" />
+                                            <span className="text-sm font-medium text-base-content/80 truncate max-w-[120px]">{att.name}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Tags */}
                     {post.tags && post.tags.length > 0 && (
