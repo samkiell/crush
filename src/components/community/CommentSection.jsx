@@ -48,7 +48,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                             <div className="flex flex-wrap gap-2 mt-3">
                                 {comment.attachments.map((att, idx) => (
                                     <div key={idx} className="relative rounded-xl overflow-hidden border border-base-300 max-w-[200px] max-h-[200px]">
-                                        {att.type.startsWith('image/') ? (
+                                        {att.type === 'image' || att.type.startsWith('image/') ? (
                                             <img src={att.url} alt="Attachment" className="w-full h-full object-cover" />
                                         ) : (
                                             <a href={att.url} target="_blank" rel="noopener noreferrer" className="p-4 bg-base-200 flex items-center gap-2 w-full h-full hover:bg-base-300 transition-colors">
@@ -303,7 +303,7 @@ const CommentSection = ({ postId }) => {
                                     <div className="flex flex-wrap gap-2 mb-2">
                                         {attachments.map((file, index) => (
                                             <div key={index} className="relative w-16 h-16 rounded-lg overflow-hidden border border-base-300 group">
-                                                {file.type.startsWith('image/') ? (
+                                                {file.type === 'image' || file.type.startsWith('image/') ? (
                                                     <img src={file.preview} alt="Preview" className="w-full h-full object-cover" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center bg-base-100">

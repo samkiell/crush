@@ -242,7 +242,7 @@ const RichEditor = () => {
                             <div className="flex flex-wrap gap-4">
                                 {attachments.map((file, index) => (
                                     <div key={index} className="relative w-24 h-24 rounded-xl overflow-hidden border border-base-300 group">
-                                        {file.type.startsWith('image/') ? (
+                                        {file.type === 'image' || file.type.startsWith('image/') ? (
                                             <img src={file.preview} alt="Preview" className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-base-200 text-base-content/50">
