@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
-import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
+
 import { selectIsAuthenticated, selectToken } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';

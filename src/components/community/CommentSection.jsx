@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
-import { fetchComments, addComment, selectCommunityComments, toggleReaction, deleteComment } from '@/store/slices/communitySlice';
+
 import { selectIsAuthenticated, selectUser, selectToken } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical, Loader2 } from 'lucide-react';
