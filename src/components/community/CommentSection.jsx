@@ -204,7 +204,9 @@ const CommentSection = ({ postId }) => {
         setReportModalOpen(true);
     };
 
-    const rootComments = comments.filter(c => !c.parentComment);
+    const rootComments = comments
+        .filter(c => !c.parentComment)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     return (
         <div className="mt-8">
