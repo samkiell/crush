@@ -76,7 +76,6 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  await dbConnect();
   const user = await getUserFromRequest(req);
 
   if (!user) {
@@ -84,6 +83,7 @@ export async function POST(req) {
   }
 
   try {
+    await dbConnect();
     const body = await req.json();
     const { title, content, category, tags, isQuestion } = body;
 
