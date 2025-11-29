@@ -11,6 +11,13 @@ const CommunityPostSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide content'],
   },
+  attachments: [{
+    url: String,
+    type: String, // image | video | audio | pdf | raw
+    publicId: String,
+    size: Number,
+    filename: String
+  }],
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

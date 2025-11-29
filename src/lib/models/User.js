@@ -48,6 +48,10 @@ const UserSchema = new mongoose.Schema({
     type: String, // URL to avatar image
     default: '',
   },
+  avatarPublicId: {
+    type: String,
+    default: '',
+  },
 });
 
 // Encrypt password using bcrypt
