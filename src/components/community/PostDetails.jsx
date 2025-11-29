@@ -164,22 +164,29 @@ const PostDetails = ({ postId }) => {
                     <div className="h-px w-full bg-base-300 my-6" />
 
                     {/* Actions */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex flex-row items-center flex-wrap gap-3 sm:gap-4">
+                    {/* Actions */}
+                    <div className="flex flex-row items-center justify-between gap-4">
+                        <div className="flex flex-row items-center gap-2 sm:gap-4 overflow-x-auto scrollbar-none">
                             <button
                                 onClick={handleLike}
-                                className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl hover:bg-base-200 text-base-content/70 hover:text-primary transition-all duration-200 group"
+                                className="flex flex-row items-center gap-2 px-3 sm:px-4 py-2 rounded-xl hover:bg-base-200 text-base-content/70 hover:text-primary transition-all duration-200 group shrink-0"
                             >
                                 <ThumbsUp className="w-5 h-5" />
-                                <span className="font-medium">{post.likes} Likes</span>
+                                <span className="font-medium text-sm sm:text-base">
+                                    {post.likes} <span className="hidden sm:inline">Likes</span>
+                                </span>
                             </button>
-                            <div className="flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-base-content/70 cursor-default">
+                            <div className="flex flex-row items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-base-content/70 cursor-default shrink-0">
                                 <MessageSquare className="w-5 h-5" />
-                                <span className="font-medium">{post.commentsCount} Comments</span>
+                                <span className="font-medium text-sm sm:text-base">
+                                    {post.commentsCount} <span className="hidden sm:inline">Comments</span>
+                                </span>
                             </div>
-                            <div className="hidden sm:flex flex-row items-center gap-2 px-4 py-2 rounded-xl text-base-content/70 cursor-default">
+                            <div className="flex flex-row items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-base-content/70 cursor-default shrink-0">
                                 <Eye className="w-5 h-5" />
-                                <span className="font-medium">{post.views} Views</span>
+                                <span className="font-medium text-sm sm:text-base">
+                                    {post.views} <span className="hidden sm:inline">Views</span>
+                                </span>
                             </div>
                         </div>
                         <div className="flex flex-row items-center gap-2">
