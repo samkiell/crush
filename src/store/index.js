@@ -5,6 +5,7 @@ import examsReducer from "./slices/examsSlice";
 import dashboardReducer from "./slices/dashboardSlice";
 import communityReducer from "./slices/communitySlice";
 import adminReducer from "./slices/adminSlice";
+import chatReducer from "./slices/chatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     community: communityReducer,
     admin: adminReducer,
+    chat: chatReducer,
   },
 });
