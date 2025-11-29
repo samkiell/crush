@@ -24,11 +24,24 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors (removed auto-redirect to prevent loop)
+// Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Just pass the error along, let components handle 401s
+    const { showErrorToast } = require('@/utils/toast');
+    
+    // Extract error message
+    let message = 'Something went wrong. Please try again.';
+    
+    if (error.response?.data?.message) {
+      message = error.response.data.message;
+    } else if (error.message === 'Network Error') {
+      message = 'Network error. Check your connection.';
+    }
+
+    // Show toast
+    showErrorToast(message);
+
     return Promise.reject(error);
   }
 );
