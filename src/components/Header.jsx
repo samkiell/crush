@@ -273,82 +273,51 @@ const Header = () => {
                         <Image src="/logo-dark.png" fill alt="D2C Logo" className="object-contain" />
                       </div>
                       <span className="text-xl font-bold text-white">D2C</span>
-                    </div>
-                    <button
-                      onClick={() => setIsMenuOpen(false)}
-                      className="btn btn-ghost btn-circle btn-sm hover:bg-white/10 text-white"
-                    >
-                      <X className="w-6 h-6" />
-                    </button>
-                  </div>
-
-                  {isAuthenticated ? (
-                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl">
-                      {user?.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
-                          {user?.name?.charAt(0).toUpperCase() || 'U'}
+                      <div className="flex-1 p-4 overflow-y-auto">
+                        <div className="flex flex-col gap-2">
+                          <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Menu</span>
+                          {(isAuthenticated ? navLinks : guestLinks).map((link) => (
+                            <NavItem key={link.name} link={link} mobile={true} />
+                          ))}
                         </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-white truncate">{user?.name || 'User'}</p>
-                        <p className="text-xs text-white/60 truncate">{user?.email || 'student@example.com'}</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      <Link href="/auth/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-white/20 text-white hover:bg-white hover:text-neutral hover:border-white">Login</Link>
-                      <Link href="/auth/register" onClick={() => setIsMenuOpen(false)} className="btn btn-primary btn-sm w-full text-white">Signup</Link>
-                    </div>
-                  )}
-                </div>
 
-                <div className="flex-1 p-4 overflow-y-auto">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Menu</span>
-                    {(isAuthenticated ? navLinks : guestLinks).map((link) => (
-                      <NavItem key={link.name} link={link} mobile={true} />
-                    ))}
-                  </div>
-
-                  {isAuthenticated && (
-                    <>
-                      <div className="divider my-6 before:bg-white/10 after:bg-white/10"></div>
-                      <div className="flex flex-col gap-2">
-                        <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Settings</span>
-                        <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
-                        <button
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            handleLogout();
-                          }}
-                          className="flex items-center justify-between p-4 rounded-xl hover:bg-error/10 text-error transition-all group mt-2"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-error/10 group-hover:bg-error/20 transition-colors">
-                              <LogOut className="w-5 h-5" />
+                        {isAuthenticated && (
+                          <>
+                            <div className="divider my-6 before:bg-white/10 after:bg-white/10"></div>
+                            <div className="flex flex-col gap-2">
+                              <span className="text-xs font-semibold text-white/40 uppercase tracking-wider px-4 mb-2">Settings</span>
+                              <NavItem link={{ name: 'Settings', href: '/settings', icon: Settings }} mobile={true} />
+                              <button
+                                onClick={() => {
+                                  setIsMenuOpen(false);
+                                  handleLogout();
+                                }}
+                                className="flex items-center justify-between p-4 rounded-xl hover:bg-error/10 text-error transition-all group mt-2"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="p-2 rounded-lg bg-error/10 group-hover:bg-error/20 transition-colors">
+                                    <LogOut className="w-5 h-5" />
+                                  </div>
+                                  <span className="font-medium">Logout</span>
+                                </div>
+                              </button>
                             </div>
-                            <span className="font-medium">Logout</span>
-                          </div>
-                        </button>
+                          </>
+                        )}
                       </div>
-                    </>
-                  )}
-                </div>
 
-                <div className="p-6 border-t border-white/10 bg-white/5">
-                  <p className="text-xs text-center text-white/40">
-                    &copy; 2025 Crush EduPlace Intl.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </>
+                      <div className="p-6 border-t border-white/10 bg-white/5">
+                        <p className="text-xs text-center text-white/40">
+                          &copy; 2025 Crush EduPlace Intl.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
         )}
-      </AnimatePresence>
-    </>
-  );
+              </AnimatePresence>
+            </>
+            );
 };
 
-export default Header;
+            export default Header;
