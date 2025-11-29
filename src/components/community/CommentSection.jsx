@@ -274,8 +274,14 @@ const CommentSection = ({ postId }) => {
                 <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 mb-10">
                     <form onSubmit={handleSubmit} className="flex gap-4">
                         <div className="avatar placeholder pt-1 flex-shrink-0">
-                            <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-sm">
-                                <span>Me</span>
+                            <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-sm overflow-hidden">
+                                {user?.avatar ? (
+                                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="flex items-center justify-center w-full h-full font-bold">
+                                        {user?.name?.charAt(0).toUpperCase() || 'Me'}
+                                    </span>
+                                )}
                             </div>
                         </div>
                         <div className="flex-1">

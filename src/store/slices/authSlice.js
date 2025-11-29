@@ -77,6 +77,8 @@ export const loadUserFromToken = createAsyncThunk(
       return rejectWithValue('Invalid token');
     }
   }
+);
+
 // Async thunk for updating user profile
 export const updateProfile = createAsyncThunk(
   'auth/updateProfile',

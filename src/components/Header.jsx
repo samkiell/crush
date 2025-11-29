@@ -169,10 +169,14 @@ const Header = () => {
                       onClick={toggleProfile}
                       className="btn btn-ghost btn-circle avatar"
                     >
-                      <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105 active:scale-95">
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
-                          {user?.name?.charAt(0).toUpperCase() || 'U'}
-                        </div>
+                      <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 transition-transform hover:scale-105 active:scale-95 overflow-hidden">
+                        {user?.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
+                            {user?.name?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                        )}
                       </div>
                     </button>
 
@@ -280,9 +284,13 @@ const Header = () => {
 
                   {isAuthenticated ? (
                     <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                        {user?.name?.charAt(0).toUpperCase() || 'U'}
-                      </div>
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg">
+                          {user?.name?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                      )}
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-white truncate">{user?.name || 'User'}</p>
                         <p className="text-xs text-white/60 truncate">{user?.email || 'student@example.com'}</p>
