@@ -38,7 +38,7 @@ const CommunityLayout = ({ children }) => {
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <button
-                            className="lg:hidden btn btn-ghost btn-circle btn-sm"
+                            className="lg:hidden btn btn-ghost btn-circle btn-sm relative z-[70]"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             {isMobileMenuOpen ? <X /> : <Menu />}
@@ -56,7 +56,7 @@ const CommunityLayout = ({ children }) => {
                     <div className="flex items-center gap-3">
                         <Link
                             href="/community/create"
-                            className="btn btn-primary rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 border-none"
+                            className="btn btn-primary rounded-xl border-none"
                         >
                             New Post
                         </Link>
@@ -72,7 +72,7 @@ const CommunityLayout = ({ children }) => {
             <div className="container mx-auto max-w-7xl px-4 py-8 flex flex-col lg:flex-row gap-8">
                 {/* Sidebar (Desktop) */}
                 <aside className={`
-                    fixed inset-y-0 left-0 z-40 w-72 bg-base-100/95 backdrop-blur-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:bg-transparent lg:backdrop-blur-none lg:w-64 shrink-0
+                    fixed inset-y-0 left-0 z-[60] w-72 bg-base-100/95 backdrop-blur-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:bg-transparent lg:backdrop-blur-none lg:w-64 shrink-0
                     ${isMobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:shadow-none'}
                 `}>
                     <div className="h-full overflow-y-auto p-6 lg:p-0 lg:sticky lg:top-24 scrollbar-none">
