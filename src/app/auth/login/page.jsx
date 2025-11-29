@@ -29,6 +29,13 @@ export default function LoginPage() {
     };
   }, [dispatch]);
 
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (isAuthenticated && user && !loginAttempted.current) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, user, router]);
+
   // Watch for login success and redirect to dashboard  
   useEffect(() => {
     // Only redirect if user actually tried to log in, not from auth initialization

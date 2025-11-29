@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import {
     HomeIcon as HomeOutline,
@@ -19,6 +20,12 @@ import {
 
 const BottomNav = () => {
     const pathname = usePathname();
+    const { isAuthenticated } = useSelector((state) => state.auth);
+
+    // Don't render if user is not authenticated
+    if (!isAuthenticated) {
+        return null;
+    }
 
     const navItems = [
         {
@@ -30,7 +37,7 @@ const BottomNav = () => {
         },
         {
             name: 'Past Questions',
-            href: '/past-questions',
+            href: '/questions',
             iconOutline: DocumentOutline,
             iconFilled: DocumentFilled,
             badge: 0
