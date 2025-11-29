@@ -6,6 +6,7 @@ import { fetchComments, addComment, selectCommunityComments, toggleReaction, del
 import { selectIsAuthenticated, selectUser } from '@/store/slices/authSlice';
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical } from 'lucide-react';
+import { ThumbsUp, Reply, Send, Flag, MessageSquare, ImagePlus, X, FileText, Trash2, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import ReportModal from './ReportModal';
 import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
@@ -69,6 +70,54 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                         </button>
                     </div>
                     );
+                        <button
+                            onClick={() => onReply(comment)}
+                            className="text-xs font-semibold text-base-content/60 hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-base-200"
+                        >
+                            <Reply className="w-3.5 h-3.5" /> Reply
+                        </button>
+                        <div className="dropdown dropdown-end ml-auto">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-xs btn-circle text-base-content/60">
+                                <MoreVertical className="w-4 h-4" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32 border border-base-200">
+                                <li>
+                                    <button onClick={() => onReport(comment._id)} className="text-xs text-base-content/80 hover:text-error">
+                                        <Flag className="w-3.5 h-3.5" /> Report
+                                    </button>
+                                </li>
+                                {currentUser && (currentUser._id === comment.author?._id || currentUser.role === 'admin') && (
+                                    <li>
+                                        <button onClick={() => onDelete(comment._id)} className="text-xs text-error hover:bg-error/10">
+                                            <Trash2 className="w-3.5 h-3.5" /> Delete
+                                        </button>
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Recursive Replies */}
+            {replies.length > 0 && (
+                <div className="ml-8 sm:ml-14 border-l-2 border-base-300 pl-6 mt-4 space-y-4">
+                    {replies.map(reply => (
+                        <CommentItem
+                            key={reply._id}
+                            comment={reply}
+                            allComments={allComments}
+                            onReply={onReply}
+                            onLike={onLike}
+                            onReport={onReport}
+                            onDelete={onDelete}
+                            currentUser={currentUser}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 };
 
                     const CommentSection = ({postId}) => {
