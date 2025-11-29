@@ -92,9 +92,9 @@ export async function POST(request) {
       description,
       type: type || 'public',
       subject: subject || 'General',
-      creator: decoded.userId,
-      admins: [decoded.userId],
-      members: [decoded.userId],
+      creator: decoded.id || decoded.userId,
+      admins: [decoded.id || decoded.userId],
+      members: [decoded.id || decoded.userId],
       settings: settings || {},
     });
     
