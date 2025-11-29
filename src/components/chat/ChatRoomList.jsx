@@ -48,7 +48,7 @@ export default function ChatRoomList({
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto pb-20 md:pb-0">
                 {loading ? (
                     <div className="p-4 space-y-4">
                         {[1, 2, 3].map((i) => (

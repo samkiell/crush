@@ -7,7 +7,7 @@ import PWAInstallPrompt from "../components/PWAInstallPrompt";
 import OfflineIndicator from "../components/OfflineIndicator";
 import Header from "../components/Header";
 import AuthInitializer from "../components/AuthInitializer";
-import MinimalFooter from "../components/MinimalFooter";
+import FooterWrapper from "../components/layout/FooterWrapper";
 import BottomNav from "../components/layout/BottomNav";
 import Loading from "./loading";
 import { Suspense } from "react";
@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
                 {children}
               </Suspense>
             </main>
-            <MinimalFooter />
+            <FooterWrapper />
             <BottomNav />
             <ToastProvider />
             <PWAInstallPrompt />

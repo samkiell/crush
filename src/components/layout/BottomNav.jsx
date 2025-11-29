@@ -8,9 +8,15 @@ import { Home, FileText, MessageCircle, Users, User } from 'lucide-react';
 const BottomNav = () => {
     const pathname = usePathname();
     const { isAuthenticated } = useSelector((state) => state.auth);
+    const { activeRoom } = useSelector((state) => state.chat);
 
     // Don't render if user is not authenticated
     if (!isAuthenticated) {
+        return null;
+    }
+
+    // Don't render on chat page if a room is active (immersive mode)
+    if (pathname === '/chat' && activeRoom) {
         return null;
     }
 
