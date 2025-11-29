@@ -1,14 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-
-const API_URL = '/api/chat';
-
-// Helper to get token
-const getAuthHeader = () => {
-  const token = Cookies.get('auth_token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import api from '@/services/api';
 
 // Async thunks
 export const fetchChatRooms = createAsyncThunk(
@@ -20,7 +11,7 @@ export const fetchChatRooms = createAsyncThunk(
       if (subject) params.append('subject', subject);
       if (userId) params.append('userId', userId);
       
-      const response = await axios.get(`${API_URL}/rooms?${params}`);
+      const response = await api.get(`/chat/rooms?${params}`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch rooms');
@@ -32,9 +23,7 @@ export const createChatRoom = createAsyncThunk(
   'chat/createRoom',
   async (roomData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/rooms`, roomData, {
-        headers: getAuthHeader(),
-      });
+      const response = await api.post('/chat/rooms', roomData);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to create room');
@@ -46,9 +35,7 @@ export const joinChatRoom = createAsyncThunk(
   'chat/joinRoom',
   async (roomId, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/rooms/${roomId}/join`, {}, {
-        headers: getAuthHeader(),
-      });
+      const response = await api.post(`/chat/rooms/${roomId}/join`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to join room');
@@ -60,9 +47,7 @@ export const leaveChatRoom = createAsyncThunk(
   'chat/leaveRoom',
   async (roomId, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/rooms/${roomId}/leave`, {}, {
-        headers: getAuthHeader(),
-      });
+      const response = await api.post(`/chat/rooms/${roomId}/leave`);
       return { roomId, message: response.data.message };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to leave room');
@@ -77,7 +62,7 @@ export const fetchMessages = createAsyncThunk(
       const params = new URLSearchParams({ roomId, limit: limit.toString() });
       if (before) params.append('before', before);
       
-      const response = await axios.get(`${API_URL}/messages?${params}`);
+      const response = await api.get(`/chat/messages?${params}`);
       return {
         roomId,
         messages: response.data.data,
@@ -93,9 +78,7 @@ export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
   async (messageData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/messages`, messageData, {
-        headers: getAuthHeader(),
-      });
+      const response = await api.post('/chat/messages', messageData);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to send message');
@@ -107,10 +90,7 @@ export const editMessage = createAsyncThunk(
   'chat/editMessage',
   async ({ messageId, content }, { rejectWithValue }) => {
     try {
-      const response = await axios.patch(`${API_URL}/messages/${messageId}`, 
-        { content },
-        { headers: getAuthHeader() }
-      );
+      const response = await api.patch(`/chat/messages/${messageId}`, { content });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to edit message');
@@ -122,9 +102,7 @@ export const deleteMessage = createAsyncThunk(
   'chat/deleteMessage',
   async (messageId, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/messages/${messageId}`, {
-        headers: getAuthHeader(),
-      });
+      await api.delete(`/chat/messages/${messageId}`);
       return messageId;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to delete message');
@@ -136,10 +114,7 @@ export const reactToMessage = createAsyncThunk(
   'chat/reactToMessage',
   async ({ messageId, emoji }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/messages/${messageId}/react`,
-        { emoji },
-        { headers: getAuthHeader() }
-      );
+      const response = await api.post(`/chat/messages/${messageId}/react`, { emoji });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to add reaction');

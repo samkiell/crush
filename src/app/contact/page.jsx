@@ -21,25 +21,14 @@ const Contact = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+            const { default: api } = await import('@/services/api');
+            await api.post('/contact', formData);
 
-            const data = await response.json();
-
-            if (response.ok) {
-                toast.success('Message sent successfully!');
-                setFormData({ firstName: '', lastName: '', email: '', message: '' });
-            } else {
-                toast.error(data.error || 'Failed to send message.');
-            }
+            toast.success('Message sent successfully!');
+            setFormData({ firstName: '', lastName: '', email: '', message: '' });
         } catch (error) {
             console.error('Submission error:', error);
-            toast.error('Something went wrong. Please try again.');
+            // Error handled by global interceptor
         } finally {
             setIsLoading(false);
         }
