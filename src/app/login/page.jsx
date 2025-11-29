@@ -112,7 +112,7 @@ export default function LoginPage() {
                   <span className="label-text font-medium text-base-content/80">Email Address</span>
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/70 group-focus-within:text-primary transition-colors">
                     <Mail className="h-5 w-5" />
                   </div>
                   <input
@@ -132,7 +132,7 @@ export default function LoginPage() {
                   <span className="label-text font-medium text-base-content/80">Password</span>
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/70 group-focus-within:text-primary transition-colors">
                     <Lock className="h-5 w-5" />
                   </div>
                   <input
@@ -147,7 +147,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/40 hover:text-primary transition-colors focus:outline-none"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/70 hover:text-primary transition-colors focus:outline-none"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
