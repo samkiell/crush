@@ -1,102 +1,104 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { Send, Paperclip, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Send, Image as ImageIcon, Paperclip, X, Smile } from 'lucide-react';
+import { sendMessage, setTypingUser } from '@/store/slices/chatSlice';
+import { useSocket } from '@/hooks/useSocket';
 
-export default function MessageInput({ onSendMessage, replyingTo, onCancelReply }) {
-    const [message, setMessage] = useState('');
-    const [isSending, setIsSending] = useState(false);
-    const inputRef = useRef(null);
+export default function MessageInput({ roomId, onSendMessage }) {
+    const [content, setContent] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
+    const typingTimeoutRef = useRef(null);
+    const socket = useSocket();
+    const { user } = useSelector((state) => state.auth);
+    const textareaRef = useRef(null);
+
+    const handleTyping = () => {
+        if (!socket) return;
+
+        if (!isTyping) {
+            setIsTyping(true);
+            socket.emit('typing_start', { roomId, username: user.username });
+        }
+
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            setIsTyping(false);
+            socket.emit('typing_stop', { roomId, username: user.username });
+        }, 2000);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!content.trim()) return;
 
-        if (!message.trim() || isSending) return;
+        const messageContent = content.trim();
+        setContent('');
 
-        setIsSending(true);
-        try {
-            await onSendMessage(message, replyingTo?._id);
-            setMessage('');
-            if (onCancelReply) onCancelReply();
-        } catch (error) {
-            console.error('Failed to send message:', error);
-        } finally {
-            setIsSending(false);
-            inputRef.current?.focus();
+        // Reset height
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+        }
+
+        if (onSendMessage) {
+            onSendMessage(messageContent);
+        }
+
+        // Stop typing indicator immediately
+        if (isTyping) {
+            setIsTyping(false);
+            socket?.emit('typing_stop', { roomId, username: user.username });
+            if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         }
     };
 
-    const handleKeyPress = (e) => {
+    const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSubmit(e);
         }
     };
 
+    const autoResize = (e) => {
+        const target = e.target;
+        target.style.height = 'auto';
+        target.style.height = `${Math.min(target.scrollHeight, 120)}px`;
+        setContent(target.value);
+        handleTyping();
+    };
+
     return (
-        <div className="p-4">
-            {/* Reply Preview */}
-            {replyingTo && (
-                <div className="mb-2 p-2 bg-base-200 rounded-lg flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                        <p className="text-xs text-base-content/60 mb-1">
-                            Replying to {replyingTo.sender?.username}
-                        </p>
-                        <p className="text-sm text-base-content truncate">
-                            {replyingTo.content}
-                        </p>
-                    </div>
-                    <button
-                        onClick={onCancelReply}
-                        className="btn btn-ghost btn-sm btn-circle"
-                    >
-                        <X className="w-4 h-4" />
-                    </button>
-                </div>
-            )}
+        <form onSubmit={handleSubmit} className="p-3 bg-base-100 border-t border-base-200 flex items-end gap-2">
+            <button
+                type="button"
+                className="btn btn-circle btn-ghost btn-sm text-base-content/50 hover:text-primary hover:bg-base-200"
+            >
+                <ImageIcon size={20} />
+            </button>
 
-            <form onSubmit={handleSubmit} className="flex gap-2">
-                {/* Attachment Button (Optional - can add file upload later) */}
-                <button
-                    type="button"
-                    className="btn btn-ghost btn-circle flex-shrink-0"
-                    title="Attach file (coming soon)"
-                    disabled
-                >
-                    <Paperclip className="w-5 h-5" />
-                </button>
+            <div className="flex-1 bg-base-200 rounded-2xl px-4 py-2 min-h-[44px] flex items-center">
+                <textarea
+                    ref={textareaRef}
+                    value={content}
+                    onChange={autoResize}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Message..."
+                    className="w-full bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed max-h-[120px] py-1 placeholder:text-base-content/40"
+                    rows={1}
+                />
+            </div>
 
-                {/* Message Input */}
-                <div className="flex-1 relative">
-                    <textarea
-                        ref={inputRef}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Type a message... (Shift+Enter for new line)"
-                        className="textarea textarea-bordered w-full resize-none pr-12"
-                        rows={1}
-                        style={{
-                            minHeight: '48px',
-                            maxHeight: '120px',
-                            overflowY: message.split('\n').length > 3 ? 'scroll' : 'hidden',
-                        }}
-                    />
-                </div>
-
-                {/* Send Button */}
-                <button
-                    type="submit"
-                    disabled={!message.trim() || isSending}
-                    className="btn btn-primary btn-circle flex-shrink-0"
-                >
-                    {isSending ? (
-                        <span className="loading loading-spinner loading-sm"></span>
-                    ) : (
-                        <Send className="w-5 h-5" />
-                    )}
-                </button>
-            </form>
-        </div>
+            <button
+                type="submit"
+                disabled={!content.trim()}
+                className={`btn btn-circle btn-sm ${content.trim() ? 'btn-primary' : 'btn-ghost text-base-content/30'}`}
+            >
+                <Send size={18} className={content.trim() ? 'ml-0.5' : ''} />
+            </button>
+        </form>
     );
 }
