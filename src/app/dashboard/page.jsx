@@ -88,9 +88,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-base-100">
-      {/* Sticky Dashboard Header */}
-      <DashboardHeader user={user} />
-
       {/* Main Dashboard Content */}
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         {/* Hero Banner */}
