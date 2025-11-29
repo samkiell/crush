@@ -86,6 +86,27 @@ const PostCard = ({ post }) => {
                     <p className="text-base-content/70 text-sm leading-relaxed line-clamp-2 mb-4">
                         {post.content}
                     </p>
+
+                    {/* Image Preview */}
+                    {post.attachments && post.attachments.length > 0 && (
+                        <div className="mb-4">
+                            {post.attachments.map((att, index) => {
+                                if (att.type === 'image' || att.type.startsWith('image/')) {
+                                    return (
+                                        <div key={index} className="relative w-full h-48 rounded-xl overflow-hidden mb-2">
+                                            <img src={att.url} alt="Post attachment" className="w-full h-full object-cover" />
+                                            {post.attachments.length > 1 && (
+                                                <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-lg">
+                                                    +{post.attachments.length - 1} more
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })[0]}
+                        </div>
+                    )}
                 </div>
 
                 {/* Tags */}
