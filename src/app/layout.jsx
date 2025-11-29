@@ -64,9 +64,11 @@ export default function RootLayout({ children }) {
           <ReduxProvider>
             <AuthInitializer />
             <Header />
-            <Suspense fallback={<Loading />}>
-              {children}
-            </Suspense>
+            <main className="flex-1">
+              <Suspense fallback={<Loading />}>
+                {children}
+              </Suspense>
+            </main>
             <MinimalFooter />
             <BottomNav />
             <ToastProvider />
