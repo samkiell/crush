@@ -186,7 +186,7 @@ const RichEditor = () => {
                                 </span>
                             </label>
                             <textarea
-                                className="textarea w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all min-h-[250px] text-base leading-relaxed resize-y"
+                                className="textarea w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all min-h-[250px] text-base leading-relaxed resize-y p-4 sm:p-6"
                                 placeholder="Share your thoughts, questions, or tips in detail..."
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}

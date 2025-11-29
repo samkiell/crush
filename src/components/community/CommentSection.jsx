@@ -75,14 +75,14 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                         </button>
                         <button
                             onClick={() => onReport(comment._id)}
-                            className="text-xs font-semibold text-base-content/60 hover:text-error transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 ml-auto opacity-0 group-hover:opacity-100"
+                            className="text-xs font-semibold text-base-content/60 hover:text-error transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 ml-auto"
                         >
                             <Flag className="w-3.5 h-3.5" /> Report
                         </button>
                         {currentUser && (currentUser._id === comment.author?._id || currentUser.role === 'admin') && (
                             <button
                                 onClick={() => onDelete(comment._id)}
-                                className="text-xs font-semibold text-error hover:text-red-700 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10 opacity-0 group-hover:opacity-100"
+                                className="text-xs font-semibold text-error hover:text-red-700 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-error/10"
                             >
                                 <Trash2 className="w-3.5 h-3.5" /> Delete
                             </button>
