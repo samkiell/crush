@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+const AttachmentSchema = new mongoose.Schema({
+  url: String,
+  type: String, // image | video | audio | pdf | raw
+  publicId: String,
+  size: Number,
+  filename: String
+}, { _id: false });
+
 const CommunityPostSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -11,13 +19,7 @@ const CommunityPostSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide content'],
   },
-  attachments: [{
-    url: String,
-    type: String, // image | video | audio | pdf | raw
-    publicId: String,
-    size: Number,
-    filename: String
-  }],
+  attachments: [AttachmentSchema],
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

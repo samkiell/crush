@@ -1,18 +1,20 @@
 import mongoose from 'mongoose';
 
+const AttachmentSchema = new mongoose.Schema({
+  url: String,
+  type: String, // image | video | audio | pdf | raw
+  publicId: String,
+  size: Number,
+  filename: String
+}, { _id: false });
+
 const CommentSchema = new mongoose.Schema({
   content: {
     type: String,
     required: [true, 'Please provide a comment'],
     trim: true,
   },
-  attachments: [{
-    url: String,
-    type: String, // image | video | audio | pdf | raw
-    publicId: String,
-    size: Number,
-    filename: String
-  }],
+  attachments: [AttachmentSchema],
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
