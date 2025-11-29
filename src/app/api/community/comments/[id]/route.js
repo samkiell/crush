@@ -27,15 +27,16 @@ const getUserFromRequest = async (req) => {
 };
 
 export async function DELETE(req, { params }) {
-  await dbConnect();
-  const user = await getUserFromRequest(req);
   const { id } = await params;
 
-  if (!user) {
-    return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
-  }
-
   try {
+    await dbConnect();
+    const user = await getUserFromRequest(req);
+
+    if (!user) {
+      return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
+    }
+
     const comment = await Comment.findById(id);
 
     if (!comment) {

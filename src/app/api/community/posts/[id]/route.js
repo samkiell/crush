@@ -27,10 +27,10 @@ const getUserFromRequest = async (req) => {
 };
 
 export async function GET(req, { params }) {
-  await dbConnect();
   const { id } = await params;
 
   try {
+    await dbConnect();
     const post = await CommunityPost.findById(id).populate('author', 'name avatar badges reputation');
 
     if (!post) {
@@ -48,15 +48,16 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  await dbConnect();
-  const user = await getUserFromRequest(req);
   const { id } = await params;
 
-  if (!user) {
-    return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
-  }
-
   try {
+    await dbConnect();
+    const user = await getUserFromRequest(req);
+
+    if (!user) {
+      return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
+    }
+
     const post = await CommunityPost.findById(id);
 
     if (!post) {

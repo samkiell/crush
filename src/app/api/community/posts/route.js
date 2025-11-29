@@ -76,14 +76,14 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const user = await getUserFromRequest(req);
-
-  if (!user) {
-    return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
-  }
-
   try {
     await dbConnect();
+    const user = await getUserFromRequest(req);
+
+    if (!user) {
+      return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { title, content, category, tags, isQuestion } = body;
 
