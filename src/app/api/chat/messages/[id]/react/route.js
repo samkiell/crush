@@ -32,7 +32,7 @@ export async function POST(request, { params }) {
       );
     }
     
-    const { id } = params;
+    const { id } = await params;
     const { emoji } = await request.json();
     
     if (!emoji) {

@@ -23,7 +23,7 @@ export async function GET(request, { params }) {
   try {
     await dbConnect();
     
-    const { id } = params;
+    const { id } = await params;
     
     const room = await ChatRoom.findById(id)
       .populate('creator', 'username avatar')
@@ -66,7 +66,7 @@ export async function PATCH(request, { params }) {
       );
     }
     
-    const { id } = params;
+    const { id } = await params;
     const updates = await request.json();
     
     // Find room and check if user is admin
@@ -133,7 +133,7 @@ export async function DELETE(request, { params }) {
       );
     }
     
-    const { id } = params;
+    const { id } = await params;
     
     // Find room and check if user is creator
     const room = await ChatRoom.findById(id);

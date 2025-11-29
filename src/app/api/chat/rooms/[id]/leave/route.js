@@ -32,7 +32,7 @@ export async function POST(request, { params }) {
       );
     }
     
-    const { id } = params;
+    const { id } = await params;
     const userId = decoded.userId;
     
     const room = await ChatRoom.findById(id);

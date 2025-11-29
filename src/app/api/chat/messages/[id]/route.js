@@ -32,7 +32,7 @@ export async function PATCH(request, { params }) {
       );
     }
     
-    const { id } = params;
+    const { id } = await params;
     const { content } = await request.json();
     
     const message = await ChatMessage.findById(id);
@@ -90,7 +90,7 @@ export async function DELETE(request, { params }) {
       );
     }
     
-    const { id } = params;
+    const { id } = await params;
     
     const message = await ChatMessage.findById(id);
     

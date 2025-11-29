@@ -22,7 +22,7 @@ const getAdminUser = async (req) => {
 export async function PATCH(req, { params }) {
   await dbConnect();
   const admin = await getAdminUser(req);
-  const { id } = params;
+  const { id } = await params;
 
   if (!admin) {
     return NextResponse.json({ success: false, error: 'Not authorized as admin' }, { status: 403 });
