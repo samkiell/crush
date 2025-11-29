@@ -70,7 +70,7 @@ export const fetchComments = createAsyncThunk(
 
 export const addComment = createAsyncThunk(
   'community/addComment',
-  async ({ postId, content, parentComment }, { rejectWithValue, getState }) => {
+  async ({ postId, content, parentComment, attachments }, { rejectWithValue, getState }) => {
     try {
       const state = getState();
       const token = state.auth.token;
@@ -85,6 +85,7 @@ export const addComment = createAsyncThunk(
       const response = await axios.post(`/api/community/posts/${postId}/comments`, {
         content,
         parentComment,
+        attachments,
       }, {
         headers: {
           Authorization: `Bearer ${token}`,

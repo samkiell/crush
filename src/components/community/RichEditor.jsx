@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createPost, selectActionLoading } from '@/store/slices/communitySlice';
 import { selectIsAuthenticated } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { Loader2, Send, X, Hash, FileText, MessageSquare, HelpCircle, ImagePlus } from 'lucide-react';
 import { showSuccessToast, showErrorToast, showLoadingToast, dismissToast } from '@/utils/toast-helpers';
 
@@ -72,6 +73,22 @@ const RichEditor = () => {
         const toastId = showLoadingToast('Creating your post...');
 
         try {
+            // Upload attachments first
+            const uploadedAttachments = [];
+            if (attachments.length > 0) {
+                for (const att of attachments) {
+                    const formData = new FormData();
+                    formData.append('file', att.file);
+                    formData.append('type', 'posts');
+
+                    const response = await axios.post('/api/media/upload', formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+
+                    uploadedAttachments.push(response.data);
+                }
+            }
+
             // Process tags
             const tagList = tags.split(',').map(t => t.trim()).filter(t => t);
 
@@ -81,11 +98,7 @@ const RichEditor = () => {
                 category,
                 tags: tagList,
                 isQuestion,
-                attachments: attachments.map(a => ({
-                    type: a.type,
-                    data: a.preview, // Base64 string
-                    name: a.name
-                }))
+                attachments: uploadedAttachments
             })).unwrap();
 
             dismissToast(toastId);

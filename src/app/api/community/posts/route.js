@@ -99,6 +99,7 @@ export async function POST(req) {
       content: cleanContent,
       category,
       tags: tags || [],
+      attachments: body.attachments || [],
       isQuestion: isQuestion || false,
       author: user._id,
     });

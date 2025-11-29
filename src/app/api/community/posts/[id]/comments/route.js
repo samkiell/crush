@@ -54,7 +54,7 @@ export async function POST(req, { params }) {
     }
 
     const body = await req.json();
-    const { content, parentComment } = body;
+    const { content, parentComment, attachments } = body;
 
     if (!content) {
       return NextResponse.json({ success: false, error: 'Please provide a comment' }, { status: 400 });
@@ -67,6 +67,7 @@ export async function POST(req, { params }) {
       post: id,
       author: user._id,
       parentComment: parentComment || null,
+      attachments: attachments || [],
     });
 
     // Update post comment count
