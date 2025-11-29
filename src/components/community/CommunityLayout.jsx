@@ -34,7 +34,7 @@ const CommunityLayout = ({ children }) => {
             </div>
 
             {/* Top Navigation */}
-            <div className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-300 shadow-sm">
+            <div className="sticky top-0 z-30 bg-base-100/80 backdrop-blur-md border-b border-base-300 shadow-sm">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <button
