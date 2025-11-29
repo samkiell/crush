@@ -77,6 +77,25 @@ export const loadUserFromToken = createAsyncThunk(
       return rejectWithValue('Invalid token');
     }
   }
+// Async thunk for updating user profile
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async (userData, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put('/api/users/profile', userData, config);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Server error';
+      return rejectWithValue(message);
+    }
+  }
 );
 
 const initialState = {
@@ -159,9 +178,25 @@ const authSlice = createSlice({
       .addCase(loadUserFromToken.rejected, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
+      })
+      // Update profile lifecycle
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user = { ...state.user, ...action.payload };
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
+
+
 
 export const { clearError, setUser, logout } = authSlice.actions;
 
