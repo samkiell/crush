@@ -6,7 +6,7 @@ import { registerUser, clearError } from '../../store/slices/authSlice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
-import { User, Mail, Lock, ArrowRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, Loader2, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { showErrorToast, showRegistrationSuccessToast } from '../../utils/toast-helpers';
 
 export default function RegisterPage() {
@@ -18,6 +18,7 @@ export default function RegisterPage() {
     });
     const [mounted, setMounted] = useState(false);
     const [passwordError, setPasswordError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -25,8 +26,6 @@ export default function RegisterPage() {
 
     useEffect(() => {
         setMounted(true);
-
-        // Cleanup on unmount
         return () => {
             dispatch(clearError());
         };
@@ -41,10 +40,8 @@ export default function RegisterPage() {
 
     // Watch for registration success
     const [registerSuccess, setRegisterSuccess] = useState(false);
-
     useEffect(() => {
         if (registerSuccess && !loading && !error) {
-            // Show success toast and redirect to login
             showRegistrationSuccessToast();
             setTimeout(() => {
                 router.push('/login');
@@ -64,8 +61,6 @@ export default function RegisterPage() {
             ...formData,
             [e.target.name]: e.target.value
         });
-
-        // Clear password error when user types
         if (passwordError && (e.target.name === 'password' || e.target.name === 'confirmPassword')) {
             setPasswordError('');
         }
@@ -73,30 +68,23 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Client-side validation
         if (formData.password !== formData.confirmPassword) {
-            const errorMsg = 'The two passwords no be the same. Check am again';
-            setPasswordError(errorMsg);
-            showErrorToast(errorMsg);
+            const err = 'The two passwords no be the same. Check am again';
+            setPasswordError(err);
+            showErrorToast(err);
             return;
         }
-
         if (formData.password.length < 6) {
-            const errorMsg = 'Password too short, do better. At least 6 characters abeg';
-            setPasswordError(errorMsg);
-            showErrorToast(errorMsg);
+            const err = 'Password too short, do better. At least 6 characters abeg';
+            setPasswordError(err);
+            showErrorToast(err);
             return;
         }
-
-        // Dispatch register action
         const result = await dispatch(registerUser({
             name: formData.name,
             email: formData.email,
-            password: formData.password,
+            password: formData.password
         }));
-
-        // Check if registration was successful
         if (registerUser.fulfilled.match(result)) {
             setRegisterSuccess(true);
         }
@@ -116,11 +104,9 @@ export default function RegisterPage() {
                 <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-content/5">
                     <div className="card-body p-8">
                         <div className="text-center mb-8">
-                            <h2 className="text-3xl font-bold text-base-content mb-2 tracking-tight">
-                                Create Account
-                            </h2>
+                            <h2 className="text-3xl font-bold text-base-content mb-2 tracking-tight">Create Account</h2>
                             <div className="h-6 flex items-center justify-center">
-                                <p className={`text-primary font-medium transition-all duration-300 ${formData.name ? 'opacity-100 transform translate-y-0' : 'opacity-70 transform translate-y-0'}`}>
+                                <p className={`text-primary font-medium transition-all duration-300 ${formData.name ? 'opacity-100' : 'opacity-70'}`}>
                                     {formData.name ? (
                                         <span className="flex items-center gap-2">
                                             Welcome, {formData.name.split(' ')[0]} <span className="animate-bounce">🚀</span>
@@ -133,12 +119,13 @@ export default function RegisterPage() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* Full Name */}
                             <div className="form-control">
                                 <label className="label px-4">
                                     <span className="label-text font-medium text-base-content/80">Full Name</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
                                         <User className="h-5 w-5" />
                                     </div>
                                     <input
@@ -153,12 +140,13 @@ export default function RegisterPage() {
                                 </div>
                             </div>
 
+                            {/* Email */}
                             <div className="form-control">
                                 <label className="label px-4">
                                     <span className="label-text font-medium text-base-content/80">Email Address</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
                                         <Mail className="h-5 w-5" />
                                     </div>
                                     <input
@@ -173,44 +161,60 @@ export default function RegisterPage() {
                                 </div>
                             </div>
 
+                            {/* Password */}
                             <div className="form-control">
                                 <label className="label px-4">
                                     <span className="label-text font-medium text-base-content/80">Password</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
                                         <Lock className="h-5 w-5" />
                                     </div>
                                     <input
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         name="password"
                                         placeholder="••••••••"
-                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        className="input input-bordered w-full pl-11 pr-12 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
                                         minLength={6}
                                     />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/40 hover:text-primary transition-colors focus:outline-none"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    </button>
                                 </div>
                             </div>
 
+                            {/* Confirm Password */}
                             <div className="form-control">
                                 <label className="label px-4">
                                     <span className="label-text font-medium text-base-content/80">Confirm Password</span>
                                 </label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/40 group-focus-within:text-primary transition-colors">
                                         <CheckCircle2 className="h-5 w-5" />
                                     </div>
                                     <input
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         name="confirmPassword"
                                         placeholder="••••••••"
-                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        className="input input-bordered w-full pl-11 pr-12 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/40 hover:text-primary transition-colors focus:outline-none"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    </button>
                                 </div>
                             </div>
 
