@@ -158,10 +158,17 @@ const Header = () => {
             {isAuthenticated && (
               <>
                 {/* Notification Bell */}
-                <button className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 relative">
+                <Link
+                  href="/notifications"
+                  className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 relative"
+                  title="Notifications"
+                >
                   <Bell className="w-5 h-5" />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-base-100 animate-pulse"></span>
-                </button>
+                  {/* Unread count badge - replace 3 with actual unread count from Redux */}
+                  <span className="absolute -top-1 -right-1 bg-error text-error-content text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    3
+                  </span>
+                </Link>
 
                 {/* User Dropdown (Desktop) */}
                 <div className="hidden md:flex items-center gap-2 ml-2" ref={profileRef}>
