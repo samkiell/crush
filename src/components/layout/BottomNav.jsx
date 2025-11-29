@@ -37,13 +37,13 @@ const BottomNav = () => {
             name: 'Chat',
             href: '/chat',
             icon: MessageCircle,
-            badge: 3 // Example: unread messages
+            badge: 0
         },
         {
             name: 'Community',
             href: '/community',
             icon: Users,
-            badge: 12 // Example: unread posts
+            badge: 0
         },
         {
             name: 'Profile',
