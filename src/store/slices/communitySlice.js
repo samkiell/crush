@@ -170,6 +170,44 @@ export const reportContent = createAsyncThunk(
   }
 );
 
+export const deletePost = createAsyncThunk(
+  'community/deletePost',
+  async (postId, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+
+      if (!token) return rejectWithValue('Authentication required');
+
+      await axios.delete(`/api/community/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return postId;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || error.message);
+    }
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  'community/deleteComment',
+  async (commentId, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.auth.token;
+
+      if (!token) return rejectWithValue('Authentication required');
+
+      await axios.delete(`/api/community/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return commentId;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || error.message);
+    }
+  }
+);
+
 const initialState = {
   posts: [],
   currentPost: null,
@@ -309,6 +347,20 @@ const communitySlice = createSlice({
     builder
       .addCase(fetchStats.fulfilled, (state, action) => {
         state.stats = action.payload;
+      })
+      // Delete Post
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter(p => p._id !== action.payload);
+        if (state.currentPost && state.currentPost._id === action.payload) {
+          state.currentPost = null;
+        }
+      })
+      // Delete Comment
+      .addCase(deleteComment.fulfilled, (state, action) => {
+        state.comments = state.comments.filter(c => c._id !== action.payload);
+        if (state.currentPost) {
+          state.currentPost.commentsCount = Math.max(0, state.currentPost.commentsCount - 1);
+        }
       });
   },
 });
