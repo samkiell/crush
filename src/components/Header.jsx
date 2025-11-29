@@ -16,9 +16,11 @@ const Header = () => {
   const { handleLogout } = useLogout();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const profileRef = useRef(null);
 
   useEffect(() => {
+    setMounted(true);
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsProfileOpen(false);
@@ -123,7 +125,7 @@ const Header = () => {
           {/* Left Side: Logo & Name */}
           <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 transition-transform group-hover:scale-105 duration-200">
-              <Image src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} fill alt="D2C Logo" className="object-contain" />
+              <Image src={mounted && theme === 'dark' ? "/logo-dark.png" : "/logo.png"} fill alt="D2C Logo" className="object-contain" />
             </div>
             <span className="text-xl font-bold text-base-content tracking-tight group-hover:text-primary transition-colors">D2C</span>
           </Link>
@@ -150,9 +152,9 @@ const Header = () => {
               className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 transition-transform hover:rotate-12"
               aria-label="Toggle theme"
             >
-              {theme === 'light' && <Sun className="w-5 h-5" />}
-              {theme === 'dark' && <Moon className="w-5 h-5" />}
-              {theme === 'eye-care' && <Eye className="w-5 h-5" />}
+              {(!mounted || theme === 'light') && <Sun className="w-5 h-5" />}
+              {mounted && theme === 'dark' && <Moon className="w-5 h-5" />}
+              {mounted && theme === 'eye-care' && <Eye className="w-5 h-5" />}
             </button>
 
             {isAuthenticated && (
