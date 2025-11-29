@@ -131,7 +131,7 @@ const RichEditor = () => {
                             <input
                                 type="text"
                                 placeholder="What's your post about?"
-                                className="input w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl text-lg transition-all"
+                                className="input w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl text-lg transition-all p-4 sm:p-6 h-auto"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 required
@@ -148,7 +148,7 @@ const RichEditor = () => {
                                     Category
                                 </label>
                                 <select
-                                    className="select w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all"
+                                    className="select w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all px-4 sm:px-6 h-12 sm:h-14"
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                 >
@@ -170,7 +170,7 @@ const RichEditor = () => {
                                 <input
                                     type="text"
                                     placeholder="jamb, physics, mathematics"
-                                    className="input w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all"
+                                    className="input w-full bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 focus:border-primary focus:bg-white dark:focus:bg-neutral-900 rounded-xl transition-all px-4 sm:px-6 h-12 sm:h-14"
                                     value={tags}
                                     onChange={(e) => setTags(e.target.value)}
                                 />
