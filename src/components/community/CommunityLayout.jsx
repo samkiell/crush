@@ -141,6 +141,16 @@ const CommunityLayout = ({ children }) => {
 
 const SidebarContent = ({ navItems, pathname, setIsMobileMenuOpen }) => (
     <div className="space-y-8">
+        {/* Mobile Close Button */}
+        <div className="lg:hidden flex justify-end mb-2">
+            <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="btn btn-ghost btn-circle btn-sm"
+            >
+                <X className="w-5 h-5" />
+            </button>
+        </div>
+
         <div>
             <h3 className="font-bold text-xs uppercase tracking-wider text-base-content/40 mb-4 px-3">Menu</h3>
             <ul className="space-y-1">

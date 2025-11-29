@@ -50,7 +50,7 @@ const SearchBar = () => {
                     placeholder="Search discussions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className={`input w-full ${searchQuery ? 'pl-10' : 'pl-4'} pr-12 bg-base-100 border-base-300 focus:border-primary rounded-xl transition-all`}
+                    className={`input w-full ${searchQuery ? 'pl-10' : 'pl-4'} pr-12 bg-base-200 border-base-300 focus:border-primary rounded-xl transition-all`}
                 />
 
                 {/* Search button on the right (always visible and functional) */}
