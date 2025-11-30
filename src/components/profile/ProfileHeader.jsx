@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Edit, Link as LinkIcon } from 'lucide-react';
+import { MapPin, Calendar, Edit, Link as LinkIcon, Settings } from 'lucide-react';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 export default function ProfileHeader({ user, isOwnProfile, onEdit }) {
     if (!user) return null;
@@ -36,13 +37,18 @@ export default function ProfileHeader({ user, isOwnProfile, onEdit }) {
                             </div>
 
                             {isOwnProfile && (
-                                <button
-                                    onClick={onEdit}
-                                    className="btn btn-primary btn-sm gap-2"
-                                >
-                                    <Edit size={16} />
-                                    Edit Profile
-                                </button>
+                                <div className="flex gap-2">
+                                    <Link href="/settings" className="btn btn-ghost btn-sm btn-circle">
+                                        <Settings size={20} />
+                                    </Link>
+                                    <button
+                                        onClick={onEdit}
+                                        className="btn btn-primary btn-sm gap-2"
+                                    >
+                                        <Edit size={16} />
+                                        Edit Profile
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </div>

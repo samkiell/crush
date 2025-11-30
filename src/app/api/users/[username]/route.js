@@ -15,7 +15,8 @@ export const GET = apiHandler(async (req, { params }) => {
     .select('-password -__v')
     .populate({
       path: 'bookmarks',
-      select: 'title category createdAt isQuestion isSolved likes commentsCount',
+      select: 'title category createdAt isQuestion isSolved likes commentsCount author tags attachments',
+      populate: { path: 'author', select: 'name avatar badges' },
       options: { limit: 5 } // Limit bookmarks for preview
     });
 
