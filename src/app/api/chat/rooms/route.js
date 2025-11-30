@@ -18,8 +18,11 @@ export async function GET(request) {
     let query = { isActive: true };
     if (type) query.type = type;
     if (subject && subject !== 'General') query.subject = subject;
-    // Only return rooms that the authenticated user is a member of
-    if (userId) query.members = userId;
+    // Visibility: Show room if it's NOT private OR if the user is a member
+    query.$or = [
+      { type: { $ne: 'private' } },
+      { members: userId }
+    ];
 
     const rooms = await ChatRoom.find(query)
       .populate('creator', 'name avatar')
