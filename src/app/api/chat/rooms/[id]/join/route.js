@@ -35,7 +35,10 @@ export async function POST(request, { params }) {
     }
     
     // Check if already a member
-    const isMember = room.members.some(memberId => memberId.toString() === user._id.toString());
+    // Defensive check: filter out any null/undefined members from the array to prevent crashes
+    const isMember = room.members
+      .filter(memberId => memberId) // Filter out nulls
+      .some(memberId => memberId.toString() === user._id.toString());
     
     if (isMember) {
       console.log(`[JOIN] User ${user._id} is already a member of room ${id}`);
