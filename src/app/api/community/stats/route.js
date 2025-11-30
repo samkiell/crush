@@ -17,11 +17,12 @@ export async function GET() {
 
     const trendingTagsAggregation = await CommunityPost.aggregate([
       { $match: { createdAt: { $gte: sevenDaysAgo } } },
+      { $addFields: { likesCount: { $size: { $ifNull: ["$likes", []] } } } },
       { $unwind: '$tags' },
       {
         $group: {
           _id: '$tags',
-          score: { $sum: { $add: ['$likes', '$commentsCount', 1] } }, // 1 point per post, plus likes and comments
+          score: { $sum: { $add: ['$likesCount', '$commentsCount', 1] } }, // 1 point per post, plus likes and comments
           count: { $sum: 1 }
         }
       },
