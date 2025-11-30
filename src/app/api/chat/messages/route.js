@@ -81,8 +81,9 @@ export async function POST(request) {
     try {
       user = await protect(request);
     } catch (authError) {
+      console.error('[MESSAGE_SEND] Auth failed:', authError.message);
       return Response.json(
-        { success: false, message: 'Unauthorized' },
+        { success: false, message: 'Unauthorized: ' + authError.message },
         { status: 401 }
       );
     }
