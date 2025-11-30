@@ -70,15 +70,19 @@ export async function GET(request) {
 }
 
 // POST - Send a new message
+// POST - Send a new message
+// POST - Send a new message
 export async function POST(request) {
   try {
     await dbConnect();
     
     // Verify authentication
-    const decoded = verifyToken(request);
-    if (!decoded) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
+    let user;
+    try {
+      user = await protect(request);
+    } catch (authError) {
+      return Response.json(
+        { success: false, message: 'Unauthorized' },
         { status: 401 }
       );
     }
@@ -88,8 +92,8 @@ export async function POST(request) {
     
     // Validate required fields
     if (!roomId || !content) {
-      return NextResponse.json(
-        { success: false, error: 'Room ID and content are required' },
+      return Response.json(
+        { success: false, message: 'Room ID and content are required' },
         { status: 400 }
       );
     }
@@ -98,19 +102,20 @@ export async function POST(request) {
     const room = await ChatRoom.findById(roomId);
     
     if (!room) {
-      return NextResponse.json(
-        { success: false, error: 'Chat room not found' },
+      return Response.json(
+        { success: false, message: 'Chat room not found' },
         { status: 404 }
       );
     }
     
-    const isMember = room.members.some(
-      memberId => memberId.toString() === decoded.userId
-    );
+    // Defensive check for members
+    const isMember = room.members
+      .filter(m => m)
+      .some(memberId => memberId.toString() === user._id.toString());
     
     if (!isMember) {
-      return NextResponse.json(
-        { success: false, error: 'You must be a member to send messages' },
+      return Response.json(
+        { success: false, message: 'You must be a member to send messages' },
         { status: 403 }
       );
     }
@@ -118,7 +123,7 @@ export async function POST(request) {
     // Create message
     const newMessage = await ChatMessage.create({
       room: roomId,
-      sender: decoded.userId,
+      sender: user._id,
       content,
       type: type || 'text',
       mediaUrl,
@@ -128,7 +133,7 @@ export async function POST(request) {
     // Update room's last message
     room.lastMessage = {
       content,
-      sender: decoded.userId,
+      sender: user._id,
       timestamp: new Date(),
     };
     await room.save();
@@ -137,15 +142,22 @@ export async function POST(request) {
       .populate('sender', 'name avatar')
       .populate('replyTo', 'content sender')
       .lean();
+      
+    // Emit socket event
+    if (global.io) {
+      global.io.to(roomId).emit('message:new', populatedMessage);
+    } else {
+      console.warn('Socket.io not initialized, message not emitted via socket');
+    }
     
-    return NextResponse.json({
+    return Response.json({
       success: true,
       data: populatedMessage,
     }, { status: 201 });
   } catch (error) {
     console.error('Error sending message:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to send message' },
+    return Response.json(
+      { success: false, message: 'Failed to send message' },
       { status: 500 }
     );
   }

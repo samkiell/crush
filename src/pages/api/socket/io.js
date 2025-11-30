@@ -47,5 +47,6 @@ export default function handler(req, res) {
   });
 
   res.socket.server.io = io;
+  global.io = io; // Expose globally for App Router
   res.end();
 }

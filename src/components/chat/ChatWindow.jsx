@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 import {
     fetchMessages,
     sendMessage,
@@ -16,9 +17,12 @@ import { useSocket } from '@/hooks/useSocket';
 
 export default function ChatWindow({ room, onBack }) {
     const dispatch = useDispatch();
+    const router = useRouter();
     const { messages, loading, typingUsers } = useSelector((state) => state.chat);
     const { user } = useSelector((state) => state.auth);
     const [showRoomInfo, setShowRoomInfo] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef(null);
 
     // Initialize socket connection
     useSocket();
@@ -36,6 +40,20 @@ export default function ChatWindow({ room, onBack }) {
         }
     }, [room._id, isMember, dispatch]);
 
+    // Handle outside click for dropdown
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const handleSendMessage = async (content) => {
         try {
             await dispatch(sendMessage({
@@ -52,6 +70,8 @@ export default function ChatWindow({ room, onBack }) {
         try {
             await dispatch(joinChatRoom(room._id)).unwrap();
             toast.success('Joined room successfully!');
+            // Redirect to chat page
+            router.push('/chat');
         } catch (error) {
             toast.error(error || 'Failed to join room');
         }
@@ -112,18 +132,24 @@ export default function ChatWindow({ room, onBack }) {
                         <Info size={20} />
                     </button>
 
-                    <div className="dropdown dropdown-end">
-                        <label tabIndex={0} className="btn btn-ghost btn-sm btn-circle">
+                    <div className="relative" ref={dropdownRef}>
+                        <button
+                            onClick={() => setShowDropdown(!showDropdown)}
+                            className={`btn btn-ghost btn-sm btn-circle ${showDropdown ? 'bg-base-200' : ''}`}
+                        >
                             <MoreVertical size={20} />
-                        </label>
-                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48 mt-2 border border-base-200">
-                            <li>
-                                <button onClick={handleLeaveRoom} className="text-error">
-                                    <LogOut size={16} />
-                                    Leave Room
-                                </button>
-                            </li>
-                        </ul>
+                        </button>
+
+                        {showDropdown && (
+                            <ul className="absolute right-0 top-full mt-2 z-[20] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-200">
+                                <li>
+                                    <button onClick={handleLeaveRoom} className="text-error">
+                                        <LogOut size={16} />
+                                        Leave Room
+                                    </button>
+                                </li>
+                            </ul>
+                        )}
                     </div>
                 </div>
             </div>

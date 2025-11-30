@@ -30,6 +30,11 @@ export const useSocket = () => {
       socketRef.current.on('receive_message', (message) => {
         dispatch(receiveMessage(message));
       });
+      
+      // Listen for message:new as per new requirement
+      socketRef.current.on('message:new', (message) => {
+        dispatch(receiveMessage(message));
+      });
 
       socketRef.current.on('typing_start', (data) => {
         dispatch(setTypingUser({ ...data, isTyping: true }));
