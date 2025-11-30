@@ -43,6 +43,22 @@ export const GET = apiHandler(async (req) => {
   if (tag) {
     query.tags = tag; // Filter posts that include this tag
   }
+  
+  const user = searchParams.get('user');
+  if (user) {
+    // Find user by username first to get ID
+    const author = await User.findOne({ username: user });
+    if (author) {
+      query.author = author._id;
+    } else {
+      // If user not found, return empty
+      return NextResponse.json({
+        success: true,
+        data: [],
+        pagination: { page, limit, total: 0, pages: 0 },
+      });
+    }
+  }
 
   let sortOption = { createdAt: -1 };
   if (sort === 'popular') sortOption = { likes: -1 };

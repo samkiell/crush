@@ -29,12 +29,14 @@ export async function PUT(req) {
   try {
     const user = await protect(req);
     await dbConnect();
-    const { name, email, password, examType, avatar, avatarPublicId } = await req.json();
+    const { name, email, password, examType, avatar, avatarPublicId, bio, username } = await req.json();
 
     const updatedUser = await User.findById(user._id);
 
     if (name) updatedUser.name = name;
     if (email) updatedUser.email = email;
+    if (username) updatedUser.username = username;
+    if (bio) updatedUser.bio = bio;
     if (examType) updatedUser.examType = examType;
     if (password) updatedUser.password = password;
     if (avatar) updatedUser.avatar = avatar;
