@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
-import { Home, FileText, MessageCircle, Users, User } from 'lucide-react';
+import { Home, FileText, MessageCircle, Users, User, Monitor, Library } from 'lucide-react';
 
 const BottomNav = () => {
     const pathname = usePathname();
@@ -28,9 +28,9 @@ const BottomNav = () => {
             badge: 0
         },
         {
-            name: 'Past Questions',
-            href: '/past-questions',
-            icon: FileText,
+            name: 'Study',
+            href: '/study',
+            icon: Library,
             badge: 0
         },
         {
@@ -46,9 +46,9 @@ const BottomNav = () => {
             badge: 0
         },
         {
-            name: 'Profile',
-            href: user?.username ? `/profile/${user.username}` : '/login',
-            icon: User,
+            name: 'CBT',
+            href: '/cbt',
+            icon: Monitor,
             badge: 0
         }
     ];
@@ -122,7 +122,7 @@ const BottomNav = () => {
                                         }
                                     `}
                                 >
-                                    {item.name === 'Past Questions' ? 'Questions' : item.name}
+                                    {item.name}
                                 </span>
                             </Link>
                         );
