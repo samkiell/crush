@@ -47,35 +47,6 @@ export default function QuickActionsDock() {
 
     return (
         <>
-            {/* Mobile Floating Dock */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-base-100/90 backdrop-blur-xl border-t border-base-300 safe-area-inset-bottom">
-                <div className="flex items-center justify-around px-4 py-3">
-                    {actions.map((action) => {
-                        const Icon = action.icon;
-                        return (
-                            <button
-                                key={action.id}
-                                onClick={action.onClick}
-                                className="relative flex flex-col items-center gap-1 min-w-0"
-                            >
-                                <div className={`relative p-2 rounded-full ${action.pulse ? 'animate-pulse' : ''
-                                    }`}>
-                                    <Icon className={`w-6 h-6 ${action.color}`} />
-                                    {action.badge && (
-                                        <span className="absolute -top-1 -right-1 bg-error text-error-content text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                                            {action.badge}
-                                        </span>
-                                    )}
-                                </div>
-                                <span className="text-xs text-base-content/60 truncate max-w-[60px]">
-                                    {action.label}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
-
             {/* Desktop Sidebar Quick Actions */}
             <div className="hidden lg:block fixed right-6 bottom-6 z-40">
                 <div className="flex flex-col gap-3">
