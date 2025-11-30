@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '@/services/api';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Search, Shield, User as UserIcon, Mail, Calendar } from 'lucide-react';
@@ -19,7 +19,7 @@ export default function AdminUsersPage() {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('/api/admin/users');
+            const response = await api.get('/admin/users');
             setUsers(response.data.data);
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to fetch users');

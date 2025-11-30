@@ -7,8 +7,21 @@ import Comment from '@/lib/models/Comment';
 import jwt from 'jsonwebtoken';
 
 const getAdminUser = async (req) => {
-  const token = req.cookies.get('token')?.value;
+  let token;
+
+  // Check Authorization header
+  const authHeader = req.headers.get('authorization');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+
+  // Check cookies if no header token
+  if (!token) {
+    token = req.cookies.get('auth_token')?.value || req.cookies.get('token')?.value;
+  }
+
   if (!token) return null;
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
