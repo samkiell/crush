@@ -35,10 +35,24 @@ export const joinChatRoom = createAsyncThunk(
   'chat/joinRoom',
   async (roomId, { rejectWithValue }) => {
     try {
-      const response = await api.post(`/chat/rooms/${roomId}/join`);
-      return response.data.data;
+      // Using fetch with credentials: 'include' as requested to ensure cookies are sent
+      const response = await fetch(`/api/chat/rooms/${roomId}/join`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Failed to join room');
+      }
+
+      return data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to join room');
+      return rejectWithValue(error.message || 'Failed to join room');
     }
   }
 );
