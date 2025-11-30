@@ -20,7 +20,7 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
     return (
         <div className="mb-6 group">
             <div className="flex gap-4">
-                <div className="avatar placeholder mt-1 flex-shrink-0">
+                <Link href={comment.author?.username ? `/profile/${comment.author.username}` : '#'} className="avatar placeholder mt-1 flex-shrink-0 hover:opacity-80 transition-opacity">
                     <div className="bg-gradient-to-br from-gray-400 to-gray-500 text-white rounded-2xl w-10 h-10 shadow-sm">
                         {comment.author?.avatar ? (
                             <img src={comment.author.avatar} alt={comment.author.name} className="rounded-2xl" />
@@ -28,18 +28,18 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
                             <span className="text-sm font-bold">{comment.author?.name?.charAt(0) || 'U'}</span>
                         )}
                     </div>
-                </div>
+                </Link>
                 <div className="flex-1 min-w-0">
                     <div className="bg-base-200 rounded-2xl rounded-tl-none p-4 px-5 shadow-sm border border-base-300">
                         <div className="flex items-center justify-between gap-4 mb-2">
-                            <span className="font-semibold text-sm text-base-content flex items-center gap-2">
+                            <Link href={comment.author?.username ? `/profile/${comment.author.username}` : '#'} className="font-semibold text-sm text-base-content flex items-center gap-2 hover:text-primary transition-colors">
                                 {comment.author?.name || 'Anonymous'}
                                 {comment.author?.badges?.map((badge, idx) => (
                                     <span key={idx} className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
                                         {badge}
                                     </span>
                                 ))}
-                            </span>
+                            </Link>
                             <span className="text-xs text-base-content/60 font-medium">
                                 {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                             </span>

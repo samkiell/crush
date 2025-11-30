@@ -141,7 +141,7 @@ const PostDetails = ({ postId }) => {
                 <div className="p-6 sm:p-8 border-b border-base-300 bg-base-200/30 rounded-t-2xl">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex items-center gap-4">
-                            <div className="avatar placeholder">
+                            <Link href={post.author?.username ? `/profile/${post.author.username}` : '#'} className="avatar placeholder hover:opacity-80 transition-opacity">
                                 <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-2xl w-12 h-12 shadow-md flex items-center justify-center text-xl font-bold">
                                     {post.author?.avatar ? (
                                         <img src={post.author.avatar} alt={post.author.name} />
@@ -149,16 +149,16 @@ const PostDetails = ({ postId }) => {
                                         <span>{post.author?.name?.charAt(0) || 'U'}</span>
                                     )}
                                 </div>
-                            </div>
+                            </Link>
                             <div>
-                                <h1 className="text-lg font-bold text-base-content flex items-center gap-2">
+                                <Link href={post.author?.username ? `/profile/${post.author.username}` : '#'} className="text-lg font-bold text-base-content flex items-center gap-2 hover:text-primary transition-colors">
                                     {post.author?.name || 'Anonymous'}
                                     {post.author?.badges?.includes('Mentor') && (
                                         <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
                                             Mentor
                                         </span>
                                     )}
-                                </h1>
+                                </Link>
                                 <div className="flex items-center gap-2 text-xs text-base-content/60 font-medium mt-1">
                                     <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
                                     <span>•</span>

@@ -72,7 +72,7 @@ export const GET = apiHandler(async (req) => {
     .sort(sortOption)
     .skip((page - 1) * limit)
     .limit(limit)
-    .populate('author', 'name avatar badges reputation');
+    .populate('author', 'name username avatar badges reputation');
 
   const total = await CommunityPost.countDocuments(query);
 

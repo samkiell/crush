@@ -34,7 +34,7 @@ export async function GET(req, { params }) {
     await dbConnect();
     const comments = await Comment.find({ post: id })
       .sort({ createdAt: 1 }) // Oldest first for chronological discussion
-      .populate('author', 'name avatar badges reputation');
+      .populate('author', 'name username avatar badges reputation');
 
     return NextResponse.json({ success: true, data: comments });
   } catch (error) {
@@ -77,7 +77,7 @@ export async function POST(req, { params }) {
     user.reputation += 2;
     await user.save();
 
-    const populatedComment = await Comment.findById(comment._id).populate('author', 'name avatar badges reputation');
+    const populatedComment = await Comment.findById(comment._id).populate('author', 'name username avatar badges reputation');
 
     return NextResponse.json({ success: true, data: populatedComment }, { status: 201 });
   } catch (error) {

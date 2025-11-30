@@ -31,7 +31,7 @@ export async function GET(req, { params }) {
 
   try {
     await dbConnect();
-    const post = await CommunityPost.findById(id).populate('author', 'name avatar badges reputation');
+    const post = await CommunityPost.findById(id).populate('author', 'name username avatar badges reputation');
 
     if (!post) {
       return NextResponse.json({ success: false, error: 'Post not found' }, { status: 404 });
