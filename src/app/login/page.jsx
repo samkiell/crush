@@ -43,7 +43,7 @@ export default function LoginPage() {
     // Only redirect if user actually tried to log in, not from auth initialization
     if (isAuthenticated && user && !loading && loginAttempted.current) {
       // Show welcome toast with username
-      const username = user.name || user.email?.split('@')[0] || 'User';
+      const username = user.username || user.name || user.email?.split('@')[0] || 'User';
       showWelcomeToast(username);
 
       // Redirect to dashboard after a brief delay
@@ -109,16 +109,16 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="form-control">
                 <label className="label px-4">
-                  <span className="label-text font-medium text-base-content/80">Email Address</span>
+                  <span className="label-text font-medium text-base-content/80">Email or Username</span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/70 group-focus-within:text-primary transition-colors">
                     <Mail className="h-5 w-5" />
                   </div>
                   <input
-                    type="email"
+                    type="text"
                     name="email"
-                    placeholder="you@example.com"
+                    placeholder="email or username"
                     className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
                     value={formData.email}
                     onChange={handleChange}

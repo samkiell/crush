@@ -23,7 +23,7 @@ export default function DashboardHeader({ user }) {
                                 Dashboard
                             </h1>
                             <p className="text-sm text-base-content/60">
-                                Welcome back, {user?.name?.split(' ')[0] || 'Student'}!
+                                Welcome back, {user?.username || 'Student'}!
                             </p>
                         </div>
                     </div>

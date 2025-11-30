@@ -6,10 +6,10 @@ import jwt from 'jsonwebtoken';
 export async function POST(req) {
   try {
     await dbConnect();
-    const { name, email, password, examType } = await req.json();
+    const { name, email, username, password, examType } = await req.json();
 
     // Validate required fields
-    if (!name || !email || !password) {
+    if (!name || !email || !username || !password) {
       return NextResponse.json(
         { message: 'Abeg, fill all the boxes make we fit register you' },
         { status: 400 }
@@ -33,12 +33,16 @@ export async function POST(req) {
       );
     }
 
-    // Check if user already exists
-    const userExists = await User.findOne({ email });
+    // Check if user already exists (email or username)
+    const userExists = await User.findOne({ $or: [{ email }, { username }] });
 
     if (userExists) {
+      const message = userExists.email === email 
+        ? 'This email already exist. You don try login?' 
+        : 'This username don dey taken. Pick another one abeg';
+      
       return NextResponse.json(
-        { message: 'This account already exist. You don try login?' },
+        { message },
         { status: 400 }
       );
     }
@@ -47,6 +51,7 @@ export async function POST(req) {
     const user = await User.create({
       name,
       email,
+      username,
       password,
       examType: examType || 'JAMB',
     });
@@ -60,6 +65,7 @@ export async function POST(req) {
         _id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username,
         role: user.role,
         token,
       }, { status: 201 });

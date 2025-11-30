@@ -12,6 +12,7 @@ import { showErrorToast, showRegistrationSuccessToast } from '../../utils/toast-
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
         name: '',
+        username: '',
         email: '',
         password: '',
         confirmPassword: ''
@@ -82,6 +83,7 @@ export default function RegisterPage() {
         }
         const result = await dispatch(registerUser({
             name: formData.name,
+            username: formData.username,
             email: formData.email,
             password: formData.password
         }));
@@ -136,6 +138,29 @@ export default function RegisterPage() {
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Username */}
+                            <div className="form-control">
+                                <label className="label px-4">
+                                    <span className="label-text font-medium text-base-content/80">Username</span>
+                                </label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-none text-base-content/70 group-focus-within:text-primary transition-colors">
+                                        <span className="text-lg font-bold">@</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        placeholder="johndoe123"
+                                        className="input input-bordered w-full pl-11 rounded-full bg-base-200 focus:bg-base-100 focus:border-primary transition-all duration-300 shadow-sm hover:shadow-md"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        required
+                                        minLength={3}
+                                        maxLength={20}
                                     />
                                 </div>
                             </div>

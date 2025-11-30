@@ -11,13 +11,16 @@ export async function POST(req) {
     // Validate required fields
     if (!email || !password) {
       return NextResponse.json(
-        { message: 'Abeg, enter your email and password' },
+        { message: 'Abeg, enter your email/username and password' },
         { status: 400 }
       );
     }
 
-    // Find user with password field
-    const user = await User.findOne({ email }).select('+password');
+    // Find user with password field (check email or username)
+    // We use the 'email' field from the request as the identifier
+    const user = await User.findOne({
+      $or: [{ email: email }, { username: email }]
+    }).select('+password');
 
     if (!user) {
       return NextResponse.json(
@@ -31,7 +34,7 @@ export async function POST(req) {
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { message: 'Email or password no correct. Check am well' },
+        { message: 'Details no correct. Check am well' },
         { status: 401 }
       );
     }
@@ -45,6 +48,7 @@ export async function POST(req) {
       _id: user._id,
       name: user.name,
       email: user.email,
+      username: user.username,
       role: user.role,
       token,
     });
