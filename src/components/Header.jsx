@@ -62,7 +62,7 @@ const Header = () => {
     { name: 'Questions', href: '/questions', icon: FileQuestion },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
-    { name: 'Profile', href: '/profile', icon: User },
+    { name: 'Profile', href: user?.username ? `/profile/${user.username}` : '/profile', icon: User },
   ];
 
   const guestLinks = [
@@ -204,7 +204,7 @@ const Header = () => {
                           </li>
                           <li>
                             <Link
-                              href="/profile"
+                              href={user?.username ? `/profile/${user.username}` : '/profile'}
                               onClick={() => setIsProfileOpen(false)}
                               className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-base-content/5 active:bg-base-content/10 text-base-content"
                             >

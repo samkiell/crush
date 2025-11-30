@@ -7,7 +7,7 @@ import { Home, FileText, MessageCircle, Users, User } from 'lucide-react';
 
 const BottomNav = () => {
     const pathname = usePathname();
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
     const { activeRoom } = useSelector((state) => state.chat);
 
     // Don't render if user is not authenticated
@@ -47,7 +47,7 @@ const BottomNav = () => {
         },
         {
             name: 'Profile',
-            href: '/profile',
+            href: user?.username ? `/profile/${user.username}` : '/login',
             icon: User,
             badge: 0
         }
