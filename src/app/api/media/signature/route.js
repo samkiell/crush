@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
-import { verifyAuth } from '@/lib/auth'; // Assuming this helper exists or I'll implement auth check inline
+import { protect } from '@/lib/auth';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -12,7 +12,7 @@ cloudinary.config({
 export async function GET(req) {
   try {
     // Verify user is authenticated
-    const user = await verifyAuth(req);
+    const user = await protect(req);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
