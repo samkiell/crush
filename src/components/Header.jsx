@@ -140,7 +140,7 @@ const Header = () => {
                 <>
                   {guestLinks.map((link) => <NavItem key={link.name} link={link} />)}
                   <div className="w-px h-6 bg-base-content/10 mx-2"></div>
-                  <Link href="/login" className="btn btn-ghost btn-sm font-medium hover:bg-base-content/10">Login</Link>
+                  <Link href="/login" className="btn btn-ghost btn-sm font-medium hover:bg-base-content/10 pr-5">Login</Link>
                   <Link href="/register" className="btn btn-primary btn-sm text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">Get Started</Link>
                 </>
               )}
