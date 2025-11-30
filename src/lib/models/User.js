@@ -35,6 +35,39 @@ const UserSchema = new mongoose.Schema({
     enum: ['student', 'admin'],
     default: 'student',
   },
+  phone: {
+    type: String,
+    trim: true,
+  },
+  bio: {
+    type: String,
+    maxlength: [160, 'Bio cannot be more than 160 characters'],
+    default: '',
+  },
+  preferences: {
+    theme: {
+      type: String,
+      enum: ['light', 'dark', 'eye-care'],
+      default: 'light',
+    },
+    notifications: {
+      email: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      marketing: { type: Boolean, default: false },
+    },
+    language: {
+      type: String,
+      default: 'en',
+    },
+  },
+  security: {
+    lastLogin: { type: Date },
+    loginHistory: [{
+      ip: String,
+      device: String,
+      date: { type: Date, default: Date.now },
+    }],
+  },
   examType: {
     type: String,
     enum: ['JAMB', 'WAEC', 'NECO', 'PUTME', 'DE'],
