@@ -21,9 +21,9 @@ const CommentItem = ({ comment, allComments, onReply, onLike, onReport, onDelete
         <div className="mb-6 group">
             <div className="flex gap-4">
                 <Link href={comment.author?.username ? `/profile/${comment.author.username}` : '#'} className="avatar placeholder mt-1 flex-shrink-0 hover:opacity-80 transition-opacity">
-                    <div className="bg-gradient-to-br from-gray-400 to-gray-500 text-white rounded-2xl w-10 h-10 shadow-sm">
+                    <div className="bg-gradient-to-br from-gray-400 to-gray-500 text-white rounded-full w-10 h-10 shadow-sm overflow-hidden flex items-center justify-center">
                         {comment.author?.avatar ? (
-                            <img src={comment.author.avatar} alt={comment.author.name} className="rounded-2xl" />
+                            <img src={comment.author.avatar} alt={comment.author.name} className="w-full h-full object-cover" />
                         ) : (
                             <span className="text-sm font-bold">{comment.author?.name?.charAt(0) || 'U'}</span>
                         )}
@@ -289,7 +289,7 @@ const CommentSection = ({ postId }) => {
                 <div className="bg-base-100 rounded-2xl p-6 shadow-sm border border-base-300 mb-10">
                     <form onSubmit={handleSubmit} className="flex gap-4">
                         <div className="avatar placeholder pt-1 flex-shrink-0">
-                            <div className="bg-primary text-primary-content rounded-2xl w-10 h-10 shadow-sm overflow-hidden">
+                            <div className="bg-primary text-primary-content rounded-full w-10 h-10 shadow-sm overflow-hidden flex items-center justify-center">
                                 {user?.avatar ? (
                                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                                 ) : (

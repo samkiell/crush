@@ -58,21 +58,21 @@ const PostCard = ({ post }) => {
                 {/* Header: Author & Meta */}
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                        <Link 
+                        <Link
                             href={post.author?.username ? `/profile/${post.author.username}` : '#'}
                             onClick={(e) => e.stopPropagation()}
                             className="avatar placeholder hover:opacity-80 transition-opacity relative z-10"
                         >
-                            <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-2xl w-10 h-10 shadow-sm flex items-center justify-center">
+                            <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-full w-10 h-10 shadow-sm flex items-center justify-center overflow-hidden">
                                 {post.author?.avatar ? (
-                                    <img src={post.author.avatar} alt={post.author.name} className="rounded-2xl" />
+                                    <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
                                 ) : (
                                     <span className="text-lg font-bold">{post.author?.name?.charAt(0) || 'U'}</span>
                                 )}
                             </div>
                         </Link>
                         <div>
-                            <Link 
+                            <Link
                                 href={post.author?.username ? `/profile/${post.author.username}` : '#'}
                                 onClick={(e) => e.stopPropagation()}
                                 className="font-semibold text-sm text-base-content flex items-center gap-2 hover:text-primary transition-colors relative z-10"

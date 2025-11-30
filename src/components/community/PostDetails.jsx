@@ -142,9 +142,9 @@ const PostDetails = ({ postId }) => {
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex items-center gap-4">
                             <Link href={post.author?.username ? `/profile/${post.author.username}` : '#'} className="avatar placeholder hover:opacity-80 transition-opacity">
-                                <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-2xl w-12 h-12 shadow-md flex items-center justify-center text-xl font-bold">
+                                <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-full w-12 h-12 shadow-md flex items-center justify-center text-xl font-bold overflow-hidden">
                                     {post.author?.avatar ? (
-                                        <img src={post.author.avatar} alt={post.author.name} />
+                                        <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
                                     ) : (
                                         <span>{post.author?.name?.charAt(0) || 'U'}</span>
                                     )}
