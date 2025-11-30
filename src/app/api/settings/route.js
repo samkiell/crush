@@ -33,9 +33,10 @@ export async function GET(req) {
     return NextResponse.json(settings);
   } catch (error) {
     console.error('Settings API Error:', error);
+    const status = error.message.includes('Not authorized') ? 401 : 500;
     return NextResponse.json({ 
       error: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 });
+    }, { status });
   }
 }

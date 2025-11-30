@@ -23,6 +23,8 @@ export async function PUT(req) {
       avatar: user.avatar,
     });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Avatar Update Error:', error);
+    const status = error.message.includes('Not authorized') ? 401 : 500;
+    return NextResponse.json({ error: error.message }, { status });
   }
 }
