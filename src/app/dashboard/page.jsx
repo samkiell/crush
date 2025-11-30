@@ -114,9 +114,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Floating Quick Actions Dock (Mobile) */}
-      <QuickActionsDock />
     </div>
   );
 }
