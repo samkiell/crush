@@ -249,7 +249,7 @@ export default function ProfileSection({ user, onUpdate }) {
                     <div className="flex justify-end pt-4">
                         <button
                             type="submit"
-                            className="btn btn-primary px-8"
+                            className="btn btn-primary px-8 gap-2"
                             disabled={loading}
                         >
                             {loading ? <Loader2 className="animate-spin" /> : <Save size={18} />}
