@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 import { format } from 'date-fns';
 import { Search, Shield, User as UserIcon, Mail, Calendar } from 'lucide-react';
 
@@ -116,7 +117,9 @@ export default function AdminUsersPage() {
                                         <span className="badge badge-success badge-sm">Active</span>
                                     </td>
                                     <td>
-                                        <button className="btn btn-ghost btn-xs">Details</button>
+                                        <Link href={`/profile/${user.username}`} className="btn btn-ghost btn-xs">
+                                            View Profile
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
