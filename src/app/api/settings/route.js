@@ -32,6 +32,10 @@ export async function GET(req) {
 
     return NextResponse.json(settings);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+    console.error('Settings API Error:', error);
+    return NextResponse.json({ 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }

@@ -9,8 +9,17 @@ export async function PUT(req) {
 
     await dbConnect();
 
+    if (!user.preferences) {
+      user.preferences = {};
+    }
+
     if (theme) user.preferences.theme = theme;
-    if (notifications) user.preferences.notifications = { ...user.preferences.notifications, ...notifications };
+    if (notifications) {
+      user.preferences.notifications = {
+        ...(user.preferences.notifications || {}),
+        ...notifications
+      };
+    }
     if (language) user.preferences.language = language;
     if (examType) user.examType = examType;
 
