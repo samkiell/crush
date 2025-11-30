@@ -5,13 +5,21 @@ import dbConnect from '@/lib/db';
 export async function protect(req) {
   let token;
 
-  if (
-    req.headers.get('authorization') &&
-    req.headers.get('authorization').startsWith('Bearer')
-  ) {
-    token = req.headers.get('authorization').split(' ')[1];
-  } else if (req.cookies && req.cookies.get('auth_token')) {
-    token = req.cookies.get('auth_token').value;
+  // Check Authorization header
+  const authHeader = req.headers.get('authorization');
+  if (authHeader && authHeader.startsWith('Bearer')) {
+    token = authHeader.split(' ')[1];
+  } 
+  // Check cookies
+  else if (req.cookies) {
+    // req.cookies can be a Map-like object in Next.js middleware/Edge or an object in standard Node
+    const cookieToken = typeof req.cookies.get === 'function' 
+      ? req.cookies.get('auth_token')?.value 
+      : req.cookies.auth_token;
+      
+    if (cookieToken) {
+      token = cookieToken;
+    }
   }
 
   if (!token) {
@@ -30,7 +38,7 @@ export async function protect(req) {
 
     return user;
   } catch (error) {
-    console.error('Auth Middleware Error:', error);
+    console.error('Auth Middleware Error:', error.message);
     throw new Error('Not authorized, token failed');
   }
 }
