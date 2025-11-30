@@ -64,10 +64,10 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-base-100 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-8 bg-black/50 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-base-100 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-base-200 flex-shrink-0">
+                <div className="flex items-center justify-between p-5 border-b border-base-200 flex-shrink-0">
                     <h3 className="font-bold text-lg">Create New Room</h3>
                     <button
                         onClick={onClose}
@@ -79,9 +79,9 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
 
                 {/* Form */}
                 <div className="overflow-y-auto">
-                    <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5">
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
                         {/* Room Name */}
-                        <div className="space-y-1">
+                        <div className="space-y-2">
                             <label className="text-sm font-medium">Room Name</label>
                             <input
                                 type="text"
@@ -96,19 +96,19 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                         </div>
 
                         {/* Description */}
-                        <div className="space-y-1">
+                        <div className="space-y-2">
                             <label className="text-sm font-medium">Description</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 placeholder="What is this room for?"
-                                className="textarea textarea-bordered w-full h-20 resize-none"
+                                className="textarea textarea-bordered w-full h-24 resize-none"
                             />
                         </div>
 
                         {/* Room Type */}
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <label className="text-sm font-medium">Room Type</label>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 {ROOM_TYPES.map((type) => (
@@ -142,8 +142,8 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                         </div>
 
                         {/* Subject & Max Members Row */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-1">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium">Subject</label>
                                 <select
                                     name="subject"
@@ -159,7 +159,7 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                                 </select>
                             </div>
 
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium">Max Members</label>
                                 <input
                                     type="number"
@@ -174,7 +174,7 @@ export default function CreateRoomModal({ isOpen, onClose, onSubmit }) {
                         </div>
 
                         {/* Actions */}
-                        <div className="pt-4 flex justify-end gap-3 sticky bottom-0 bg-base-100 pb-2">
+                        <div className="pt-6 flex justify-end gap-3 sticky bottom-0 bg-base-100 pb-4 border-t border-base-200/50 mt-2">
                             <button
                                 type="button"
                                 onClick={onClose}
