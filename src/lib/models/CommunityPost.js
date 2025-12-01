@@ -31,7 +31,7 @@ const CommunityPostSchema = new mongoose.Schema({
   }],
   category: {
     type: String,
-    enum: ['General', 'Exam Help', 'Study Tips', 'Career', 'Off-Topic'],
+    enum: ['General', 'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Literature', 'Government', 'Economics', 'CRS', 'IRS', 'Geography', 'History', 'Commerce', 'Accounting'],
     default: 'General',
   },
   likes: [{
