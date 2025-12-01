@@ -1,12 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Calendar, Play, BookOpen, Users, ArrowRight, Wallet, Plus, HelpCircle } from 'lucide-react';
+import { Flame, Calendar, Play, BookOpen, Users, ArrowRight, Wallet, Plus, HelpCircle, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 
 export default function MomentumLayer({ user, stats }) {
     const firstName = user?.name?.split(' ')[0] || 'Scholar';
+
+    // Mock Active Session (Replace with real data later)
+    const activeSession = {
+        title: 'Mathematics 2014',
+        type: 'Study Session',
+        progress: 65,
+        href: '/study/mathematics-2014-all-topics'
+    };
 
     const [quote, setQuote] = useState('Ready to crush your goals today? 🚀');
 
@@ -77,8 +85,25 @@ export default function MomentumLayer({ user, stats }) {
         { label: 'Start Test', icon: Play, href: '/cbt', color: 'text-primary', bg: 'bg-primary/10' },
         { label: 'Study Mode', icon: BookOpen, href: '/study', color: 'text-secondary', bg: 'bg-secondary/10' },
         { label: 'Community', icon: Users, href: '/community', color: 'text-accent', bg: 'bg-accent/10' },
-        { label: 'Coming Soon', icon: HelpCircle, href: '#', color: 'text-info', bg: 'bg-info/10' },
     ];
+
+    if (activeSession) {
+        quickActions.push({
+            label: 'Continue',
+            icon: RotateCcw,
+            href: activeSession.href,
+            color: 'text-success',
+            bg: 'bg-success/10'
+        });
+    } else {
+        quickActions.push({
+            label: 'Coming Soon',
+            icon: HelpCircle,
+            href: '#',
+            color: 'text-info',
+            bg: 'bg-info/10'
+        });
+    }
 
     return (
         <motion.div
@@ -177,29 +202,62 @@ export default function MomentumLayer({ user, stats }) {
                     </motion.div>
                 )}
 
-                {/* 4. Streak Card (Hidden for Admin) */}
+                {/* 4. Streak & Resume (Hidden for Admin) */}
                 {user?.role !== 'admin' && (
-                    <motion.div
-                        variants={variants.scale}
-                        className="md:col-span-4 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-6 flex flex-col justify-center shadow-sm relative overflow-hidden"
-                    >
-                        <div className="flex items-center justify-between relative z-10">
-                            <div>
-                                <p className="text-sm text-base-content/60 font-medium mb-1">Daily Streak</p>
-                                <div className="flex items-baseline gap-1">
-                                    <span className="text-4xl font-bold text-orange-600">{stats?.streak || 0}</span>
-                                    <span className="text-sm text-orange-600/80">days</span>
+                    <div className="md:col-span-4 flex flex-col gap-4">
+                        {/* Streak Card */}
+                        <motion.div
+                            variants={variants.scale}
+                            className="flex-1 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-6 flex flex-col justify-center shadow-sm relative overflow-hidden"
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <div>
+                                    <p className="text-sm text-base-content/60 font-medium mb-1">Daily Streak</p>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-4xl font-bold text-orange-600">{stats?.streak || 0}</span>
+                                        <span className="text-sm text-orange-600/80">days</span>
+                                    </div>
+                                    <p className="text-xs text-base-content/50 mt-1">You're on fire! 🔥</p>
                                 </div>
-                                <p className="text-xs text-base-content/50 mt-1">You're on fire! 🔥</p>
-                            </div>
-                            <div className="relative">
-                                <div className="p-4 bg-orange-500 rounded-full text-white shadow-lg shadow-orange-500/30">
-                                    <Flame className="w-8 h-8 fill-current" />
+                                <div className="relative">
+                                    <div className="p-4 bg-orange-500 rounded-full text-white shadow-lg shadow-orange-500/30">
+                                        <Flame className="w-8 h-8 fill-current" />
+                                    </div>
+                                    <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-20" />
                                 </div>
-                                <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-20" />
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+
+                        {/* Resume Card */}
+                        {activeSession && (
+                            <motion.div
+                                variants={variants.scale}
+                                className="bg-base-100 border border-base-200 rounded-3xl p-5 shadow-sm relative overflow-hidden group hover:border-primary/50 transition-colors"
+                            >
+                                <Link href={activeSession.href} className="block relative z-10">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <div className="p-2 bg-primary/10 text-primary rounded-lg">
+                                                <RotateCcw className="w-4 h-4" />
+                                            </div>
+                                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Resume</span>
+                                        </div>
+                                        <span className="text-xs font-mono text-base-content/60">{activeSession.progress}%</span>
+                                    </div>
+
+                                    <h3 className="font-bold text-base mb-1 truncate">{activeSession.title}</h3>
+                                    <p className="text-xs text-base-content/60 mb-3">{activeSession.type}</p>
+
+                                    <div className="w-full bg-base-200 h-1.5 rounded-full overflow-hidden">
+                                        <div
+                                            className="bg-primary h-full rounded-full transition-all duration-500"
+                                            style={{ width: `${activeSession.progress}%` }}
+                                        />
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        )}
+                    </div>
                 )}
             </div>
         </motion.div>
