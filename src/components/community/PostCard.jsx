@@ -4,29 +4,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from '@/utils/dateUtils';
 import { ThumbsUp, MessageSquare, Eye, MoreHorizontal } from 'lucide-react';
-
-// ... (inside component)
-
-{/* Footer Actions - Reverted to Pill Style */ }
-<div className="flex items-center gap-3 mt-3">
-    <button
-        onClick={handleLike}
-        className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 hover:bg-primary/10 hover:text-primary transition-all duration-200 group/like"
-    >
-        <ThumbsUp className={`w-4 h-4 ${isLiked ? 'fill-primary text-primary' : ''}`} />
-        <span className="text-sm font-bold">{likeCount}</span>
-    </button>
-
-    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
-        <MessageSquare className="w-4 h-4" />
-        <span className="text-sm font-bold">{post.commentsCount}</span>
-    </div>
-
-    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
-        <Eye className="w-4 h-4" />
-        <span className="text-sm font-bold">{post.views}</span>
-    </div>
-</div>
 import { useDispatch } from 'react-redux';
 import { toggleReaction } from '@/store/slices/communitySlice';
 import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
@@ -70,7 +47,7 @@ const PostCard = ({ post }) => {
         router.push(`/community/${post._id}`);
     };
 
-    const isLiked = Array.isArray(post.likes) && post.likes.includes('me'); // Assuming 'me' or user ID check logic exists
+    const isLiked = Array.isArray(post.likes) && post.likes.includes('me');
     const likeCount = Array.isArray(post.likes) ? post.likes.length : (post.likes || 0);
 
     return (
@@ -166,49 +143,25 @@ const PostCard = ({ post }) => {
                         </div>
                     )}
 
-                    {/* Footer Actions */}
-                    <div className="flex items-center justify-between max-w-md text-base-content/60">
-                        {/* Comment */}
-                        <button className="flex items-center gap-2 group transition-colors hover:text-primary">
-                            <div className="p-2 rounded-full group-hover:bg-primary/10 transition-colors">
-                                <MessageCircle className="w-4.5 h-4.5" />
-                            </div>
-                            <span className="text-xs font-medium">{post.commentsCount || 0}</span>
-                        </button>
-
-                        {/* Repost (Mock) */}
-                        <button className="flex items-center gap-2 group transition-colors hover:text-success">
-                            <div className="p-2 rounded-full group-hover:bg-success/10 transition-colors">
-                                <Repeat2 className="w-4.5 h-4.5" />
-                            </div>
-                            <span className="text-xs font-medium">0</span>
-                        </button>
-
-                        {/* Like */}
+                    {/* Footer Actions - Pill Style */}
+                    <div className="flex items-center gap-3 mt-3">
                         <button
                             onClick={handleLike}
-                            className={`flex items-center gap-2 group transition-colors ${isLiked ? 'text-pink-600' : 'hover:text-pink-600'}`}
+                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 hover:bg-primary/10 hover:text-primary transition-all duration-200 group/like"
                         >
-                            <div className="p-2 rounded-full group-hover:bg-pink-600/10 transition-colors">
-                                <Heart className={`w-4.5 h-4.5 ${isLiked ? 'fill-current' : ''}`} />
-                            </div>
-                            <span className="text-xs font-medium">{likeCount}</span>
+                            <ThumbsUp className={`w-4 h-4 ${isLiked ? 'fill-primary text-primary' : ''}`} />
+                            <span className="text-sm font-bold">{likeCount}</span>
                         </button>
 
-                        {/* Views */}
-                        <button className="flex items-center gap-2 group transition-colors hover:text-primary">
-                            <div className="p-2 rounded-full group-hover:bg-primary/10 transition-colors">
-                                <BarChart2 className="w-4.5 h-4.5" />
-                            </div>
-                            <span className="text-xs font-medium">{post.views || 0}</span>
-                        </button>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
+                            <MessageSquare className="w-4 h-4" />
+                            <span className="text-sm font-bold">{post.commentsCount}</span>
+                        </div>
 
-                        {/* Share */}
-                        <button className="flex items-center gap-2 group transition-colors hover:text-primary">
-                            <div className="p-2 rounded-full group-hover:bg-primary/10 transition-colors">
-                                <Share className="w-4.5 h-4.5" />
-                            </div>
-                        </button>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
+                            <Eye className="w-4 h-4" />
+                            <span className="text-sm font-bold">{post.views}</span>
+                        </div>
                     </div>
                 </div>
             </div>
