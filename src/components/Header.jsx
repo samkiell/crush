@@ -167,7 +167,7 @@ const Header = () => {
                 >
                   <Bell className="w-5 h-5" />
                   {/* Unread count badge - replace 3 with actual unread count from Redux */}
-                  <span className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-error text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold border-2 border-base-100 shadow-sm">
+                  <span className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold border-2 border-base-100 shadow-sm">
                     3
                   </span>
                 </Link>
