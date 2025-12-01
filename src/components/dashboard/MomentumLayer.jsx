@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 
 import { motion } from 'framer-motion';
 import { Flame, Calendar, Play, BookOpen, BarChart2, Users, ArrowRight, Wallet, Plus } from 'lucide-react';
@@ -105,7 +106,7 @@ export default function MomentumLayer({ user, stats }) {
                             })()}, {firstName}
                         </h1>
                         <p className="text-xs text-base-content/70 font-medium">
-                            Ready to crush your goals today? 🚀
+                            {quote}
                         </p>
                     </div>
 
