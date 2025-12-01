@@ -99,6 +99,7 @@ export default function ExamPage() {
     return (
         <CBTLayout
             subjectName={MOCK_EXAM_DATA.subject}
+            timeLeft={timeLeft}
             sidebar={
                 <QuestionGrid
                     totalQuestions={MOCK_EXAM_DATA.questions.length}
@@ -117,7 +118,6 @@ export default function ExamPage() {
                     onSubmit={handleSubmit}
                     onFlag={handleFlag}
                     isFlagged={flagged.includes(currentQuestion)}
-                    timeLeft={timeLeft}
                 />
             }
         >
@@ -130,6 +130,7 @@ export default function ExamPage() {
             >
                 <QuestionCard
                     questionNumber={currentQuestion}
+                    totalQuestions={MOCK_EXAM_DATA.questions.length}
                     question={question}
                     selectedOption={answers[currentQuestion]}
                     onOptionSelect={handleOptionSelect}

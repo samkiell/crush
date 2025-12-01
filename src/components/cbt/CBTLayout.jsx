@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { LayoutGrid, X, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CBTLayout({
@@ -9,9 +9,21 @@ export default function CBTLayout({
     sidebar, // Question Grid
     children, // Question Card
     footer, // Controls
-    subjectName = "JAMB Mock Exam"
+    subjectName = "JAMB Mock Exam",
+    timeLeft // in seconds
 }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Format time as HH:MM:SS
+    const formatTime = (seconds) => {
+        if (seconds === undefined) return "--:--:--";
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    };
+
+    const isLowTime = timeLeft < 300;
 
     return (
         <div className="flex flex-col h-screen bg-base-200 overflow-hidden">
@@ -23,11 +35,20 @@ export default function CBTLayout({
                     <h1 className="font-medium text-base-content/80 hidden md:block">{subjectName}</h1>
                 </div>
 
+                {/* Timer (Center/Right) */}
+                <div className={`
+                    flex items-center gap-2 font-mono text-lg font-bold px-3 py-1.5 rounded-lg bg-base-200/50
+                    ${isLowTime ? 'text-error animate-pulse' : 'text-base-content'}
+                `}>
+                    <Clock className="w-4 h-4" />
+                    {formatTime(timeLeft)}
+                </div>
+
                 <button
                     className="md:hidden btn btn-ghost btn-circle"
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 >
-                    {isSidebarOpen ? <X /> : <Menu />}
+                    {isSidebarOpen ? <X /> : <LayoutGrid />}
                 </button>
             </header>
 
