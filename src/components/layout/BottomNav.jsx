@@ -1,139 +1,97 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { useSelector } from 'react-redux';
 import Link from 'next/link';
-import { Home, FileText, MessageCircle, Users, User, Monitor, Library } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Home, BookOpen, MessageSquare, Users, ClipboardList } from 'lucide-react';
 
-const BottomNav = () => {
+export default function BottomNav() {
     const pathname = usePathname();
-    const { isAuthenticated, user } = useSelector((state) => state.auth);
-    const { activeRoom } = useSelector((state) => state.chat);
-
-    // Don't render if user is not authenticated
-    if (!isAuthenticated) {
-        return null;
-    }
-
-    // Don't render on chat page if a room is active (immersive mode)
-    if (pathname === '/chat' && activeRoom) {
-        return null;
-    }
 
     const navItems = [
         {
-            name: 'Home',
+            label: 'Home',
             href: '/dashboard',
             icon: Home,
-            badge: 0
         },
         {
-            name: 'Study',
+            label: 'Study',
             href: '/study',
-            icon: Library,
-            badge: 0
+            icon: BookOpen,
         },
         {
-            name: 'Chat',
+            label: 'Chat',
             href: '/chat',
-            icon: MessageCircle,
-            badge: 0
+            icon: MessageSquare,
         },
         {
-            name: 'Community',
+            label: 'Community',
             href: '/community',
             icon: Users,
-            badge: 0
         },
         {
-            name: 'CBT',
+            label: 'CBT',
             href: '/cbt',
-            icon: Monitor,
-            badge: 0
-        }
+            icon: ClipboardList,
+        },
     ];
 
-    const isActive = (href) => {
-        if (href === '/dashboard') {
-            return pathname === '/dashboard' || pathname === '/';
-        }
-        return pathname?.startsWith(href);
-    };
-
     return (
-        <nav
-            role="navigation"
-            aria-label="Main Navigation"
-            className="fixed bottom-0 left-0 right-0 z-50 lg:hidden"
-        >
-            {/* Main Navigation Container */}
-            <div className="h-16 bg-base-100/95 backdrop-blur-xl border-t border-base-300 shadow-[0_-2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_-2px_12px_rgba(0,0,0,0.3)]">
-                <div className="flex items-center justify-around h-full max-w-screen-xl mx-auto px-2">
-                    {navItems.map((item) => {
-                        const active = isActive(item.href);
-                        const Icon = item.icon;
+        <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+            {/* Glassmorphism Background */}
+            <div className="absolute inset-0 bg-base-100/80 backdrop-blur-lg border-t border-base-300 shadow-strong-lg" />
 
-                        return (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`
-                                    flex flex-col items-center justify-center flex-1 h-full
-                                    transition-all duration-200 ease-out
-                                    active:scale-95
-                                    hover:opacity-100
-                                    ${active ? 'opacity-100' : 'opacity-70'}
-                                `}
-                                aria-label={`${item.name} - Navigate to ${item.name.toLowerCase()}`}
-                                aria-current={active ? 'page' : undefined}
+            <div className="relative flex items-center justify-around h-16 px-2">
+                {navItems.map((item) => {
+                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    const Icon = item.icon;
+
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className="relative flex flex-col items-center justify-center w-full h-full"
+                        >
+                            {/* Active Indicator (Top Border) */}
+                            {isActive && (
+                                <motion.div
+                                    layoutId="activeTabIndicator"
+                                    className="absolute top-0 w-8 h-0.5 bg-primary rounded-b-full"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                />
+                            )}
+
+                            <motion.div
+                                className={`flex flex-col items-center gap-1 transition-colors duration-300 ${isActive ? 'text-primary' : 'text-base-content/60 hover:text-base-content/80'
+                                    }`}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
-                                {/* Icon Container with Badge */}
                                 <div className="relative">
                                     <Icon
-                                        className={`
-                                            w-6 h-6 transition-all duration-200
-                                            ${active
-                                                ? 'text-primary -translate-y-0.5'
-                                                : 'text-base-content/60'
-                                            }
-                                        `}
-                                        fill={active ? 'currentColor' : 'none'}
-                                        strokeWidth={2}
+                                        className={`w-6 h-6 ${isActive ? 'stroke-[2.5px]' : 'stroke-2'}`}
                                     />
-
-                                    {/* Notification Badge */}
-                                    {item.badge > 0 && (
-                                        <span
-                                            className="absolute -top-2 -right-2 z-10 flex items-center justify-center min-w-[20px] h-[20px] px-1 text-[10px] font-bold text-white bg-red-500 border-[2px] border-base-100 rounded-full shadow-sm"
-                                            aria-label={`${item.badge} unread notifications`}
-                                        >
-                                            {item.badge > 99 ? '99+' : item.badge}
-                                        </span>
+                                    {/* Optional: Notification dot example for Chat */}
+                                    {item.label === 'Chat' && (
+                                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-error rounded-full ring-2 ring-base-100 hidden" />
                                     )}
                                 </div>
 
-                                {/* Label */}
-                                <span
-                                    className={`
-                                        mt-1 text-[10px] transition-all duration-150
-                                        ${active
-                                            ? 'text-primary font-semibold'
-                                            : 'text-base-content/60 font-medium'
-                                        }
-                                    `}
-                                >
-                                    {item.name}
+                                <span className={`text-[10px] font-medium ${isActive ? 'font-semibold' : ''}`}>
+                                    {item.label}
                                 </span>
-                            </Link>
-                        );
-                    })}
-                </div>
-            </div>
+                            </motion.div>
 
-            {/* iOS Safe Area Bottom Padding */}
-            <div className="h-[env(safe-area-inset-bottom)] bg-base-100" />
+                            {/* Active Glow Effect (Subtle) */}
+                            {isActive && (
+                                <div className="absolute inset-0 bg-primary/5 rounded-lg -z-10 blur-sm" />
+                            )}
+                        </Link>
+                    );
+                })}
+            </div>
         </nav>
     );
-};
-
-export default BottomNav;
+}

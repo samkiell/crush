@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem("d2c_theme");
+                  var saved = localStorage.getItem("crushedu-theme");
                   var theme = saved || "light";
                   document.documentElement.setAttribute("data-theme", theme);
                 } catch (e) {}
