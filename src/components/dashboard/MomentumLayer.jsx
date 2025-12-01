@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-
 import { motion } from 'framer-motion';
-import { Flame, Calendar, Play, BookOpen, BarChart2, Users, ArrowRight, Wallet, Plus } from 'lucide-react';
+import { Flame, Calendar, Play, BookOpen, Users, ArrowRight, Wallet, Plus, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 
@@ -78,7 +77,7 @@ export default function MomentumLayer({ user, stats }) {
         { label: 'Start Test', icon: Play, href: '/cbt', color: 'text-primary', bg: 'bg-primary/10' },
         { label: 'Study Mode', icon: BookOpen, href: '/study', color: 'text-secondary', bg: 'bg-secondary/10' },
         { label: 'Community', icon: Users, href: '/community', color: 'text-accent', bg: 'bg-accent/10' },
-        { label: 'Performance', icon: BarChart2, href: '/dashboard/performance', color: 'text-info', bg: 'bg-info/10' },
+        { label: 'Coming Soon', icon: HelpCircle, href: '#', color: 'text-info', bg: 'bg-info/10' },
     ];
 
     return (
