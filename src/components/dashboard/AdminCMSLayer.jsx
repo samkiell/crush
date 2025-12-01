@@ -1,10 +1,17 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database } from 'lucide-react';
+import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database, Activity, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 
 export default function AdminCMSLayer() {
+    const stats = [
+        { label: 'Total Users', value: '1,234', change: '+12%', icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
+        { label: 'Questions', value: '15.4k', change: '+5%', icon: Database, color: 'text-secondary', bg: 'bg-secondary/10' },
+        { label: 'Active Now', value: '42', change: '+8%', icon: Activity, color: 'text-success', bg: 'bg-success/10' },
+        { label: 'Daily Exams', value: '156', change: '+23%', icon: TrendingUp, color: 'text-accent', bg: 'bg-accent/10' },
+    ];
+
     const adminActions = [
         {
             title: 'Upload Questions',
@@ -28,7 +35,7 @@ export default function AdminCMSLayer() {
             title: 'User Management',
             description: 'View and manage registered students',
             icon: Users,
-            href: '#',
+            href: '/admin/users',
             color: 'text-secondary',
             bg: 'bg-secondary/10',
             border: 'border-secondary/20',
@@ -76,11 +83,33 @@ export default function AdminCMSLayer() {
             variants={stagger.container(0.1)}
             initial="initial"
             animate="animate"
-            className="space-y-6"
+            className="space-y-8"
         >
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-base-content">Admin Console</h2>
                 <span className="badge badge-primary badge-outline">v2.0.0</span>
+            </div>
+
+            {/* CMS Stats Overview */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {stats.map((stat, index) => (
+                    <motion.div
+                        key={index}
+                        variants={variants.fadeUp}
+                        className="bg-base-100 border border-base-200 p-4 rounded-2xl shadow-sm flex items-center gap-4"
+                    >
+                        <div className={`p-3 rounded-xl ${stat.bg} ${stat.color}`}>
+                            <stat.icon size={20} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-base-content/60 font-medium">{stat.label}</p>
+                            <div className="flex items-baseline gap-2">
+                                <h4 className="text-lg font-bold">{stat.value}</h4>
+                                <span className="text-xs text-success font-medium">{stat.change}</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

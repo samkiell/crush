@@ -89,7 +89,6 @@ const Header = () => {
     { name: 'Upload', href: '/admin/questions/upload', icon: Upload },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
-    { name: 'Admin', href: '/admin', icon: ShieldAlert },
   ];
 
   const navLinks = user?.role === 'admin' ? adminLinks : baseLinks;
