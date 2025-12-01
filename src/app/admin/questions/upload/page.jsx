@@ -51,10 +51,20 @@ export default function AdminUploadPage() {
                 throw new Error('JSON must contain an array of questions');
             }
 
+            // Normalize questions before upload
+            const normalizedQuestions = questionsArray.map(q => ({
+                ...q,
+                options: {
+                    ...q.options,
+                    E: q.options.E || ''
+                },
+                answer: q.answer ? q.answer : 'NO CORRECT OPTION'
+            }));
+
             const payload = {
                 subject,
                 year: parseInt(year),
-                questions: questionsArray,
+                questions: normalizedQuestions,
             };
 
             const response = await fetch('/api/admin/questions/upload', {
