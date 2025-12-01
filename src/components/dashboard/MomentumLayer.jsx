@@ -44,6 +44,28 @@ export default function MomentumLayer({ user, stats }) {
                 </p>
             </motion.div>
 
+            {/* Quick Actions Grid - Moved Up */}
+            <motion.div
+                variants={stagger.container(0.05)}
+                className="grid grid-cols-2 md:grid-cols-4 gap-3"
+            >
+                {quickActions.map((action) => (
+                    <Link key={action.label} href={action.href} className="block">
+                        <motion.div
+                            variants={variants.fadeUp}
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="flex flex-col items-center justify-center p-4 rounded-2xl bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-primary/20 transition-all h-full"
+                        >
+                            <div className={`p-3 rounded-xl ${action.bg} ${action.color} mb-2`}>
+                                <action.icon className="w-6 h-6" />
+                            </div>
+                            <span className="text-sm font-semibold text-base-content/80">{action.label}</span>
+                        </motion.div>
+                    </Link>
+                ))}
+            </motion.div>
+
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                 {/* JAMB Countdown Card */}
                 <motion.div
@@ -115,28 +137,6 @@ export default function MomentumLayer({ user, stats }) {
                     </motion.div>
                 </div>
             </div>
-
-            {/* Quick Actions Grid */}
-            <motion.div
-                variants={stagger.container(0.05)}
-                className="grid grid-cols-2 md:grid-cols-4 gap-3"
-            >
-                {quickActions.map((action) => (
-                    <Link key={action.label} href={action.href} className="block">
-                        <motion.div
-                            variants={variants.fadeUp}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="flex flex-col items-center justify-center p-4 rounded-2xl bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-primary/20 transition-all h-full"
-                        >
-                            <div className={`p-3 rounded-xl ${action.bg} ${action.color} mb-2`}>
-                                <action.icon className="w-6 h-6" />
-                            </div>
-                            <span className="text-sm font-semibold text-base-content/80">{action.label}</span>
-                        </motion.div>
-                    </Link>
-                ))}
-            </motion.div>
         </motion.div>
     );
 }
