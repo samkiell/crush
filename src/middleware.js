@@ -5,7 +5,7 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   // Define protected and guest routes
-  const protectedRoutes = ['/dashboard', '/exam', '/questions', '/profile'];
+  const protectedRoutes = ['/dashboard', '/exam', '/questions', '/profile', '/study', '/chat', '/community', '/cbt', '/settings'];
   const guestRoutes = ['/login', '/register', '/'];
 
   // Check if the current path matches any protected route
