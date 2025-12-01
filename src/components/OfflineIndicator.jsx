@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import { WifiOff } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function OfflineIndicator() {
     const [isOnline, setIsOnline] = useState(true);
@@ -10,19 +11,8 @@ export default function OfflineIndicator() {
         // Set initial state
         setIsOnline(navigator.onLine);
 
-        const handleOnline = () => {
-            setIsOnline(true);
-            toast.success('You are back online! 🌐', {
-                duration: 3000,
-            });
-        };
-
-        const handleOffline = () => {
-            setIsOnline(false);
-            toast.error('You are offline. Some features may be limited.', {
-                duration: 5000,
-            });
-        };
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
 
         window.addEventListener('online', handleOnline);
         window.addEventListener('offline', handleOffline);
@@ -33,14 +23,21 @@ export default function OfflineIndicator() {
         };
     }, []);
 
-    if (isOnline) return null;
-
     return (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-error text-error-content py-2 px-4 text-center text-sm font-medium">
-            <span className="inline-flex items-center gap-2">
-                <span className="inline-block w-2 h-2 bg-error-content rounded-full animate-pulse"></span>
-                Offline Mode - Some features may be limited
-            </span>
-        </div>
+        <AnimatePresence>
+            {!isOnline && (
+                <motion.div
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 100, opacity: 0 }}
+                    className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-[100]"
+                >
+                    <div className="bg-base-content/90 text-base-100 backdrop-blur-md px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium border border-base-content/10">
+                        <WifiOff className="w-4 h-4" />
+                        <span>You are offline</span>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }

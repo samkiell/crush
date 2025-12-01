@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Calendar, Layers, Lock, Sparkles, ChevronRight, GraduationCap } from 'lucide-react';
 
-// Mock Data for Icons and Display Names
+import { toast } from 'react-hot-toast';
+
 const SUBJECTS = [
     { id: 'math', name: 'Mathematics', icon: '📐' },
     { id: 'eng', name: 'English Language', icon: '📚' },
@@ -82,8 +83,17 @@ export default function StudySetupPage() {
         }
     }, [selectedSubject, availableMetadata]);
 
+
+
     const handleStartStudy = () => {
-        if (!selectedSubject || !selectedYear) return;
+        if (!selectedSubject) {
+            toast.error('Please select a subject first');
+            return;
+        }
+        if (!selectedYear) {
+            toast.error('Please select a year');
+            return;
+        }
         setIsStarting(true);
         // Default to 'all-topics' if no topic selected
         const topicSlug = selectedTopic ? selectedTopic.toLowerCase().replace(/\s+/g, '-') : 'all-topics';
@@ -308,7 +318,7 @@ export default function StudySetupPage() {
 
                                 <button
                                     onClick={handleStartStudy}
-                                    disabled={!selectedSubject || !selectedYear || isStarting}
+                                    disabled={isStarting}
                                     className="btn btn-primary w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20 disabled:bg-base-300 disabled:text-base-content/40 flex items-center justify-center gap-2"
                                 >
                                     {isStarting ? (

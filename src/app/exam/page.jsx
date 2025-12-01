@@ -1,209 +1,354 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { startExam, submitAnswer, submitExamStart, submitExamSuccess, submitExamFailure } from '../../store/slices/examsSlice';
-import { examsAPI } from '../../services/api';
-import QuestionCard from '../../components/QuestionCard';
-import ExamTimer from '../../components/ExamTimer';
-import { Sun, Moon, Eye } from 'lucide-react';
-import { useTheme } from '../../utils/theme';
-import toast from 'react-hot-toast';
-import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
+import { BookOpen, Calendar, Timer, Lock, Sparkles, ChevronRight, GraduationCap } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
-export default function ExamPage() {
-  const dispatch = useDispatch();
-  const { currentExam, answers, isExamActive, loading } = useSelector((state) => state.exams);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { theme, setTheme } = useTheme();
+// Mock Data for Icons and Display Names
+const SUBJECTS = [
+  { id: 'math', name: 'Mathematics', icon: '📐' },
+  { id: 'eng', name: 'English Language', icon: '📚' },
+  { id: 'phy', name: 'Physics', icon: '⚡' },
+  { id: 'chem', name: 'Chemistry', icon: '🧪' },
+  { id: 'bio', name: 'Biology', icon: '🧬' },
+  { id: 'govt', name: 'Government', icon: '🏛️' },
+  { id: 'econ', name: 'Economics', icon: '📈' },
+  { id: 'lit', name: 'Literature', icon: '📖' },
+  { id: 'crs', name: 'CRS', icon: '✝️' },
+  { id: 'geo', name: 'Geography', icon: '🌍' },
+];
 
-  // Keyboard navigation
-  useKeyboardNavigation({
-    onNext: () => nextQuestion(),
-    onPrevious: () => prevQuestion(),
-    onSubmit: () => currentQuestionIndex === currentExam?.questions.length - 1 && handleSubmitExam(),
-    enabled: !!currentExam,
-  });
+export default function ExamSetupPage() {
+  const router = useRouter();
+  const { user } = useSelector((state) => state.auth);
 
-  const cycleTheme = () => {
-    if (theme === "light") setTheme("dark");
-    else if (theme === "dark") setTheme("eye-care");
-    else setTheme("light");
-  };
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [isPremium, setIsPremium] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+
+  const [availableMetadata, setAvailableMetadata] = useState({});
+  const [availableYears, setAvailableYears] = useState([]);
+  const [loadingMetadata, setLoadingMetadata] = useState(true);
 
   useEffect(() => {
-    // Start exam when component mounts (in real app, this would be triggered by user action)
-    if (!currentExam) {
-      startMockExam();
+    if (user) {
+      setIsPremium(user.isPremium || user.plan === 'premium' || false);
     }
+  }, [user]);
+
+  // Fetch Metadata (Subjects & Years)
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        // Check cache first
+        const cached = localStorage.getItem('study_metadata');
+        const cachedTime = localStorage.getItem('study_metadata_time');
+        const ONE_HOUR = 60 * 60 * 1000;
+
+        if (cached && cachedTime && (Date.now() - parseInt(cachedTime) < ONE_HOUR)) {
+          setAvailableMetadata(JSON.parse(cached));
+          setLoadingMetadata(false);
+        }
+
+        // Fetch fresh data
+        const res = await fetch('/api/study/metadata');
+        if (res.ok) {
+          const data = await res.json();
+          setAvailableMetadata(data.metadata);
+          localStorage.setItem('study_metadata', JSON.stringify(data.metadata));
+          localStorage.setItem('study_metadata_time', Date.now().toString());
+        }
+      } catch (error) {
+        console.error('Failed to fetch metadata', error);
+      } finally {
+        setLoadingMetadata(false);
+      }
+    };
+
+    fetchMetadata();
   }, []);
 
-  const startMockExam = async () => {
-    try {
-      // In a real app, you'd fetch exam configuration from API
-      const mockExam = {
-        id: 'mock-exam-1',
-        title: 'JAMB Mock Exam',
-        duration: 120, // 2 hours in minutes
-        questions: [
-          {
-            id: 'q1',
-            question: 'What is the capital of France?',
-            options: ['London', 'Berlin', 'Paris', 'Madrid'],
-            correctAnswer: 'Paris',
-            subject: 'General Knowledge',
-            topic: 'Geography',
-            difficulty: 'easy',
-            explanation: 'Paris is the capital and most populous city of France.'
-          },
-          {
-            id: 'q2',
-            question: 'Solve for x: 2x + 3 = 7',
-            options: ['x = 1', 'x = 2', 'x = 3', 'x = 4'],
-            correctAnswer: 'x = 2',
-            subject: 'Mathematics',
-            topic: 'Algebra',
-            difficulty: 'easy',
-            explanation: 'Subtracting 3 from both sides: 2x = 4. Dividing by 2: x = 2.'
-          },
-          // Add more questions as needed
-        ]
-      };
-
-      dispatch(startExam(mockExam));
-    } catch (error) {
-      console.error('Failed to start exam:', error);
+  // Update available years when subject changes
+  useEffect(() => {
+    if (selectedSubject && availableMetadata[selectedSubject]) {
+      setAvailableYears(availableMetadata[selectedSubject]);
+      setSelectedYear(''); // Reset year
+    } else {
+      setAvailableYears([]);
     }
-  };
+  }, [selectedSubject, availableMetadata]);
 
-  const handleAnswerSelect = (questionId, answer) => {
-    dispatch(submitAnswer({ questionId, answer }));
-  };
-
-  const handleSubmitExam = async () => {
-    if (!currentExam) return;
-
-    try {
-      dispatch(submitExamStart());
-      const result = await examsAPI.submitExam(currentExam.id, answers);
-      dispatch(submitExamSuccess(result.data));
-      toast.success('Exam submitted successfully! Check your results in the dashboard.');
-    } catch (error) {
-      dispatch(submitExamFailure(error.message));
-      toast.error('Failed to submit exam. Please try again.');
+  const handleStartExam = () => {
+    if (!selectedSubject) {
+      toast.error('Please select a subject first');
+      return;
     }
-  };
-
-  const nextQuestion = () => {
-    if (currentQuestionIndex < currentExam.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    if (!selectedYear) {
+      toast.error('Please select a year');
+      return;
     }
+    setIsStarting(true);
+    // Default to 'all-topics' if no topic selected
+    const topicSlug = selectedTopic ? selectedTopic.toLowerCase().replace(/\s+/g, '-') : 'all-topics';
+    const slug = `${selectedSubject}-${selectedYear}-${topicSlug}`;
+    router.push(`/exam/${slug}`);
   };
 
-  const prevQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
+  const isYearLocked = (year) => {
+    if (isPremium) return false;
+    // Free users only get access to years 1978-1988
+    const yearNum = parseInt(year);
+    return yearNum < 1978 || yearNum > 1988;
   };
-
-  if (!currentExam) {
-    return (
-      <div className="min-h-screen bg-base-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-base-content/70">Loading exam...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const currentQuestion = currentExam.questions[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content">
-      {/* Header */}
-      <div className="bg-base-200 border-b border-base-300 sticky top-0 z-10">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">{currentExam.title}</h1>
-
-          <div className="flex items-center gap-4">
-            <ExamTimer duration={currentExam.duration} onTimeUp={handleSubmitExam} />
-
-            <button
-              onClick={cycleTheme}
-              className="btn btn-circle btn-sm bg-base-100 border border-base-300"
-            >
-              {theme === "light" && <Sun size={18} />}
-              {theme === "dark" && <Moon size={18} />}
-              {theme === "eye-care" && <Eye size={18} />}
-            </button>
-          </div>
+    <div className="min-h-screen bg-base-100 pb-20 md:pb-8 pt-6 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="mb-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4"
+          >
+            <Timer className="w-5 h-5" />
+            <span className="font-semibold text-sm">Exam Mode</span>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl font-bold mb-4"
+          >
+            Test Your Knowledge
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-base-content/60 max-w-lg mx-auto"
+          >
+            Simulate real exam conditions with a timer and no immediate feedback. Review your performance at the end.
+          </motion.p>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Question Counter */}
-          <div className="mb-6 flex justify-between items-center">
-            <span className="text-base-content/70">
-              Question {currentQuestionIndex + 1} of {currentExam.questions.length}
-            </span>
-            <div className="flex gap-2">
-              {currentExam.questions.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentQuestionIndex(idx)}
-                  className={`w-8 h-8 rounded-lg text-sm font-semibold ${idx === currentQuestionIndex
-                    ? 'bg-primary text-primary-content'
-                    : answers[currentExam.questions[idx].id]
-                      ? 'bg-success/20 text-success'
-                      : 'bg-base-200 text-base-content'
-                    }`}
-                >
-                  {idx + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Question Card */}
-          <QuestionCard
-            question={currentQuestion}
-            showAnswer={false}
-            onAnswerSelect={handleAnswerSelect}
-            selectedAnswer={answers[currentQuestion.id]}
-          />
-
-          {/* Navigation */}
-          <div className="mt-8 flex justify-between items-center">
-            <button
-              onClick={prevQuestion}
-              disabled={currentQuestionIndex === 0}
-              className="btn btn-outline rounded-xl"
-            >
-              Previous
-            </button>
-
-            <div className="flex gap-4">
-              {currentQuestionIndex === currentExam.questions.length - 1 ? (
-                <button
-                  onClick={handleSubmitExam}
-                  className="btn btn-success rounded-xl px-8"
-                  disabled={loading}
-                >
-                  {loading ? 'Submitting...' : 'Submit Exam'}
-                </button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: Filters */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="lg:col-span-2 space-y-6"
+          >
+            {/* Subject Selection */}
+            <div className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-primary" />
+                Select Subject
+              </h3>
+              {loadingMetadata ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="h-24 rounded-xl bg-base-200 animate-pulse"></div>
+                  ))}
+                </div>
               ) : (
-                <button
-                  onClick={nextQuestion}
-                  className="btn btn-primary rounded-xl"
-                >
-                  Next
-                </button>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {SUBJECTS.map((subject) => {
+                    // Find matching key in metadata
+                    const dbKey = Object.keys(availableMetadata).find(k =>
+                      k.toLowerCase().includes(subject.name.toLowerCase()) ||
+                      subject.name.toLowerCase().includes(k.toLowerCase())
+                    );
+
+                    const hasData = !!dbKey;
+                    const subjectKey = dbKey || subject.name.toLowerCase();
+
+                    return (
+                      <button
+                        key={subject.id}
+                        disabled={!hasData}
+                        onClick={() => {
+                          setSelectedSubject(subjectKey);
+                          setSelectedTopic('');
+                        }}
+                        className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-2 ${selectedSubject === subjectKey
+                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                          : hasData
+                            ? 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
+                            : 'border-base-200 opacity-50 cursor-not-allowed bg-base-200/30'
+                          }`}
+                      >
+                        <span className="text-2xl">{subject.icon}</span>
+                        <span className="font-medium text-sm">{subject.name}</span>
+                        {!hasData && <span className="text-[10px] text-error">No Data</span>}
+                      </button>
+                    );
+                  })}
+
+                  {/* Show other subjects from DB that might not be in our icon list */}
+                  {Object.keys(availableMetadata).map(key => {
+                    const isMapped = SUBJECTS.some(s =>
+                      key.toLowerCase().includes(s.name.toLowerCase()) ||
+                      s.name.toLowerCase().includes(key.toLowerCase())
+                    );
+
+                    if (isMapped) return null;
+
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => {
+                          setSelectedSubject(key);
+                          setSelectedTopic('');
+                        }}
+                        className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-2 ${selectedSubject === key
+                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                          : 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
+                          }`}
+                      >
+                        <span className="text-2xl">📝</span>
+                        <span className="font-medium text-sm capitalize">{key}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
-          </div>
+
+            {/* Year Selection */}
+            <div className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-secondary" />
+                  Select Year
+                </h3>
+                {!isPremium && (
+                  <span className="text-xs font-medium px-2 py-1 bg-base-200 rounded-lg text-base-content/60 flex items-center gap-1">
+                    <Lock className="w-3 h-3" />
+                    Limited Access
+                  </span>
+                )}
+              </div>
+
+              {!selectedSubject ? (
+                <div className="text-center py-8 text-base-content/40 text-sm">
+                  Please select a subject first.
+                </div>
+              ) : availableYears.length === 0 ? (
+                <div className="text-center py-8 text-base-content/40 text-sm">
+                  No years found for this subject.
+                </div>
+              ) : (
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                  {availableYears.map((year) => {
+                    const locked = isYearLocked(year);
+                    return (
+                      <button
+                        key={year}
+                        disabled={locked}
+                        onClick={() => setSelectedYear(year)}
+                        className={`p-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden ${selectedYear === year
+                          ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20 ring-2 ring-secondary ring-offset-2'
+                          : locked
+                            ? 'bg-base-200/50 text-base-content/30 cursor-not-allowed'
+                            : 'bg-base-100 hover:bg-base-200 text-base-content'
+                          }`}
+                      >
+                        {year}
+                        {locked && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-base-200/80 backdrop-blur-[1px]">
+                            <Lock className="w-3 h-3 text-base-content/40" />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {!isPremium && (
+                <div className="mt-4 p-3 bg-base-200/50 rounded-xl text-xs text-center text-base-content/60">
+                  Upgrade to Premium to unlock all years (2021-2024).
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Right Column: Summary & Action */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="lg:col-span-1"
+          >
+            <div className="sticky top-6">
+              <div className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/5 rounded-full blur-3xl -ml-16 -mb-16"></div>
+
+                <h3 className="text-xl font-bold mb-6 relative z-10">Exam Summary</h3>
+
+                <div className="space-y-4 mb-8 relative z-10">
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-base-200/50">
+                    <span className="text-sm text-base-content/60">Subject</span>
+                    <span className="font-semibold capitalize">
+                      {selectedSubject || '-'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-base-200/50">
+                    <span className="text-sm text-base-content/60">Year</span>
+                    <span className="font-semibold">{selectedYear || '-'}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-base-200/50">
+                    <span className="text-sm text-base-content/60">Duration</span>
+                    <span className="font-semibold text-right">
+                      40 Mins
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleStartExam}
+                  disabled={isStarting}
+                  className="btn btn-primary w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20 disabled:bg-base-300 disabled:text-base-content/40 flex items-center justify-center gap-2"
+                >
+                  {isStarting ? (
+                    <>
+                      <span className="loading loading-spinner loading-md"></span>
+                      Preparing...
+                    </>
+                  ) : (
+                    <>
+                      Start Exam
+                      <ChevronRight className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+
+                {!isPremium && (
+                  <div className="mt-6 pt-6 border-t border-base-200 text-center relative z-10">
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white mb-3 shadow-lg shadow-orange-500/30">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <h4 className="font-bold text-sm mb-1">Unlock Full Access</h4>
+                    <p className="text-xs text-base-content/60 mb-3">
+                      Get access to all years, advanced analytics, and AI tutoring.
+                    </p>
+                    <button className="btn btn-sm btn-outline w-full rounded-lg">
+                      Upgrade to Premium
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>
