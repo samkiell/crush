@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
@@ -74,7 +74,7 @@ const Header = () => {
     }
   }, [pathname, theme, setTheme]);
 
-  const navLinks = [
+  const baseLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Exams', href: '/exam', icon: BookOpen },
     { name: 'Study', href: '/study', icon: Library },
@@ -82,6 +82,17 @@ const Header = () => {
     { name: 'Community', href: '/community', icon: Users },
     { name: 'CBT', href: '/cbt', icon: Monitor },
   ];
+
+  const adminLinks = [
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Exams', href: '/exam', icon: BookOpen },
+    { name: 'CBT', href: '/cbt', icon: Monitor },
+    { name: 'Chat', href: '/chat', icon: MessageCircle },
+    { name: 'Community', href: '/community', icon: Users },
+    { name: 'Admin', href: '/admin', icon: ShieldAlert },
+  ];
+
+  const navLinks = user?.role === 'admin' ? adminLinks : baseLinks;
 
   const guestLinks = [
     { name: 'Community', href: '/community', icon: Users },
