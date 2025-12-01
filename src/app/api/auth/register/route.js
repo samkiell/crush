@@ -67,6 +67,7 @@ export async function POST(req) {
         email: user.email,
         username: user.username,
         role: user.role,
+        avatar: user.avatar,
         token,
       }, { status: 201 });
     } else {

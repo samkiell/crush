@@ -72,11 +72,15 @@ export const loadUserFromToken = createAsyncThunk(
         return rejectWithValue('No token found');
       }
 
-      // Optionally verify token with backend
-      // For now, we'll just return the token
-      // You can add a /api/auth/verify endpoint later
+      // Verify token and get user data
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
       
-      return { token };
+      const response = await axios.get('/api/users/profile', config);
+      return { token, user: response.data };
     } catch (error) {
       removeToken();
       return rejectWithValue('Invalid token');
@@ -179,6 +183,7 @@ const authSlice = createSlice({
       })
       .addCase(loadUserFromToken.fulfilled, (state, action) => {
         state.token = action.payload.token;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
         state.loading = false;
       })
