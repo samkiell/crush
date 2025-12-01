@@ -9,6 +9,19 @@ export default function StudySessionPage() {
     const params = useParams();
     const { sessionId } = params;
 
+    // Parse sessionId: subject-year-topic
+    const [subjectCode, year, ...topicParts] = sessionId.split('-');
+
+    const SUBJECT_MAP = {
+        math: 'Mathematics',
+        eng: 'English Language',
+        phy: 'Physics',
+        chem: 'Chemistry',
+        bio: 'Biology'
+    };
+
+    const subjectName = SUBJECT_MAP[subjectCode] || subjectCode;
+
     return (
         <div className="min-h-screen bg-base-100 pb-20 md:pb-8 pt-6 px-4">
             <div className="max-w-5xl mx-auto">
@@ -22,12 +35,16 @@ export default function StudySessionPage() {
                     </Link>
                     <div>
                         <h1 className="text-lg font-bold">Study Session</h1>
-                        <p className="text-xs text-base-content/60 font-mono">{sessionId}</p>
+                        <p className="text-xs text-base-content/60 font-mono">JAMB {year}</p>
                     </div>
                 </div>
 
                 {/* Workspace */}
-                <QuestionWorkspace sessionId={sessionId} />
+                <QuestionWorkspace
+                    sessionId={sessionId}
+                    subjectName={subjectName}
+                    year={year}
+                />
             </div>
         </div>
     );

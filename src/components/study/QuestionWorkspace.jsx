@@ -82,7 +82,7 @@ const MOCK_QUESTIONS = [
 
 const FREE_LIMIT = 3;
 
-export default function QuestionWorkspace({ sessionId }) {
+export default function QuestionWorkspace({ sessionId, subjectName }) {
     const { user } = useSelector((state) => state.auth);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -196,7 +196,7 @@ export default function QuestionWorkspace({ sessionId }) {
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2 text-sm font-medium text-base-content/60">
                     <span className="bg-base-200 px-2 py-1 rounded-lg">Question {currentQuestionIndex + 1} / {MOCK_QUESTIONS.length}</span>
-                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg capitalize">{sessionId.split('-')[0]}</span>
+                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg">{subjectName || sessionId.split('-')[0]}</span>
                 </div>
                 <div className="flex gap-2">
                     <button
