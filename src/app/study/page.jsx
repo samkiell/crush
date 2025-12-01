@@ -1,88 +1,84 @@
-import React from 'react';
-import { BookOpen, Search, Filter, PlayCircle, Clock, Award } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import StudyMaterialCard from '@/components/study/StudyMaterialCard';
+import TopicNavigation from '@/components/study/TopicNavigation';
+
+// Mock Data
+const MOCK_TOPICS = [
+    { id: '1', title: 'Introduction to Biology', duration: '15 min', completed: true, locked: false },
+    { id: '2', title: 'Cell Structure and Function', duration: '25 min', completed: false, locked: false },
+    { id: '3', title: 'Photosynthesis', duration: '30 min', completed: false, locked: true },
+    { id: '4', title: 'Genetics and Heredity', duration: '45 min', completed: false, locked: true },
+    { id: '5', title: 'Ecology and Ecosystems', duration: '20 min', completed: false, locked: true },
+];
+
+const MOCK_CONTENT = {
+    '1': {
+        title: 'Introduction to Biology',
+        content: `Biology is the scientific study of life. It is a natural science with a broad scope but has several unifying themes that tie it together as a single, coherent field. For instance, all organisms are made up of cells that process hereditary information encoded in genes, which can be transmitted to future generations.
+
+Another major theme is evolution, which explains the unity and diversity of life. Energy processing is also important to life as it allows organisms to move, grow, and reproduce. Finally, all organisms are able to regulate their own internal environments.
+
+Biologists are able to study life at multiple levels of organization, from the molecular biology of a cell to the anatomy and physiology of plants and animals, and evolution of populations. Hence, there are multiple subdisciplines within biology, each defined by the nature of their research questions and the tools that they use.`,
+        progress: 100
+    },
+    '2': {
+        title: 'Cell Structure and Function',
+        content: `The cell is the basic structural, functional, and biological unit of all known organisms. A cell is the smallest unit of life. Cells are often called the "building blocks of life". The study of cells is called cell biology, cellular biology, or cytology.
+
+Cells consist of cytoplasm enclosed within a membrane, which contains many biomolecules such as proteins and nucleic acids. Most plant and animal cells are only visible under a light microscope, with dimensions between 1 and 100 micrometers.
+
+Electron microscopy gives a much higher resolution showing greatly detailed cell structure. Organisms can be classified as unicellular (consisting of a single cell such as bacteria) or multicellular (including plants and animals). Most unicellular organisms are classified as microorganisms.`,
+        progress: 45
+    }
+};
 
 export default function StudyPage() {
+    const [currentTopicId, setCurrentTopicId] = useState('2');
+    const [topics, setTopics] = useState(MOCK_TOPICS);
+
+    const handleTopicSelect = (topicId) => {
+        setCurrentTopicId(topicId);
+    };
+
+    const handleComplete = () => {
+        // Update progress logic here
+        const updatedTopics = topics.map(t =>
+            t.id === currentTopicId ? { ...t, completed: true } : t
+        );
+        setTopics(updatedTopics);
+
+        // Unlock next topic logic could go here
+    };
+
+    const currentContent = MOCK_CONTENT[currentTopicId] || {
+        title: 'Content Locked',
+        content: 'Please complete the previous modules to unlock this content.',
+        progress: 0
+    };
+
     return (
-        <div className="min-h-screen bg-base-200/50 pb-20 md:pb-8">
-            {/* Hero Section */}
-            <div className="bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 pt-8 pb-12 px-4 md:px-8">
-                <div className="max-w-7xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-bold text-base-content mb-4">
-                        Study Center
-                    </h1>
-                    <p className="text-lg text-base-content/70 max-w-2xl">
-                        Access comprehensive study materials, past questions, and interactive lessons to master your subjects.
-                    </p>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 md:px-8 -mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Study Materials Card */}
-                    <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-content/5 group">
-                        <div className="card-body">
-                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                <BookOpen className="w-6 h-6 text-primary" />
-                            </div>
-                            <h2 className="card-title text-xl mb-2">Study Materials</h2>
-                            <p className="text-base-content/60 mb-4">
-                                Browse through curated notes, textbooks, and video lectures.
-                            </p>
-                            <div className="card-actions justify-end">
-                                <button className="btn btn-primary btn-sm">Explore</button>
-                            </div>
-                        </div>
+        <div className="min-h-screen bg-base-200/50 pb-20 md:pb-8 pt-6">
+            <div className="max-w-7xl mx-auto px-4 md:px-6">
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Navigation Sidebar */}
+                    <div className="lg:w-80 shrink-0">
+                        <TopicNavigation
+                            topics={topics}
+                            currentTopicId={currentTopicId}
+                            onSelectTopic={handleTopicSelect}
+                        />
                     </div>
 
-                    {/* Practice Mode Card */}
-                    <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-content/5 group">
-                        <div className="card-body">
-                            <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                <PlayCircle className="w-6 h-6 text-secondary" />
-                            </div>
-                            <h2 className="card-title text-xl mb-2">Practice Mode</h2>
-                            <p className="text-base-content/60 mb-4">
-                                Test your knowledge with topic-wise practice questions.
-                            </p>
-                            <div className="card-actions justify-end">
-                                <button className="btn btn-secondary btn-sm">Start Practice</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Progress Tracker Card */}
-                    <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-content/5 group">
-                        <div className="card-body">
-                            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                <Award className="w-6 h-6 text-accent" />
-                            </div>
-                            <h2 className="card-title text-xl mb-2">Your Progress</h2>
-                            <p className="text-base-content/60 mb-4">
-                                Track your study hours and performance analytics.
-                            </p>
-                            <div className="card-actions justify-end">
-                                <button className="btn btn-accent btn-sm">View Stats</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Recent Activity Section */}
-                <div className="mt-12">
-                    <h3 className="text-2xl font-bold text-base-content mb-6 flex items-center gap-2">
-                        <Clock className="w-6 h-6 text-primary" />
-                        Recent Activity
-                    </h3>
-                    <div className="bg-base-100 rounded-3xl shadow-sm border border-base-content/5 p-6 text-center py-12">
-                        <div className="max-w-md mx-auto">
-                            <div className="w-20 h-20 bg-base-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                                <BookOpen className="w-8 h-8 text-base-content/30" />
-                            </div>
-                            <h4 className="text-lg font-semibold mb-2">No recent study activity</h4>
-                            <p className="text-base-content/60 mb-6">Start studying to see your recent topics and progress here.</p>
-                            <button className="btn btn-outline btn-primary">Browse Topics</button>
-                        </div>
+                    {/* Main Content Area */}
+                    <div className="flex-1 min-w-0">
+                        <StudyMaterialCard
+                            title={currentContent.title}
+                            content={currentContent.content}
+                            progress={currentContent.progress}
+                            onComplete={handleComplete}
+                        />
                     </div>
                 </div>
             </div>

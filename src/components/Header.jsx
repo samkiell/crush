@@ -51,10 +51,28 @@ const Header = () => {
   }, [isMenuOpen]);
 
   const cycleTheme = () => {
-    if (theme === "light") setTheme("dark");
-    else if (theme === "dark") setTheme("eye-care");
-    else setTheme("light");
+    const canUseEyeCare = pathname.startsWith('/study') || pathname.startsWith('/community');
+
+    if (theme === "light") {
+      setTheme("dark");
+    } else if (theme === "dark") {
+      if (canUseEyeCare) {
+        setTheme("eye-care");
+      } else {
+        setTheme("light");
+      }
+    } else {
+      setTheme("light");
+    }
   };
+
+  // Enforce theme restriction
+  useEffect(() => {
+    const canUseEyeCare = pathname.startsWith('/study') || pathname.startsWith('/community');
+    if (theme === 'eye-care' && !canUseEyeCare) {
+      setTheme('light');
+    }
+  }, [pathname, theme, setTheme]);
 
   const navLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
