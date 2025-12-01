@@ -76,30 +76,36 @@ const PostCard = ({ post }) => {
                 {/* Right: Content */}
                 <div className="flex-1 min-w-0">
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-1.5 text-[15px] truncate">
+                    <div className="flex items-start justify-between mb-2">
+                        <div className="flex flex-col">
                             <Link
                                 href={post.author?.username ? `/profile/${post.author.username}` : '#'}
                                 onClick={(e) => e.stopPropagation()}
-                                className="font-bold text-base-content hover:underline truncate"
+                                className="font-bold text-base-content hover:underline leading-tight"
                             >
                                 {post.author?.name || 'Anonymous'}
                             </Link>
-                            <span className="text-base-content/60 truncate">
-                                @{post.author?.username || 'user'}
-                            </span>
-                            <span className="text-base-content/60">·</span>
-                            <span className="text-base-content/60 hover:underline">
-                                {formatDistanceToNow(new Date(post.createdAt))}
-                            </span>
+                            <div className="flex items-center gap-2 text-sm text-base-content/60">
+                                <span>@{post.author?.username || 'user'}</span>
+                                <span>·</span>
+                                <span>{formatDistanceToNow(new Date(post.createdAt))}</span>
+                            </div>
                         </div>
-                        <button className="btn btn-ghost btn-xs btn-circle text-base-content/60 hover:bg-primary/10 hover:text-primary">
-                            <MoreHorizontal className="w-4 h-4" />
-                        </button>
+
+                        {/* Functional Three Dots Menu */}
+                        <div className="dropdown dropdown-end" onClick={(e) => e.stopPropagation()}>
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-xs btn-circle text-base-content/60 hover:bg-primary/10 hover:text-primary">
+                                <MoreHorizontal className="w-4 h-4" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-content/10">
+                                <li><a onClick={() => navigator.clipboard.writeText(window.location.href)}>Copy Link</a></li>
+                                <li><a className="text-error">Report Post</a></li>
+                            </ul>
+                        </div>
                     </div>
 
                     {/* Text Content */}
-                    <div className="text-[15px] text-base-content leading-normal whitespace-pre-wrap mb-3">
+                    <div className="text-[15px] text-base-content leading-normal whitespace-pre-wrap mb-3 break-words line-clamp-4">
                         {post.title && <h3 className="font-bold mb-1">{post.title}</h3>}
                         {post.content}
                     </div>
