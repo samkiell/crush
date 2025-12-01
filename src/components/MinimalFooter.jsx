@@ -40,7 +40,7 @@ const MinimalFooter = () => {
                     {/* Socials */}
                     <div className="flex items-center gap-4">
                         <a
-                            href="https://instagram.com"
+                            href="https://www.instagram.com/crush_eduplace/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-base-content/60 hover:text-pink-600 transition-colors"
