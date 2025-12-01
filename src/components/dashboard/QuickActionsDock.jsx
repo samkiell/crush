@@ -12,28 +12,32 @@ export default function QuickActionsDock() {
             icon: Play,
             href: '/cbt',
             gradient: 'from-primary to-primary-focus',
-            textClass: 'text-primary'
+            textClass: 'text-primary',
+            contentClass: 'text-primary-content'
         },
         {
             label: 'Study Mode',
             icon: BookOpen,
             href: '/study',
             gradient: 'from-secondary to-secondary-focus',
-            textClass: 'text-secondary'
+            textClass: 'text-secondary',
+            contentClass: 'text-secondary-content'
         },
         {
             label: 'Performance',
             icon: BarChart2,
             href: '/dashboard/performance',
             gradient: 'from-accent to-accent-focus',
-            textClass: 'text-accent'
+            textClass: 'text-accent',
+            contentClass: 'text-accent-content'
         },
         {
             label: 'Community',
             icon: Users,
             href: '/community',
-            gradient: 'from-info to-info', // Info usually doesn't have a focus var in standard daisyui setup sometimes, but we can use just info
-            textClass: 'text-info'
+            gradient: 'from-info to-info',
+            textClass: 'text-info',
+            contentClass: 'text-info-content'
         },
     ];
 
