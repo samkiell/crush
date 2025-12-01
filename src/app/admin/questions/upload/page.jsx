@@ -170,6 +170,13 @@ export default function AdminUploadPage() {
     "options": { "A": "1", "B": "2", "C": "3", "D": "4", "E": "5" },
     "answer": "C",
     "explanation": "..."
+  },
+  {
+    "qid": "mth-1978-002",
+    "question": "Question with no correct option...",
+    "options": { "A": "1", "B": "2", "C": "3", "D": "4" },
+    "answer": "", 
+    "explanation": "This will default to NO CORRECT OPTION"
   }
 ]`}
                         value={jsonInput}

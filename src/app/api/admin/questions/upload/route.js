@@ -44,18 +44,32 @@ export async function POST(req) {
     await Question.deleteMany({ subject: subject.toLowerCase(), year });
 
     // 4. Prepare and Insert new questions
-    const questionsToInsert = questions.map((q) => ({
-      subject: subject.toLowerCase(),
-      year,
-      qid: q.qid,
-      question: q.question,
-      options: {
-        ...q.options,
-        E: q.options.E || '', // Default E to empty string if missing
-      },
-      answer: q.answer ? q.answer.toUpperCase() : 'NO CORRECT OPTION',
-      explanation: q.explanation || '',
-    }));
+    const questionsToInsert = questions.map((q) => {
+        // Handle Answer Logic
+        let answer = 'NO CORRECT OPTION';
+        if (q.answer && typeof q.answer === 'string' && q.answer.trim() !== '') {
+            answer = q.answer.toUpperCase().trim();
+            // Optional: Validate if answer is A-E
+            if (!['A', 'B', 'C', 'D', 'E', 'NO CORRECT OPTION'].includes(answer)) {
+                // If invalid answer provided, default to NO CORRECT OPTION or keep as is to let Mongoose error?
+                // Let's default to NO CORRECT OPTION to be safe and ensure upload succeeds
+                answer = 'NO CORRECT OPTION';
+            }
+        }
+
+        return {
+            subject: subject.toLowerCase(),
+            year,
+            qid: q.qid,
+            question: q.question,
+            options: {
+                ...q.options,
+                E: q.options.E || '', // Default E to empty string if missing
+            },
+            answer: answer,
+            explanation: q.explanation || '',
+        };
+    });
 
     await Question.insertMany(questionsToInsert);
 

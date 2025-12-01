@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 
+// Force model rebuild in development to ensure schema changes are picked up
+if (process.env.NODE_ENV === 'development') {
+  delete mongoose.models.Question;
+}
+
 const QuestionSchema = new mongoose.Schema({
   subject: {
     type: String,
@@ -32,7 +37,6 @@ const QuestionSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide answer'],
     enum: ['A', 'B', 'C', 'D', 'E', 'NO CORRECT OPTION'],
-    uppercase: true,
   },
   explanation: {
     type: String,
@@ -44,5 +48,4 @@ const QuestionSchema = new mongoose.Schema({
   },
 });
 
-// Prevent duplicate compilation
 export default mongoose.models.Question || mongoose.model('Question', QuestionSchema);
