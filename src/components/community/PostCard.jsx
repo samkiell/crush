@@ -54,7 +54,7 @@ const PostCard = ({ post }) => {
 
     return (
         <>
-            <div onClick={handleCardClick} className="block group bg-base-100 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-base-content/5 cursor-pointer relative">
+            <div onClick={handleCardClick} className="block group bg-base-100 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 cursor-pointer relative">
                 {/* Header: Author & Meta */}
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ const PostCard = ({ post }) => {
                             onClick={(e) => e.stopPropagation()}
                             className="avatar placeholder hover:opacity-80 transition-opacity relative z-10"
                         >
-                            <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-full w-10 h-10 shadow-sm flex items-center justify-center overflow-hidden">
+                            <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-full w-12 h-12 shadow-md flex items-center justify-center overflow-hidden ring-2 ring-base-100">
                                 {post.author?.avatar ? (
                                     <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
                                 ) : (
@@ -75,7 +75,7 @@ const PostCard = ({ post }) => {
                             <Link
                                 href={post.author?.username ? `/profile/${post.author.username}` : '#'}
                                 onClick={(e) => e.stopPropagation()}
-                                className="font-semibold text-sm text-base-content flex items-center gap-2 hover:text-primary transition-colors relative z-10"
+                                className="font-bold text-base text-base-content flex items-center gap-2 hover:text-primary transition-colors relative z-10"
                             >
                                 {post.author?.name || 'Anonymous'}
                                 {post.author?.badges?.includes('Mentor') && (
@@ -84,7 +84,7 @@ const PostCard = ({ post }) => {
                                     </span>
                                 )}
                             </Link>
-                            <p className="text-xs text-base-content/60 font-medium">
+                            <p className="text-xs text-base-content/50 font-medium">
                                 {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                             </p>
                         </div>
@@ -93,43 +93,40 @@ const PostCard = ({ post }) => {
                     <div className="flex gap-2">
                         {post.isQuestion && (
                             <span
-                                className={`px-3 py-1 rounded-full text-xs font-semibold ${post.isSolved
+                                className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide ${post.isSolved
                                     ? 'bg-success/10 text-success'
                                     : 'bg-warning/10 text-warning'
                                     }`}
                             >
-                                {post.isSolved ? 'Solved' : 'Question'}
+                                {post.isSolved ? 'SOLVED' : 'QUESTION'}
                             </span>
                         )}
-                        <span className="px-3 py-1 rounded-full bg-base-200 text-base-content/70 text-xs font-medium">
-                            {post.category}
-                        </span>
                     </div>
                 </div>
 
                 {/* Content */}
-                <div>
-                    <h3 className="text-xl font-semibold text-base-content mb-2 leading-tight group-hover:text-primary transition-colors">
+                <div className="mb-6 pl-14">
+                    <h3 className="text-xl font-bold text-base-content mb-3 leading-tight group-hover:text-primary transition-colors">
                         {post.title}
                     </h3>
-                    <p className="text-base-content/70 text-sm leading-relaxed line-clamp-2 mb-4">
+                    <p className="text-base-content/70 text-base leading-relaxed line-clamp-3 mb-4">
                         {post.content}
                     </p>
 
                     {/* Image Preview */}
                     {post.attachments && post.attachments.length > 0 && (
-                        <div className="mb-4 relative z-10">
+                        <div className="mb-4 relative z-10 rounded-2xl overflow-hidden shadow-sm">
                             {post.attachments.map((att, index) => {
                                 if (att.type === 'image' || att.type.startsWith('image/')) {
                                     return (
                                         <div
                                             key={index}
-                                            className="relative w-full h-48 rounded-xl overflow-hidden mb-2 cursor-zoom-in"
+                                            className="relative w-full h-64 cursor-zoom-in"
                                             onClick={(e) => handleImageClick(e, att.url)}
                                         >
-                                            <img src={att.url} alt="Post attachment" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                            <img src={att.url} alt="Post attachment" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                                             {post.attachments.length > 1 && (
-                                                <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-lg pointer-events-none">
+                                                <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full pointer-events-none">
                                                     +{post.attachments.length - 1} more
                                                 </div>
                                             )}
@@ -140,73 +137,47 @@ const PostCard = ({ post }) => {
                             })[0]}
                         </div>
                     )}
+
+                    {/* Tags */}
+                    {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-2 relative z-10">
+                            {post.tags.map((tag, index) => (
+                                <span
+                                    key={index}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        window.location.href = `/community/tags/${tag}`;
+                                    }}
+                                    className="text-xs font-semibold text-primary/80 hover:text-primary transition-colors cursor-pointer"
+                                >
+                                    #{tag}
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                {/* Tags */}
-                {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4 relative z-10">
-                        {post.tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    window.location.href = `/community/tags/${tag}`;
-                                }}
-                                className="text-xs font-medium text-primary bg-primary/5 px-3 py-1 rounded-xl border border-primary/10 hover:bg-primary/10 transition-colors cursor-pointer"
-                            >
-                                #{tag}
-                            </span>
-                        ))}
-                    </div>
-                )}
-
                 {/* Footer: Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-base-300 relative z-10">
-                    <div className="flex gap-4">
+                <div className="flex items-center justify-between pl-14 relative z-10">
+                    <div className="flex gap-3">
                         <button
                             onClick={handleLike}
-                            className="flex items-center gap-2 text-sm font-medium text-base-content/70 hover:text-primary transition-colors group/like"
+                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 hover:bg-primary/10 hover:text-primary transition-all duration-200 group/like"
                         >
-                            <div className="p-2 rounded-full bg-base-200 group-hover/like:bg-primary/10 transition-colors">
-                                <ThumbsUp className="w-4 h-4" />
-                            </div>
-                            <span>{Array.isArray(post.likes) ? post.likes.length : (post.likes || 0)}</span>
+                            <ThumbsUp className={`w-4 h-4 ${Array.isArray(post.likes) && post.likes.includes('me') ? 'fill-primary text-primary' : ''}`} />
+                            <span className="text-sm font-bold">{Array.isArray(post.likes) ? post.likes.length : (post.likes || 0)}</span>
                         </button>
 
-                        <div className="flex items-center gap-2 text-sm font-medium text-base-content/70">
-                            <div className="p-2 rounded-full bg-base-200">
-                                <MessageSquare className="w-4 h-4" />
-                            </div>
-                            <span>{post.commentsCount}</span>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
+                            <MessageSquare className="w-4 h-4" />
+                            <span className="text-sm font-bold">{post.commentsCount}</span>
                         </div>
 
-                        <div className="flex items-center gap-2 text-sm font-medium text-base-content/70">
-                            <div className="p-2 rounded-full bg-base-200">
-                                <Eye className="w-4 h-4" />
-                            </div>
-                            <span>{post.views}</span>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
+                            <Eye className="w-4 h-4" />
+                            <span className="text-sm font-bold">{post.views}</span>
                         </div>
-                    </div>
-
-                    {/* Read More - Hidden on mobile */}
-                    <div className="hidden sm:flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-focus transition-colors">
-                        Read More
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="w-4 h-4"
-                        >
-                            <path d="M5 12h14" />
-                            <path d="m12 5 7 7-7 7" />
-                        </svg>
                     </div>
                 </div>
             </div>

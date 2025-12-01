@@ -9,10 +9,9 @@ const FilterBar = () => {
     const currentSort = searchParams.get('sort') || 'latest';
 
     const filters = [
-        { id: 'latest', label: 'All' },
-        { id: 'popular', label: 'Popular' },
+        { id: 'all', label: 'All' },
         { id: 'trending', label: 'Trending' },
-        { id: 'following', label: 'Following' },
+        { id: 'latest', label: 'Latest' },
     ];
 
     const handleFilterClick = (filterId) => {

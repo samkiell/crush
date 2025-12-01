@@ -17,9 +17,6 @@ export default function CommunityPage() {
         <HeroSection />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-          <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-base-content to-base-content/70">
-            Latest Discussions
-          </h2>
           <FilterBar />
         </div>
 
