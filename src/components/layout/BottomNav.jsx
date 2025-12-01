@@ -65,8 +65,8 @@ export default function BottomNav() {
 
                             <motion.div
                                 className={`flex flex-col items-center gap-1 transition-colors duration-300 ${isActive
-                                        ? 'text-primary'
-                                        : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                                    ? 'text-primary'
+                                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                                     }`}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
