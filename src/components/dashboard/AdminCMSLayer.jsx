@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert } from 'lucide-react';
+import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 
@@ -14,6 +14,15 @@ export default function AdminCMSLayer() {
             color: 'text-primary',
             bg: 'bg-primary/10',
             border: 'border-primary/20',
+        },
+        {
+            title: 'Manage Questions',
+            description: 'Edit, delete, and manage existing questions',
+            icon: Database,
+            href: '/admin/questions/manage',
+            color: 'text-success',
+            bg: 'bg-success/10',
+            border: 'border-success/20',
         },
         {
             title: 'User Management',

@@ -113,7 +113,7 @@ export default function MomentumLayer({ user, stats }) {
                     <div className="flex justify-between items-center relative z-10">
                         <div>
                             <p className="text-xs text-base-content/60 font-medium mb-1">Wallet Balance</p>
-                            <h3 className="text-2xl font-bold text-base-content">₦{user?.balance?.toLocaleString() || '0.00'}</h3>
+                            <h3 className="text-2xl font-bold text-base-content">₦{user?.balance?.toLocaleString() || '2,300'}</h3>
                         </div>
                         <div className="p-3 bg-primary/10 rounded-full text-primary">
                             <Wallet className="w-5 h-5" />
