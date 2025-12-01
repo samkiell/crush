@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
@@ -85,8 +85,8 @@ const Header = () => {
 
   const adminLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Exams', href: '/exam', icon: BookOpen },
-    { name: 'CBT', href: '/cbt', icon: Monitor },
+    { name: 'Users', href: '/admin/users', icon: Users },
+    { name: 'Upload', href: '/admin/questions/upload', icon: Upload },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
     { name: 'Admin', href: '/admin', icon: ShieldAlert },
