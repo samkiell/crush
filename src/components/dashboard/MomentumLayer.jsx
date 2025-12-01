@@ -218,7 +218,6 @@ export default function MomentumLayer({ user, stats }) {
                                 </div>
                             </div>
                         </motion.div>
-                        )}
                     </div>
                 )}
             </div>
