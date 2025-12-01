@@ -3,9 +3,9 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import ExamWorkspace from '@/components/exam/ExamWorkspace';
+import CBTWorkspace from '@/components/cbt/CBTWorkspace';
 
-export default function ExamSessionPage() {
+export default function CBTSessionPage() {
     const params = useParams();
     const { sessionId } = params;
 
@@ -33,19 +33,19 @@ export default function ExamSessionPage() {
                 {/* Top Bar */}
                 <div className="flex items-center gap-4 mb-8">
                     <Link
-                        href="/exam"
+                        href="/cbt"
                         className="btn btn-circle btn-ghost btn-sm"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </Link>
                     <div>
-                        <h1 className="text-lg font-bold">Exam Session</h1>
+                        <h1 className="text-lg font-bold">CBT Session</h1>
                         <p className="text-xs text-base-content/60 font-mono">JAMB {year} • {subjectName}</p>
                     </div>
                 </div>
 
                 {/* Workspace */}
-                <ExamWorkspace
+                <CBTWorkspace
                     sessionId={sessionId}
                     subjectName={subjectName}
                 />

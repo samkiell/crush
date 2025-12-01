@@ -96,7 +96,7 @@ export default function ExamSetupPage() {
     // Default to 'all-topics' if no topic selected
     const topicSlug = selectedTopic ? selectedTopic.toLowerCase().replace(/\s+/g, '-') : 'all-topics';
     const slug = `${selectedSubject}-${selectedYear}-${topicSlug}`;
-    router.push(`/exam/${slug}`);
+    router.push(`/cbt/${slug}`);
   };
 
   const isYearLocked = (year) => {

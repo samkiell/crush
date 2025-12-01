@@ -29,7 +29,7 @@ const LOADING_MESSAGES = [
 
 const EXAM_DURATION = 40 * 60; // 40 minutes in seconds
 
-export default function ExamWorkspace({ sessionId, subjectName }) {
+export default function CBTWorkspace({ sessionId, subjectName }) {
     const router = useRouter();
     const { user } = useSelector((state) => state.auth);
 
@@ -293,7 +293,7 @@ export default function ExamWorkspace({ sessionId, subjectName }) {
                             Review Mistakes
                         </button>
                         <button
-                            onClick={() => router.push('/exam')}
+                            onClick={() => router.push('/cbt')}
                             className="btn btn-outline btn-lg rounded-xl"
                         >
                             Take Another Exam
@@ -497,7 +497,7 @@ export default function ExamWorkspace({ sessionId, subjectName }) {
                         </button>
                     ) : (
                         <button
-                            onClick={() => router.push('/exam')}
+                            onClick={() => router.push('/cbt')}
                             className="btn btn-primary rounded-xl gap-2"
                         >
                             Finish Review

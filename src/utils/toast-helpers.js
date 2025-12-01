@@ -78,7 +78,7 @@ export const dismissToast = (toastId) => {
  * Show registration success toast notification
  */
 export const showRegistrationSuccessToast = (message) => {
-  return showSuccessToast(message);
+  return showSuccessToast(message || 'Registration successful! Please login.');
 };
 
 /**

@@ -29,8 +29,7 @@ const ROUTE_GROUPS = [
         routes: [
             { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
             { name: 'Study Mode', path: '/study', icon: BookOpen },
-            { name: 'Exam Mode', path: '/exam', icon: FileText },
-            { name: 'CBT Practice', path: '/cbt', icon: Monitor },
+            { name: 'CBT Exam', path: '/cbt', icon: Monitor },
             { name: 'Community', path: '/community', icon: Users },
             { name: 'Chat', path: '/chat', icon: MessageSquare },
             { name: 'Profile', path: '/profile', icon: Users },

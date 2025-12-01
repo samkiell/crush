@@ -89,6 +89,7 @@ export default function RegisterPage() {
         }));
         if (registerUser.fulfilled.match(result)) {
             setRegisterSuccess(true);
+            showRegistrationSuccessToast();
         }
     };
 
