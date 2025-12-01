@@ -54,7 +54,7 @@ const PostCard = ({ post }) => {
 
     return (
         <>
-            <div onClick={handleCardClick} className="block group bg-base-100 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-base-300 hover:scale-[1.01] cursor-pointer relative">
+            <div onClick={handleCardClick} className="block group bg-base-100 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-base-content/5 cursor-pointer relative">
                 {/* Header: Author & Meta */}
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
