@@ -248,7 +248,21 @@ const Header = () => {
               className="btn btn-ghost btn-circle md:hidden z-50 relative hover:bg-base-content/10"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : isAuthenticated ? (
+                <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary ring-offset-2 ring-offset-base-100">
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-primary text-primary-content flex items-center justify-center text-xs font-bold">
+                      {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
