@@ -1,42 +1,41 @@
 import mongoose from 'mongoose';
 
 const QuestionSchema = new mongoose.Schema({
-  text: {
-    type: String,
-    required: [true, 'Please provide question text'],
-  },
-  options: {
-    type: [String],
-    required: [true, 'Please provide options'],
-    validate: [arrayLimit, '{PATH} exceeds the limit of 4'],
-  },
-  correctOption: {
-    type: Number, // Index of the correct option (0-3)
-    required: [true, 'Please provide correct option index'],
-    min: 0,
-    max: 3,
-  },
-  explanation: {
-    type: String,
-  },
   subject: {
     type: String,
     required: [true, 'Please provide subject'],
-    enum: ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Government', 'Literature'],
-  },
-  examType: {
-    type: String,
-    required: [true, 'Please provide exam type'],
-    enum: ['JAMB', 'WAEC', 'NECO', 'PUTME'],
+    lowercase: true,
+    trim: true,
   },
   year: {
     type: Number,
     required: [true, 'Please provide year'],
   },
-  difficulty: {
+  qid: {
     type: String,
-    enum: ['easy', 'medium', 'hard'],
-    default: 'medium',
+    required: [true, 'Please provide question ID'],
+    unique: true,
+    trim: true,
+  },
+  question: {
+    type: String,
+    required: [true, 'Please provide question text'],
+  },
+  options: {
+    A: { type: String, required: true },
+    B: { type: String, required: true },
+    C: { type: String, required: true },
+    D: { type: String, required: true },
+  },
+  answer: {
+    type: String,
+    required: [true, 'Please provide answer'],
+    enum: ['A', 'B', 'C', 'D'],
+    uppercase: true,
+  },
+  explanation: {
+    type: String,
+    default: '',
   },
   createdAt: {
     type: Date,
@@ -44,8 +43,5 @@ const QuestionSchema = new mongoose.Schema({
   },
 });
 
-function arrayLimit(val) {
-  return val.length <= 5; // Allow up to 5 options just in case
-}
-
+// Prevent duplicate compilation
 export default mongoose.models.Question || mongoose.model('Question', QuestionSchema);
