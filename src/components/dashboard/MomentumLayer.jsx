@@ -143,9 +143,9 @@ export default function MomentumLayer({ user, stats }) {
                     </div>
 
                     <div className="relative z-10 mt-4">
-                        <div className="w-full bg-white/20 h-2 rounded-full mb-2">
+                        <div className="w-full bg-black/20 h-2 rounded-full mb-2">
                             <div
-                                className="bg-white h-2 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(255,255,255,0.7),0_0_20px_rgba(255,255,255,0.5)]"
+                                className="bg-cyan-300 h-2 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(103,232,249,0.8),0_0_30px_rgba(103,232,249,0.4)]"
                                 style={{ width: `${Math.max(0, Math.min(100, 100 - (daysRemaining / 365) * 100))}%` }}
                             />
                         </div>
