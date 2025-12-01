@@ -58,7 +58,7 @@ export default function HeroBanner({ user, stats }) {
 
                     <AnimatedButton
                         variant="outline"
-                        className="border-white text-white hover:bg-white hover:text-primary"
+                        className="border-primary-content text-primary-content hover:bg-primary-content hover:text-primary"
                         rightIcon={<ArrowRight className="w-4 h-4" />}
                     >
                         Go to Study Plan
