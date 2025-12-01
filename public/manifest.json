@@ -4,8 +4,8 @@
   "description": "Your ultimate JAMB exam preparation platform. Master the questions, Crush the exam, and Secure your future.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFC107",
-  "theme_color": "#FFC107",
+  "background_color": "#0f172",
+  "theme_color": "#f9fafb",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -82,7 +82,7 @@
       "name": "Practice Questions",
       "short_name": "Questions",
       "description": "Practice JAMB questions",
-      "url": "/questions",
+      "url": "/study",
       "icons": [
         {
           "src": "/logo.png",
