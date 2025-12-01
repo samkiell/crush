@@ -9,12 +9,15 @@ import { toggleReaction } from '@/store/slices/communitySlice';
 import { showSuccessToast, showErrorToast } from '@/utils/toast-helpers';
 import { useState } from 'react';
 import ImageModal from '@/components/ImageModal';
+import ReportModal from './ReportModal';
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     const handleLike = async (e) => {
         e.preventDefault();
@@ -45,6 +48,28 @@ const PostCard = ({ post }) => {
     const handleCardClick = (e) => {
         if (window.getSelection().toString().length > 0) return;
         router.push(`/community/${post._id}`);
+    };
+
+    const handleCopyLink = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = `${window.location.origin}/community/${post._id}`;
+        navigator.clipboard.writeText(url);
+        showSuccessToast('Link copied to clipboard!');
+        setIsMenuOpen(false);
+    };
+
+    const handleReportClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsReportModalOpen(true);
+        setIsMenuOpen(false);
+    };
+
+    const toggleMenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsMenuOpen(!isMenuOpen);
     };
 
     const isLiked = Array.isArray(post.likes) && post.likes.includes('me');
@@ -93,14 +118,23 @@ const PostCard = ({ post }) => {
                         </div>
 
                         {/* Functional Three Dots Menu */}
-                        <div className="dropdown dropdown-end" onClick={(e) => e.stopPropagation()}>
-                            <div tabIndex={0} role="button" className="btn btn-ghost btn-xs btn-circle text-base-content/60 hover:bg-primary/10 hover:text-primary">
+                        <div className="relative">
+                            <button
+                                onClick={toggleMenu}
+                                className="btn btn-ghost btn-xs btn-circle text-base-content/60 hover:bg-primary/10 hover:text-primary"
+                            >
                                 <MoreHorizontal className="w-4 h-4" />
-                            </div>
-                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-content/10">
-                                <li><a onClick={() => navigator.clipboard.writeText(window.location.href)}>Copy Link</a></li>
-                                <li><a className="text-error">Report Post</a></li>
-                            </ul>
+                            </button>
+
+                            {isMenuOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} />
+                                    <ul className="absolute right-0 top-full mt-1 z-20 menu p-2 shadow-lg bg-base-100 rounded-box w-40 border border-base-content/10">
+                                        <li><button onClick={handleCopyLink} className="text-sm font-medium">Copy Link</button></li>
+                                        <li><button onClick={handleReportClick} className="text-sm font-medium text-error hover:bg-error/10 hover:text-error">Report Post</button></li>
+                                    </ul>
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -176,6 +210,12 @@ const PostCard = ({ post }) => {
                 isOpen={isImageModalOpen}
                 onClose={() => setIsImageModalOpen(false)}
                 src={selectedImage}
+            />
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                targetType="CommunityPost"
+                targetId={post._id}
             />
         </>
     );
