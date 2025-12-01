@@ -20,7 +20,7 @@ const FREE_LIMIT = 3;
 
 export default function QuestionWorkspace({ sessionId, subjectName }) {
     const { user } = useSelector((state) => state.auth);
-    
+
     // Data State
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -62,33 +62,33 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                 // Example: mathematics-1978-all-topics
                 const partsArr = sessionId.split('-');
                 const yearIndex = partsArr.findIndex(p => /^\d{4}$/.test(p));
-                
+
                 if (yearIndex === -1) throw new Error('Invalid session ID format');
-                
-                const subject = partsArr.slice(0, yearIndex).join(' '); 
+
+                const subject = partsArr.slice(0, yearIndex).join(' ');
                 const year = partsArr[yearIndex];
-                
+
                 const res = await fetch(`/api/questions?subject=${subject}&year=${year}`);
                 if (!res.ok) throw new Error('Failed to load questions');
-                
+
                 const data = await res.json();
                 if (!data.questions || data.questions.length === 0) {
                     throw new Error('No questions found for this session.');
                 }
-                
+
                 const formattedQuestions = data.questions.map(q => ({
                     id: q.qid,
                     text: q.question,
                     options: Object.entries(q.options).map(([key, value]) => ({
                         id: key,
                         text: value
-                    })).filter(o => o.text), 
+                    })).filter(o => o.text),
                     correctOption: q.answer,
                     explanation: q.explanation
                 }));
-                
+
                 setQuestions(formattedQuestions);
-                
+
                 // Save to cache
                 localStorage.setItem(cacheKey, JSON.stringify(formattedQuestions));
                 localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
@@ -236,16 +236,18 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     <button
                         onClick={handlePrevQuestion}
                         disabled={currentQuestionIndex === 0}
-                        className="btn btn-sm btn-circle btn-ghost"
+                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3"
                     >
-                        <ChevronLeft className="w-5 h-5" />
+                        <ChevronLeft className="w-6 h-6 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">Previous</span>
                     </button>
                     <button
                         onClick={handleNextQuestion}
                         disabled={currentQuestionIndex === questions.length - 1}
-                        className="btn btn-sm btn-circle btn-ghost"
+                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3"
                     >
-                        <ChevronRight className="w-5 h-5" />
+                        <span className="hidden sm:inline">Next</span>
+                        <ChevronRight className="w-6 h-6 sm:w-5 sm:h-5" />
                     </button>
                 </div>
             </div>

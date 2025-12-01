@@ -91,8 +91,9 @@ export default function StudySetupPage() {
 
     const isYearLocked = (year) => {
         if (isPremium) return false;
-        // Free users only get access to years before 2021
-        return year > 2020;
+        // Free users only get access to years 1978-1988
+        const yearNum = parseInt(year);
+        return yearNum < 1978 || yearNum > 1988;
     };
 
     return (
@@ -241,10 +242,10 @@ export default function StudySetupPage() {
                                                 disabled={locked}
                                                 onClick={() => setSelectedYear(year)}
                                                 className={`p-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden ${selectedYear === year
-                                                    ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20'
+                                                    ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20 ring-2 ring-secondary ring-offset-2'
                                                     : locked
                                                         ? 'bg-base-200/50 text-base-content/30 cursor-not-allowed'
-                                                        : 'bg-base-100 border border-base-200 hover:border-secondary hover:text-secondary'
+                                                        : 'bg-base-100 hover:bg-base-200 text-base-content'
                                                     }`}
                                             >
                                                 {year}
