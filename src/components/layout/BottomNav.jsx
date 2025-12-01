@@ -46,9 +46,9 @@ export default function BottomNav() {
             icon: Home,
         },
         {
-            label: 'Community',
-            href: '/community',
-            icon: Users,
+            label: 'Users',
+            href: '/admin/users',
+            icon: UserCog,
         },
         {
             label: 'Chat',
@@ -56,14 +56,14 @@ export default function BottomNav() {
             icon: MessageSquare,
         },
         {
+            label: 'Community',
+            href: '/community',
+            icon: Users,
+        },
+        {
             label: 'Upload',
             href: '/admin/questions/upload',
             icon: Upload,
-        },
-        {
-            label: 'Users',
-            href: '/admin/users',
-            icon: UserCog,
         },
     ];
 
