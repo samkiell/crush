@@ -60,7 +60,9 @@ module.exports = {
       {
         light: {
           primary: "#FFC107",
+          "primary-content": "#212529",
           secondary: "#E9ECEF",
+          "secondary-content": "#212529",
           accent: "#FFA000",
           neutral: "#6C757D",
           "base-100": "#FFFFFF",

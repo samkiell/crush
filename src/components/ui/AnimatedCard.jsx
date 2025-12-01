@@ -14,7 +14,7 @@ export default function AnimatedCard({
         default: 'bg-base-100 border border-base-300',
         glass: 'glass',
         elevated: 'surface-elevated shadow-medium',
-        gradient: 'gradient-primary text-white',
+        gradient: 'gradient-primary text-primary-content',
     };
 
     return (

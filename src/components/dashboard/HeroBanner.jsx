@@ -36,7 +36,7 @@ export default function HeroBanner({ user, stats }) {
                         <h1 className="text-3xl font-bold mb-2">
                             Ready to crush it, {firstName}? 🚀
                         </h1>
-                        <p className="text-white/90 mb-6 max-w-md">
+                        <p className="text-primary-content/90 mb-6 max-w-md">
                             Your daily goals are set. Let's make today count towards your success.
                         </p>
                     </motion.div>
@@ -49,9 +49,9 @@ export default function HeroBanner({ user, stats }) {
                         <span className="text-xl font-medium mb-2 opacity-90">days until JAMB</span>
                     </motion.div>
 
-                    <div className="w-full bg-white/20 h-2 rounded-full mb-6 max-w-md">
+                    <div className="w-full bg-primary-content/20 h-2 rounded-full mb-6 max-w-md">
                         <div
-                            className="bg-white h-2 rounded-full transition-all duration-1000"
+                            className="bg-primary-content h-2 rounded-full transition-all duration-1000"
                             style={{ width: `${Math.max(0, Math.min(100, 100 - (daysRemaining / 365) * 100))}%` }}
                         />
                     </div>
