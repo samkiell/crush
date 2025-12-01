@@ -107,8 +107,8 @@ export default function StudySetupPage() {
                                             setSelectedTopic(''); // Reset topic when subject changes
                                         }}
                                         className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-2 ${selectedSubject === subject.id
-                                                ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                                                : 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
+                                            ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                                            : 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
                                             }`}
                                     >
                                         <span className="text-2xl">{subject.icon}</span>
@@ -141,10 +141,10 @@ export default function StudySetupPage() {
                                             disabled={locked}
                                             onClick={() => setSelectedYear(year)}
                                             className={`p-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden ${selectedYear === year
-                                                    ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20'
-                                                    : locked
-                                                        ? 'bg-base-200/50 text-base-content/30 cursor-not-allowed'
-                                                        : 'bg-base-100 border border-base-200 hover:border-secondary hover:text-secondary'
+                                                ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20'
+                                                : locked
+                                                    ? 'bg-base-200/50 text-base-content/30 cursor-not-allowed'
+                                                    : 'bg-base-100 border border-base-200 hover:border-secondary hover:text-secondary'
                                                 }`}
                                         >
                                             {year}
@@ -183,8 +183,8 @@ export default function StudySetupPage() {
                                                 key={topic}
                                                 onClick={() => setSelectedTopic(topic)}
                                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${selectedTopic === topic
-                                                        ? 'bg-accent text-accent-content border-accent'
-                                                        : 'bg-base-100 border-base-200 hover:border-accent/50'
+                                                    ? 'bg-accent text-accent-content border-accent'
+                                                    : 'bg-base-100 border-base-200 hover:border-accent/50'
                                                     }`}
                                             >
                                                 {topic}
@@ -233,7 +233,7 @@ export default function StudySetupPage() {
                                 <button
                                     onClick={handleStartStudy}
                                     disabled={!selectedSubject || !selectedYear || !selectedTopic}
-                                    className="btn btn-primary w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20 disabled:bg-base-300 disabled:text-base-content/40"
+                                    className="btn btn-primary w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20 disabled:bg-base-300 disabled:text-base-content/40 flex items-center justify-center gap-2"
                                 >
                                     Start Study
                                     <ChevronRight className="w-5 h-5" />

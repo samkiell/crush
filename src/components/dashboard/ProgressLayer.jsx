@@ -95,8 +95,8 @@ export default function ProgressLayer({ stats, progress }) {
                                 Start studying or take an exam to see your progress light up.
                             </p>
                         </div>
-                        <Link href="/study" className="btn btn-xs btn-primary rounded-full gap-1">
-                            Start Studying <ArrowRight className="w-3 h-3" />
+                        <Link href="/study" className="btn btn-sm btn-primary rounded-full px-6 shadow-lg shadow-primary/20 hover:scale-105 transition-transform whitespace-nowrap flex items-center gap-2">
+                            Start Studying <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
                 )}
