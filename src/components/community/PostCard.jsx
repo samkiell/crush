@@ -189,17 +189,17 @@ const PostCard = ({ post }) => {
                             className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 hover:bg-primary/10 hover:text-primary transition-all duration-200 group/like"
                         >
                             <ThumbsUp className={`w-4 h-4 ${isLiked ? 'fill-primary text-primary' : ''}`} />
-                            <span className="text-sm font-bold">{likeCount}</span>
+                            <span className="text-sm font-bold leading-none">{likeCount}</span>
                         </button>
 
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
                             <MessageSquare className="w-4 h-4" />
-                            <span className="text-sm font-bold">{post.commentsCount}</span>
+                            <span className="text-sm font-bold leading-none">{post.commentsCount}</span>
                         </div>
 
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-base-200/50 text-base-content/70">
                             <Eye className="w-4 h-4" />
-                            <span className="text-sm font-bold">{post.views}</span>
+                            <span className="text-sm font-bold leading-none">{post.views}</span>
                         </div>
                     </div>
                 </div>

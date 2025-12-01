@@ -281,35 +281,39 @@ const RichEditor = () => {
                             </label>
                         </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex justify-end gap-3 pt-4">
-                            <button
-                                type="button"
-                                className="btn btn-ghost rounded-xl"
-                                onClick={() => router.back()}
-                                disabled={actionLoading}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/20"
-                                disabled={actionLoading || !content.trim()}
-                            >
-                                {actionLoading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        <span>Publishing...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Send className="w-4 h-4" />
-                                        <span>Post</span>
-                                    </>
-                                )}
-                            </button>
-                        </div>
                     </form>
+                </div>
+
+                {/* Action Buttons - Moved Outside */}
+                <div className="flex items-center justify-between gap-4 px-2">
+                    <button
+                        type="button"
+                        className="btn btn-ghost text-base-content/60 hover:text-error hover:bg-error/10 rounded-xl gap-2"
+                        onClick={() => router.back()}
+                        disabled={actionLoading}
+                    >
+                        <X className="w-5 h-5" />
+                        <span className="font-medium">Cancel</span>
+                    </button>
+
+                    <button
+                        type="submit"
+                        form="create-post-form"
+                        className="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/20 gap-2"
+                        disabled={actionLoading || !content.trim()}
+                    >
+                        {actionLoading ? (
+                            <>
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <span>Publishing...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Send className="w-5 h-5" />
+                                <span>Post</span>
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>
