@@ -28,38 +28,40 @@ export default function MomentumLayer({ user, stats }) {
             initial="initial"
             animate="animate"
         >
-            {/* Greeting & Subtitle */}
-            <motion.div variants={variants.fadeUp} className="px-1">
-                <h1 className="text-3xl font-bold text-primary">
-                    {(() => {
-                        const hour = new Date().getHours();
-                        if (hour < 12) return 'Good Morning';
-                        if (hour < 18) return 'Good Afternoon';
-                        if (hour < 22) return 'Good Evening';
-                        return 'Good Night';
-                    })()}, {firstName}
-                </h1>
-                <p className="text-base-content/70 font-medium">
-                    Ready to crush your goals today? 🚀
-                </p>
-            </motion.div>
-
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                {/* 1. Wallet Balance */}
+                {/* 1. Wallet Balance & Greeting */}
                 <motion.div
                     variants={variants.scale}
-                    className="md:col-span-4 bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between"
+                    className="md:col-span-4 bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between gap-4"
                 >
+                    {/* Greeting */}
+                    <div>
+                        <h1 className="text-lg font-bold text-primary">
+                            {(() => {
+                                const hour = new Date().getHours();
+                                if (hour < 12) return 'Good Morning';
+                                if (hour < 18) return 'Good Afternoon';
+                                if (hour < 22) return 'Good Evening';
+                                return 'Good Night';
+                            })()}, {firstName}
+                        </h1>
+                        <p className="text-xs text-base-content/70 font-medium">
+                            Ready to crush your goals today? 🚀
+                        </p>
+                    </div>
+
+                    {/* Balance */}
                     <div className="flex justify-between items-center relative z-10">
                         <div>
-                            <p className="text-sm text-base-content/60 font-medium mb-1">Wallet Balance</p>
-                            <h3 className="text-3xl font-bold text-base-content">₦{user?.balance?.toLocaleString() || '0.00'}</h3>
+                            <p className="text-xs text-base-content/60 font-medium mb-1">Wallet Balance</p>
+                            <h3 className="text-2xl font-bold text-base-content">₦{user?.balance?.toLocaleString() || '0.00'}</h3>
                         </div>
                         <div className="p-3 bg-primary/10 rounded-full text-primary">
-                            <Wallet className="w-6 h-6" />
+                            <Wallet className="w-5 h-5" />
                         </div>
                     </div>
-                    <button className="btn btn-primary mt-4 w-full gap-2 rounded-xl">
+
+                    <button className="btn btn-primary w-full gap-2 rounded-xl flex items-center justify-center">
                         <Plus className="w-4 h-4" /> Top Up Wallet
                     </button>
                 </motion.div>
