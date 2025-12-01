@@ -142,10 +142,10 @@ const Header = () => {
         <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
           {/* Left Side: Logo & Name */}
           <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 transition-transform group-hover:scale-105 duration-200">
+            <div className="relative w-11 h-11 transition-transform group-hover:scale-105 duration-200">
               <Image src={mounted && theme === 'dark' ? "/logo-dark.png" : "/logo.png"} fill alt="D2C Logo" className="object-contain" />
             </div>
-            <span className="text-xl font-bold text-base-content tracking-tight group-hover:text-primary transition-colors">D2C</span>
+            <span className="text-2xl font-bold text-base-content tracking-tight group-hover:text-primary transition-colors">D2C</span>
           </Link>
 
           {/* Right Side: Desktop Nav, Theme, User Actions */}
