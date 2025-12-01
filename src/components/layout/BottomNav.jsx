@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Home, BookOpen, MessageSquare, Users, ClipboardList } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, Users, Monitor } from 'lucide-react';
 
 export default function BottomNav() {
     const pathname = usePathname();
@@ -32,7 +32,7 @@ export default function BottomNav() {
         {
             label: 'CBT',
             href: '/cbt',
-            icon: ClipboardList,
+            icon: Monitor,
         },
     ];
 

@@ -71,17 +71,17 @@ export default function HeroBanner({ user, stats }) {
                 {/* Streak Card */}
                 <AnimatedCard
                     variant="elevated"
-                    className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-100 dark:border-orange-900/30"
+                    className="border-warning/20 bg-gradient-to-br from-base-100 to-base-200"
                 >
                     <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold text-base-content">Current Streak</h3>
-                        <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-full text-orange-500">
-                            <Flame className="w-5 h-5 fill-orange-500" />
+                        <div className="p-2 bg-warning/10 rounded-full text-warning">
+                            <Flame className="w-5 h-5 fill-warning" />
                         </div>
                     </div>
 
                     <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-bold text-orange-600 dark:text-orange-400">
+                        <span className="text-4xl font-bold text-warning">
                             {stats?.streak || 0}
                         </span>
                         <span className="text-sm text-base-content/60">days on fire! 🔥</span>
