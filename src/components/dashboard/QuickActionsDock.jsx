@@ -68,7 +68,7 @@ export default function QuickActionsDock() {
 
                                 <div className="flex flex-col items-center text-center gap-3">
                                     <div className={`
-                    p-3 rounded-xl text-white shadow-md transition-transform duration-300 group-hover:scale-110
+                    p-3 rounded-xl ${action.contentClass} shadow-md transition-transform duration-300 group-hover:scale-110
                     bg-gradient-to-br ${action.gradient}
                   `}>
                                         <Icon className="w-6 h-6" />
