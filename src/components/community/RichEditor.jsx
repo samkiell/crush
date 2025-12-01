@@ -288,7 +288,7 @@ const RichEditor = () => {
                 <div className="flex items-center justify-between gap-4 px-2">
                     <button
                         type="button"
-                        className="btn btn-ghost text-base-content/60 hover:text-error hover:bg-error/10 rounded-xl gap-2"
+                        className="btn btn-ghost text-base-content/60 hover:text-error hover:bg-error/10 rounded-xl gap-2 flex flex-row items-center"
                         onClick={() => router.back()}
                         disabled={actionLoading}
                     >
@@ -299,7 +299,7 @@ const RichEditor = () => {
                     <button
                         type="submit"
                         form="create-post-form"
-                        className="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/20 gap-2"
+                        className="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/20 gap-2 flex flex-row items-center"
                         disabled={actionLoading || !content.trim()}
                     >
                         {actionLoading ? (
