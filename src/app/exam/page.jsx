@@ -339,7 +339,7 @@ export default function ExamSetupPage() {
                     </div>
                     <h4 className="font-bold text-sm mb-1">Unlock Full Access</h4>
                     <p className="text-xs text-base-content/60 mb-3">
-                      Get access to all years, advanced analytics, and AI tutoring.
+                      Get access to all years, advanced analytics, and Crush AI.
                     </p>
                     <button className="btn btn-sm btn-outline w-full rounded-lg">
                       Upgrade to Premium

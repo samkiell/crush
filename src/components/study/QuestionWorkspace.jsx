@@ -369,7 +369,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                     }`}
                             >
                                 <Sparkles className="w-4 h-4" />
-                                AI Tutor
+                                Crush AI
                                 {!isPremium && <Lock className="w-3 h-3 opacity-50" />}
                             </button>
                         </div>
@@ -412,7 +412,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                             {loadingAi ? (
                                                 <div className="flex flex-col items-center justify-center py-8 gap-3">
                                                     <span className="loading loading-dots loading-md text-secondary"></span>
-                                                    <span className="text-xs text-base-content/50 animate-pulse">Consulting AI Tutor...</span>
+                                                    <span className="text-xs text-base-content/50 animate-pulse">Consulting Crush AI...</span>
                                                 </div>
                                             ) : (
                                                 <div className="prose prose-sm max-w-none">
