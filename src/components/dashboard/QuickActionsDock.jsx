@@ -1,92 +1,84 @@
 'use client';
 
-import { PlayCircle, Bookmark, MessageCircle, HelpCircle, Target } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Play, BookOpen, BarChart2, Users } from 'lucide-react';
+import Link from 'next/link';
+import { hover, stagger } from '@/lib/motionConfig';
 
 export default function QuickActionsDock() {
-    const router = useRouter();
-
     const actions = [
         {
-            id: 'resume',
-            icon: PlayCircle,
-            label: 'Resume',
-            sublabel: 'Math Practice',
-            color: 'text-primary',
-            bgColor: 'bg-primary',
-            pulse: true,
-            onClick: () => router.push('/practice'),
+            label: 'Start Test',
+            icon: Play,
+            href: '/cbt',
+            color: 'bg-blue-500',
+            gradient: 'from-blue-500 to-blue-600',
         },
         {
-            id: 'bookmarks',
-            icon: Bookmark,
-            label: 'Bookmarks',
-            badge: 5,
-            color: 'text-warning',
-            bgColor: 'bg-warning',
-            onClick: () => router.push('/bookmarks'),
+            label: 'Study Mode',
+            icon: BookOpen,
+            href: '/study',
+            color: 'bg-amber-500',
+            gradient: 'from-amber-500 to-amber-600',
         },
         {
-            id: 'community',
-            icon: MessageCircle,
+            label: 'Performance',
+            icon: BarChart2,
+            href: '/dashboard/performance',
+            color: 'bg-emerald-500',
+            gradient: 'from-emerald-500 to-emerald-600',
+        },
+        {
             label: 'Community',
-            badge: 2,
-            color: 'text-info',
-            bgColor: 'bg-info',
-            onClick: () => router.push('/community'),
-        },
-        {
-            id: 'practice',
-            icon: Target,
-            label: 'Practice',
-            color: 'text-success',
-            bgColor: 'bg-success',
-            onClick: () => router.push('/practice'),
+            icon: Users,
+            href: '/community',
+            color: 'bg-purple-500',
+            gradient: 'from-purple-500 to-purple-600',
         },
     ];
 
     return (
-        <>
-            {/* Desktop Sidebar Quick Actions */}
-            <div className="hidden lg:block fixed right-6 bottom-6 z-40">
-                <div className="flex flex-col gap-3">
-                    {actions.map((action) => {
-                        const Icon = action.icon;
-                        return (
-                            <button
-                                key={action.id}
-                                onClick={action.onClick}
-                                className={`group relative flex items-center gap-3 p-4 ${action.bgColor} text-white rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all ${action.pulse ? 'animate-pulse' : ''
-                                    }`}
-                                title={action.label}
+        <div className="bg-base-100/80 backdrop-blur-md border border-base-200 rounded-2xl p-4 shadow-lg">
+            <h3 className="text-sm font-semibold text-base-content/70 mb-4 uppercase tracking-wider px-2">
+                Quick Actions
+            </h3>
+
+            <motion.div
+                className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+                variants={stagger.container(0.05)}
+                initial="initial"
+                animate="animate"
+            >
+                {actions.map((action) => {
+                    const Icon = action.icon;
+
+                    return (
+                        <Link key={action.label} href={action.href}>
+                            <motion.div
+                                className="group relative overflow-hidden rounded-xl bg-base-100 border border-base-200 p-4 hover:border-transparent transition-colors"
+                                variants={stagger.item}
+                                {...hover.lift}
                             >
-                                {/* Tooltip */}
-                                <div className="absolute right-full mr-3 px-3 py-2 bg-base-content text-base-100 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                    {action.label}
-                                    {action.sublabel && (
-                                        <div className="text-xs opacity-75">{action.sublabel}</div>
-                                    )}
-                                </div>
+                                {/* Hover Gradient Background */}
+                                <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
 
-                                {/* Icon */}
-                                <div className="relative">
-                                    <Icon className="w-6 h-6" />
-                                    {action.badge && (
-                                        <span className="absolute -top-2 -right-2 bg-error text-error-content text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                                            {action.badge}
-                                        </span>
-                                    )}
-                                </div>
+                                <div className="flex flex-col items-center text-center gap-3">
+                                    <div className={`
+                    p-3 rounded-xl text-white shadow-md transition-transform duration-300 group-hover:scale-110
+                    bg-gradient-to-br ${action.gradient}
+                  `}>
+                                        <Icon className="w-6 h-6" />
+                                    </div>
 
-                                {/* Expandable Label (Desktop only) */}
-                                <span className="font-semibold whitespace-nowrap max-w-0 overflow-hidden group-hover:max-w-xs transition-all">
-                                    {action.label}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
-        </>
+                                    <span className="font-medium text-base-content group-hover:text-primary transition-colors">
+                                        {action.label}
+                                    </span>
+                                </div>
+                            </motion.div>
+                        </Link>
+                    );
+                })}
+            </motion.div>
+        </div>
     );
 }

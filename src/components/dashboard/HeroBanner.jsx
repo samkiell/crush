@@ -1,83 +1,116 @@
 'use client';
 
-import { Calendar, Target, Flame, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Flame, Calendar, Trophy, ArrowRight } from 'lucide-react';
+import { AnimatedCard, AnimatedButton } from '@/components/ui';
+import { stagger, variants } from '@/lib/motionConfig';
 
 export default function HeroBanner({ user, stats }) {
-    // Mock data - replace with real data
-    const examDate = new Date('2025-05-15');
+    // Calculate days until JAMB (Example date: April 19, 2026)
+    const examDate = new Date('2026-04-19');
     const today = new Date();
-    const daysUntilExam = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
-    const dailyGoalProgress = 5; // out of 8 topics
-    const dailyGoalTotal = 8;
-    const currentStreak = 12;
+    const timeDiff = examDate.getTime() - today.getTime();
+    const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    const firstName = user?.name?.split(' ')[0] || 'Scholar';
 
     return (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-                <div className="absolute inset-0" style={{
-                    backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
-                    backgroundSize: '24px 24px'
-                }}></div>
-            </div>
-
-            <div className="relative p-6 md:p-8">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                    {/* Left - Greeting & Exam Countdown */}
-                    <div className="flex-1">
-                        <h2 className="text-2xl md:text-3xl font-bold text-base-content mb-2">
-                            Welcome back, {user?.username || 'Student'}! 👋
-                        </h2>
-                        <p className="text-base-content/70 mb-4">
-                            Keep pushing! You're making excellent progress.
-                        </p>
-
-                        {/* Exam Countdown */}
-                        <div className="flex items-center gap-2 bg-error/10 text-error px-4 py-2 rounded-full inline-flex border border-error/20">
-                            <Calendar className="w-4 h-4" />
-                            <span className="font-semibold">
-                                JAMB Exam in <span className="text-lg font-bold">{daysUntilExam}</span> days
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Right - Stats Grid */}
-                    <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-                        {/* Daily Goal */}
-                        <div className="bg-base-100/80 backdrop-blur-sm rounded-xl p-4 border border-base-300">
-                            <div className="flex items-center gap-2 mb-2">
-                                <Target className="w-5 h-5 text-primary" />
-                                <span className="text-sm text-base-content/60">Daily Goal</span>
-                            </div>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-2xl font-bold text-base-content">{dailyGoalProgress}</span>
-                                <span className="text-sm text-base-content/60">/ {dailyGoalTotal}</span>
-                            </div>
-                            <div className="mt-2">
-                                <div className="w-full bg-base-300 rounded-full h-2">
-                                    <div
-                                        className="bg-primary rounded-full h-2 transition-all duration-500"
-                                        style={{ width: `${(dailyGoalProgress / dailyGoalTotal) * 100}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Current Streak */}
-                        <div className="bg-base-100/80 backdrop-blur-sm rounded-xl p-4 border border-base-300">
-                            <div className="flex items-center gap-2 mb-2">
-                                <Flame className="w-5 h-5 text-orange-500" />
-                                <span className="text-sm text-base-content/60">Streak</span>
-                            </div>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-2xl font-bold text-orange-500">{currentStreak}</span>
-                                <span className="text-sm text-base-content/60">days</span>
-                            </div>
-                            <p className="text-xs text-success mt-1">🔥 On fire!</p>
-                        </div>
-                    </div>
+        <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            variants={stagger.container(0.1)}
+            initial="initial"
+            animate="animate"
+        >
+            {/* Welcome & Countdown Card */}
+            <AnimatedCard
+                variant="gradient"
+                className="md:col-span-2 relative overflow-hidden"
+                hoverable={true}
+            >
+                <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <Calendar className="w-32 h-32" />
                 </div>
+
+                <div className="relative z-10">
+                    <motion.div variants={variants.fadeUp}>
+                        <h1 className="text-3xl font-bold mb-2">
+                            Ready to crush it, {firstName}? 🚀
+                        </h1>
+                        <p className="text-white/90 mb-6 max-w-md">
+                            Your daily goals are set. Let's make today count towards your success.
+                        </p>
+                    </motion.div>
+
+                    <motion.div
+                        className="flex items-end gap-2 mb-2"
+                        variants={variants.scale}
+                    >
+                        <span className="text-6xl font-bold font-display">{daysRemaining}</span>
+                        <span className="text-xl font-medium mb-2 opacity-90">days until JAMB</span>
+                    </motion.div>
+
+                    <div className="w-full bg-white/20 h-2 rounded-full mb-6 max-w-md">
+                        <div
+                            className="bg-white h-2 rounded-full transition-all duration-1000"
+                            style={{ width: `${Math.max(0, Math.min(100, 100 - (daysRemaining / 365) * 100))}%` }}
+                        />
+                    </div>
+
+                    <AnimatedButton
+                        variant="outline"
+                        className="border-white text-white hover:bg-white hover:text-primary"
+                        rightIcon={<ArrowRight className="w-4 h-4" />}
+                    >
+                        Go to Study Plan
+                    </AnimatedButton>
+                </div>
+            </AnimatedCard>
+
+            {/* Streak & Stats Card */}
+            <div className="grid grid-rows-2 gap-6">
+                {/* Streak Card */}
+                <AnimatedCard
+                    variant="elevated"
+                    className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-100 dark:border-orange-900/30"
+                >
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold text-base-content">Current Streak</h3>
+                        <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-full text-orange-500">
+                            <Flame className="w-5 h-5 fill-orange-500" />
+                        </div>
+                    </div>
+
+                    <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-bold text-orange-600 dark:text-orange-400">
+                            {stats?.streak || 0}
+                        </span>
+                        <span className="text-sm text-base-content/60">days on fire! 🔥</span>
+                    </div>
+                    <p className="text-xs text-base-content/50 mt-2">
+                        Keep it up! You're building a habit.
+                    </p>
+                </AnimatedCard>
+
+                {/* Quick Stat */}
+                <AnimatedCard variant="glass">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold text-base-content">Topics Mastered</h3>
+                        <div className="p-2 bg-primary/10 rounded-full text-primary">
+                            <Trophy className="w-5 h-5" />
+                        </div>
+                    </div>
+
+                    <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-bold text-primary">
+                            {stats?.topicsMastered || 0}
+                        </span>
+                        <span className="text-sm text-base-content/60">topics</span>
+                    </div>
+                    <p className="text-xs text-base-content/50 mt-2">
+                        Top 5% of students this week
+                    </p>
+                </AnimatedCard>
             </div>
-        </div>
+        </motion.div>
     );
 }

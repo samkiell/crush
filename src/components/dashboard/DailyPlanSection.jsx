@@ -1,170 +1,111 @@
 'use client';
 
-import { Clock, PlayCircle, CheckCircle2, Circle, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Circle, ArrowRight } from 'lucide-react';
+import { AnimatedCard, AnimatedButton } from '@/components/ui';
+import { stagger, variants } from '@/lib/motionConfig';
 
 export default function DailyPlanSection({ stats }) {
-    // Mock daily plan - replace with real data
-    const dailyPlan = [
-        {
-            id: 1,
-            time: '9:00 AM',
-            subject: 'Chemistry',
-            topic: 'Redox Reactions',
-            duration: '45 min',
-            status: 'completed',
-            progress: 100,
-        },
-        {
-            id: 2,
-            time: '11:00 AM',
-            subject: 'Mathematics',
-            topic: 'Calculus - Differentiation',
-            duration: '60 min',
-            status: 'in-progress',
-            progress: 65,
-        },
-        {
-            id: 3,
-            time: '2:00 PM',
-            subject: 'English',
-            topic: 'Comprehension Practice',
-            duration: '30 min',
-            status: 'pending',
-            progress: 0,
-        },
-        {
-            id: 4,
-            time: '4:00 PM',
-            subject: 'Physics',
-            topic: 'Mechanics - Newton\'s Laws',
-            duration: '45 min',
-            status: 'pending',
-            progress: 0,
-        },
+    const dailyGoals = [
+        { id: 1, title: 'Complete 20 Physics Questions', completed: true, subject: 'Physics' },
+        { id: 2, title: 'Read Chapter 4: Cell Biology', completed: false, subject: 'Biology' },
+        { id: 3, title: 'Take English Mock Test', completed: false, subject: 'English' },
     ];
 
-    const getSubjectColor = (subject) => {
-        const colors = {
-            Mathematics: 'badge-primary',
-            English: 'badge-secondary',
-            Physics: 'badge-accent',
-            Chemistry: 'badge-info',
-            Biology: 'badge-success',
-        };
-        return colors[subject] || 'badge-neutral';
-    };
-
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case 'completed':
-                return <CheckCircle2 className="w-5 h-5 text-success" />;
-            case 'in-progress':
-                return <PlayCircle className="w-5 h-5 text-primary animate-pulse" />;
-            default:
-                return <Circle className="w-5 h-5 text-base-content/30" />;
-        }
-    };
+    const progress = Math.round((dailyGoals.filter(g => g.completed).length / dailyGoals.length) * 100);
 
     return (
-        <div className="bg-base-200 rounded-2xl p-6">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h2 className="text-2xl font-bold text-base-content">Today's Plan</h2>
-                    <p className="text-sm text-base-content/60">
-                        {dailyPlan.filter(p => p.status === 'completed').length} of {dailyPlan.length} completed
-                    </p>
-                </div>
-                <button className="btn btn-ghost btn-sm gap-2">
-                    View All
-                    <ArrowRight className="w-4 h-4" />
-                </button>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-base-content">Today's Plan</h2>
+                <AnimatedButton variant="ghost" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                    View Full Schedule
+                </AnimatedButton>
             </div>
 
-            {/* Time Blocks */}
-            <div className="space-y-4">
-                {dailyPlan.map((block) => (
-                    <div
-                        key={block.id}
-                        className={`bg-base-100 rounded-xl p-4 border-2 transition-all hover:shadow-lg hover:scale-[1.02] ${block.status === 'in-progress'
-                                ? 'border-primary shadow-lg shadow-primary/20'
-                                : block.status === 'completed'
-                                    ? 'border-success/30 opacity-75'
-                                    : 'border-base-300'
-                            }`}
-                    >
-                        <div className="flex items-start gap-4">
-                            {/* Status Icon */}
-                            <div className="flex-shrink-0 mt-1">
-                                {getStatusIcon(block.status)}
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-2">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className={`badge ${getSubjectColor(block.subject)} badge-sm`}>
-                                                {block.subject}
-                                            </span>
-                                            <span className="text-xs text-base-content/60 flex items-center gap-1">
-                                                <Clock className="w-3 h-3" />
-                                                {block.time}
-                                            </span>
-                                        </div>
-                                        <h3 className="font-semibold text-base-content">{block.topic}</h3>
-                                        <p className="text-sm text-base-content/60">{block.duration}</p>
-                                    </div>
-
-                                    {/* Action Button */}
-                                    {block.status === 'in-progress' && (
-                                        <button className="btn btn-primary btn-sm gap-2">
-                                            <PlayCircle className="w-4 h-4" />
-                                            Resume
-                                        </button>
-                                    )}
-                                    {block.status === 'pending' && (
-                                        <button className="btn btn-outline btn-sm">
-                                            Start
-                                        </button>
-                                    )}
-                                </div>
-
-                                {/* Progress Bar */}
-                                {block.progress > 0 && (
-                                    <div className="mt-3">
-                                        <div className="flex items-center justify-between text-xs text-base-content/60 mb-1">
-                                            <span>Progress</span>
-                                            <span>{block.progress}%</span>
-                                        </div>
-                                        <div className="w-full bg-base-300 rounded-full h-2">
-                                            <div
-                                                className={`rounded-full h-2 transition-all duration-500 ${block.status === 'completed' ? 'bg-success' : 'bg-primary'
-                                                    }`}
-                                                style={{ width: `${block.progress}%` }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Progress Card */}
+                <AnimatedCard className="flex flex-col items-center justify-center text-center">
+                    <div className="relative w-32 h-32 mb-4">
+                        <svg className="w-full h-full transform -rotate-90">
+                            <circle
+                                cx="64"
+                                cy="64"
+                                r="56"
+                                className="stroke-base-300 fill-none"
+                                strokeWidth="12"
+                            />
+                            <motion.circle
+                                cx="64"
+                                cy="64"
+                                r="56"
+                                className="stroke-primary fill-none"
+                                strokeWidth="12"
+                                strokeLinecap="round"
+                                strokeDasharray="351.86"
+                                initial={{ strokeDashoffset: 351.86 }}
+                                animate={{ strokeDashoffset: 351.86 - (351.86 * progress) / 100 }}
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                            />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <span className="text-3xl font-bold text-base-content">{progress}%</span>
+                            <span className="text-xs text-base-content/60">Complete</span>
                         </div>
                     </div>
-                ))}
-            </div>
+                    <h3 className="font-semibold text-base-content">Daily Goals</h3>
+                    <p className="text-sm text-base-content/60">
+                        {dailyGoals.filter(g => g.completed).length} of {dailyGoals.length} tasks done
+                    </p>
+                </AnimatedCard>
 
-            {/* Next Up Card */}
-            <div className="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-xl">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-sm text-base-content/60 mb-1">Up Next</p>
-                        <p className="font-semibold text-base-content">
-                            {dailyPlan.find(p => p.status === 'pending')?.topic || 'All done for today! 🎉'}
-                        </p>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-xs text-base-content/60">Starts in</p>
-                        <p className="text-lg font-bold text-primary">25 min</p>
-                    </div>
+                {/* Task List */}
+                <div className="md:col-span-2 space-y-3">
+                    <motion.div
+                        variants={stagger.container(0.1)}
+                        initial="initial"
+                        animate="animate"
+                        className="space-y-3"
+                    >
+                        {dailyGoals.map((goal) => (
+                            <motion.div
+                                key={goal.id}
+                                variants={variants.slideLeft}
+                                className={`
+                  group flex items-center gap-4 p-4 rounded-xl border transition-all duration-300
+                  ${goal.completed
+                                        ? 'bg-base-100/50 border-base-200 opacity-70'
+                                        : 'bg-base-100 border-base-300 shadow-sm hover:shadow-md hover:border-primary/30'
+                                    }
+                `}
+                            >
+                                <button className={`
+                  flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors
+                  ${goal.completed
+                                        ? 'bg-success border-success text-white'
+                                        : 'border-base-300 text-transparent group-hover:border-primary'
+                                    }
+                `}>
+                                    <CheckCircle2 className="w-4 h-4" />
+                                </button>
+
+                                <div className="flex-1">
+                                    <h4 className={`font-medium ${goal.completed ? 'line-through text-base-content/50' : 'text-base-content'}`}>
+                                        {goal.title}
+                                    </h4>
+                                    <span className="text-xs text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full">
+                                        {goal.subject}
+                                    </span>
+                                </div>
+
+                                {!goal.completed && (
+                                    <AnimatedButton variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100">
+                                        Start
+                                    </AnimatedButton>
+                                )}
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </div>
             </div>
         </div>

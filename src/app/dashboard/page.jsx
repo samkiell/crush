@@ -93,6 +93,11 @@ export default function DashboardPage() {
         {/* Hero Banner */}
         <HeroBanner user={user} stats={stats} />
 
+        {/* Quick Actions Dock */}
+        <div className="mt-6">
+          <QuickActionsDock />
+        </div>
+
         {/* Main Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
           {/* Left Column - Main Content */}
