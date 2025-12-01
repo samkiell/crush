@@ -7,7 +7,8 @@ export default function QuestionCard({
     question,
     selectedOption,
     onOptionSelect,
-    questionNumber
+    questionNumber,
+    totalQuestions
 }) {
     if (!question) return null;
 
@@ -22,7 +23,9 @@ export default function QuestionCard({
         <div className="w-full max-w-3xl mx-auto">
             {/* Question Header */}
             <div className="mb-6">
-                <span className="text-sm font-bold text-primary mb-2 block">Question {questionNumber}</span>
+                <span className="text-sm font-bold text-primary mb-2 block">
+                    Question {questionNumber} <span className="text-base-content/40">/ {totalQuestions}</span>
+                </span>
                 <h2 className="text-xl md:text-2xl font-medium text-base-content leading-relaxed">
                     {question.text}
                 </h2>
