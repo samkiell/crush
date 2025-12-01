@@ -227,89 +227,51 @@ export default function ManageQuestionsPage() {
                                                             value={editForm.options?.[opt] || ''}
                                                             onChange={(e) => setEditForm({
                                                                 ...editForm,
-                                                                options: { ...editForm.options, [opt]: e.target.value }
-                                                            })}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="form-control">
-                                                <label className="label text-xs">Answer</label>
-                                                <select
-                                                    className="select select-bordered select-sm"
-                                                    value={editForm.answer || ''}
-                                                    onChange={(e) => setEditForm({ ...editForm, answer: e.target.value })}
-                                                >
-                                                    <option value="">None</option>
-                                                    {['A', 'B', 'C', 'D', 'E'].map(o => <option key={o} value={o}>{o}</option>)}
-                                                </select>
-                                            </div>
-                                            <div className="form-control">
-                                                <label className="label text-xs">Explanation</label>
-                                                <input
-                                                    type="text"
-                                                    className="input input-bordered input-sm"
-                                                    value={editForm.explanation || ''}
-                                                    onChange={(e) => setEditForm({ ...editForm, explanation: e.target.value })}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex justify-end gap-2 mt-4">
-                                            <button className="btn btn-ghost btn-sm" onClick={handleCancelEdit}>
-                                                <X size={16} /> Cancel
-                                            </button>
-                                            <button className="btn btn-success btn-sm" onClick={handleSave}>
-                                                <Save size={16} /> Save Changes
-                                            </button>
                                         </div>
                                     </div>
-                                ) : (
-                                    // View Mode
-                                    <div className="flex flex-col md:flex-row gap-6">
-                                        <div className="flex-1 space-y-3">
-                                            <div className="flex items-center gap-2">
-                                                <span className="badge badge-ghost font-mono text-xs">{q.qid}</span>
-                                                {q.answer && <span className="badge badge-success badge-outline text-xs">Ans: {q.answer}</span>}
-                                            </div>
-                                            <p className="font-medium text-lg">{q.question}</p>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-base-content/70">
-                                                {Object.entries(q.options || {}).map(([key, val]) => (
-                                                    val && <div key={key} className={key === q.answer ? "text-success font-semibold" : ""}>
-                                                        <span className="font-bold mr-1">{key}.</span> {val}
+                                            ) : (
+                                            // View Mode
+                                            <div className="flex flex-col md:flex-row gap-6">
+                                                <div className="flex-1 space-y-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="badge badge-ghost font-mono text-xs">{q.qid}</span>
+                                                        {q.answer && <span className="badge badge-success badge-outline text-xs">Ans: {q.answer}</span>}
                                                     </div>
-                                                ))}
-                                            </div>
-                                            {q.explanation && (
-                                                <p className="text-xs text-info mt-2">💡 {q.explanation}</p>
-                                            )}
-                                        </div>
+                                                    <p className="font-medium text-lg">{q.question}</p>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-base-content/70">
+                                                        {Object.entries(q.options || {}).map(([key, val]) => (
+                                                            val && <div key={key} className={key === q.answer ? "text-success font-semibold" : ""}>
+                                                                <span className="font-bold mr-1">{key}.</span> {val}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    {q.explanation && (
+                                                        <p className="text-xs text-info mt-2">💡 {q.explanation}</p>
+                                                    )}
+                                                </div>
 
-                                        <div className="flex md:flex-col gap-2 justify-start md:justify-start pt-2 md:pt-0 border-t md:border-t-0 md:border-l border-base-200 md:pl-6">
-                                            <button
-                                                className="btn btn-ghost btn-sm text-primary"
-                                                onClick={() => handleEdit(q)}
-                                            >
-                                                <Edit2 size={16} />
-                                            </button>
-                                            <button
-                                                className="btn btn-ghost btn-sm text-error"
-                                                onClick={() => handleDelete(q._id)}
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-                                    </div>
+                                                <div className="flex md:flex-col gap-2 justify-start md:justify-start pt-2 md:pt-0 border-t md:border-t-0 md:border-l border-base-200 md:pl-6">
+                                                    <button
+                                                        className="btn btn-ghost btn-sm text-primary"
+                                                        onClick={() => handleEdit(q)}
+                                                    >
+                                                        <Edit2 size={16} />
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-ghost btn-sm text-error"
+                                                        onClick={() => handleDelete(q._id)}
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </div>
                                 )}
-                            </div>
-                        ))
+                                        </div>
+                                        ))
                     )}
-                </div>
+                                    </div>
 
             </div>
         </div>
-    );
+                );
 }
