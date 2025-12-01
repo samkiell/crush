@@ -28,6 +28,7 @@ export default function StudySetupPage() {
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedTopic, setSelectedTopic] = useState('');
     const [isPremium, setIsPremium] = useState(false);
+    const [isStarting, setIsStarting] = useState(false);
 
     const [availableMetadata, setAvailableMetadata] = useState({});
     const [availableYears, setAvailableYears] = useState([]);
@@ -83,6 +84,7 @@ export default function StudySetupPage() {
 
     const handleStartStudy = () => {
         if (!selectedSubject || !selectedYear) return;
+        setIsStarting(true);
         // Default to 'all-topics' if no topic selected
         const topicSlug = selectedTopic ? selectedTopic.toLowerCase().replace(/\s+/g, '-') : 'all-topics';
         const slug = `${selectedSubject}-${selectedYear}-${topicSlug}`;
@@ -142,8 +144,10 @@ export default function StudySetupPage() {
                                 Select Subject
                             </h3>
                             {loadingMetadata ? (
-                                <div className="flex justify-center py-8">
-                                    <span className="loading loading-spinner loading-md text-primary"></span>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                                        <div key={i} className="h-24 rounded-xl bg-base-200 animate-pulse"></div>
+                                    ))}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -304,11 +308,20 @@ export default function StudySetupPage() {
 
                                 <button
                                     onClick={handleStartStudy}
-                                    disabled={!selectedSubject || !selectedYear}
+                                    disabled={!selectedSubject || !selectedYear || isStarting}
                                     className="btn btn-primary w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20 disabled:bg-base-300 disabled:text-base-content/40 flex items-center justify-center gap-2"
                                 >
-                                    Start Study
-                                    <ChevronRight className="w-5 h-5" />
+                                    {isStarting ? (
+                                        <>
+                                            <span className="loading loading-spinner loading-md"></span>
+                                            Preparing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Start Study
+                                            <ChevronRight className="w-5 h-5" />
+                                        </>
+                                    )}
                                 </button>
 
                                 {!isPremium && (
