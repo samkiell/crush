@@ -31,9 +31,10 @@ export async function POST(req) {
           { status: 400 }
         );
       }
+      // A-D are required, E is optional (will default to "")
       if (!q.options.A || !q.options.B || !q.options.C || !q.options.D) {
         return NextResponse.json(
-          { message: `Missing options for QID: ${q.qid}` },
+          { message: `Missing required options (A-D) for QID: ${q.qid}` },
           { status: 400 }
         );
       }
@@ -48,8 +49,11 @@ export async function POST(req) {
       year,
       qid: q.qid,
       question: q.question,
-      options: q.options,
-      answer: q.answer ? q.answer.toUpperCase() : undefined,
+      options: {
+        ...q.options,
+        E: q.options.E || '', // Default E to empty string if missing
+      },
+      answer: q.answer ? q.answer.toUpperCase() : 'NO CORRECT OPTION',
       explanation: q.explanation || '',
     }));
 

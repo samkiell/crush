@@ -26,11 +26,12 @@ const QuestionSchema = new mongoose.Schema({
     B: { type: String, required: true },
     C: { type: String, required: true },
     D: { type: String, required: true },
-    E: { type: String },
+    E: { type: String, default: '' },
   },
   answer: {
     type: String,
-    enum: ['A', 'B', 'C', 'D', 'E'],
+    required: [true, 'Please provide answer'],
+    enum: ['A', 'B', 'C', 'D', 'E', 'NO CORRECT OPTION'],
     uppercase: true,
   },
   explanation: {
