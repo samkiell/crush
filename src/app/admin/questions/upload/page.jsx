@@ -2,22 +2,14 @@
 
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Upload, FileJson, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, FileJson, CheckCircle, AlertCircle, Settings, Code, Trash2, Copy, Info } from 'lucide-react';
 
 const SUBJECTS = [
-    'Mathematics',
-    'English',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'Economics',
-    'Government',
-    'Literature',
-    'CRS',
-    'Geography',
+    'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology',
+    'Economics', 'Government', 'Literature', 'CRS', 'Geography',
 ];
 
-const YEARS = Array.from({ length: 50 }, (_, i) => 2024 - i); // 2024 down to 1975
+const YEARS = Array.from({ length: 50 }, (_, i) => 2024 - i);
 
 export default function AdminUploadPage() {
     const [subject, setSubject] = useState('');
@@ -91,79 +83,8 @@ export default function AdminUploadPage() {
         }
     };
 
-    return (
-        <div className="min-h-screen bg-base-200 p-8">
-            <div className="max-w-4xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
-                <div className="flex items-center gap-4 mb-8 border-b border-base-300 pb-4">
-                    <div className="p-3 bg-primary/10 rounded-lg text-primary">
-                        <Upload size={24} />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold">Upload Exam Questions</h1>
-                        <p className="text-base-content/60">Bulk upload questions for JAMB preparation</p>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-medium">Subject</span>
-                        </label>
-                        <select
-                            className="select select-bordered w-full"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                        >
-                            <option value="">Select Subject</option>
-                            {SUBJECTS.map((s) => (
-                                <option key={s} value={s}>{s}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-medium">Year</span>
-                        </label>
-                        <select
-                            className="select select-bordered w-full"
-                            value={year}
-                            onChange={(e) => setYear(e.target.value)}
-                        >
-                            <option value="">Select Year</option>
-                            {YEARS.map((y) => (
-                                <option key={y} value={y}>{y}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text font-medium">Admin Key</span>
-                        </label>
-                        <input
-                            type="password"
-                            className="input input-bordered w-full"
-                            placeholder="Enter Admin Secret"
-                            value={adminKey}
-                            onChange={(e) => setAdminKey(e.target.value)}
-                        />
-                    </div>
-                </div>
-
-                <div className="form-control mb-8">
-                    <label className="label">
-                        <span className="label-text font-medium flex items-center gap-2">
-                            <FileJson size={16} />
-                            JSON Payload
-                        </span>
-                        <span className="label-text-alt text-base-content/60">
-                            Paste the questions array or full object here
-                        </span>
-                    </label>
-                    <textarea
-                        className="textarea textarea-bordered h-96 font-mono text-sm leading-relaxed"
-                        placeholder={`[
+    const copyExample = () => {
+        const example = `[
   {
     "qid": "mth-1978-001",
     "question": "Solve for x...",
@@ -178,27 +99,144 @@ export default function AdminUploadPage() {
     "answer": "", 
     "explanation": "This will default to NO CORRECT OPTION"
   }
-]`}
-                        value={jsonInput}
-                        onChange={(e) => setJsonInput(e.target.value)}
-                    ></textarea>
+]`;
+        setJsonInput(example);
+        toast.success('Example copied to editor');
+    };
+
+    const clearEditor = () => {
+        if (jsonInput && confirm('Are you sure you want to clear the editor?')) {
+            setJsonInput('');
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-base-200 p-4 md:p-8 font-sans">
+            <div className="max-w-6xl mx-auto space-y-6">
+
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight text-base-content">Question Upload</h1>
+                        <p className="text-base-content/60 mt-1">Bulk import questions into the database</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <button className="btn btn-ghost btn-sm gap-2" onClick={copyExample}>
+                            <Copy size={16} /> Load Example
+                        </button>
+                    </div>
                 </div>
 
-                <div className="flex justify-end">
-                    <button
-                        className="btn btn-primary min-w-[150px]"
-                        onClick={handleUpload}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (
-                            <span className="loading loading-spinner"></span>
-                        ) : (
-                            <>
-                                <Upload size={18} />
-                                Upload Questions
-                            </>
-                        )}
-                    </button>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    {/* Configuration Panel */}
+                    <div className="lg:col-span-1 space-y-6">
+                        <div className="card bg-base-100 shadow-xl border border-base-300">
+                            <div className="card-body p-6">
+                                <h2 className="card-title text-lg flex items-center gap-2 mb-4 text-base-content">
+                                    <Settings size={18} className="text-primary" />
+                                    Configuration
+                                </h2>
+
+                                <div className="space-y-4">
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text font-medium">Subject</span>
+                                        </label>
+                                        <select
+                                            className="select select-bordered w-full focus:border-primary focus:ring-1 focus:ring-primary"
+                                            value={subject}
+                                            onChange={(e) => setSubject(e.target.value)}
+                                        >
+                                            <option value="">Select Subject</option>
+                                            {SUBJECTS.map(s => <option key={s} value={s}>{s}</option>)}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text font-medium">Year</span>
+                                        </label>
+                                        <select
+                                            className="select select-bordered w-full focus:border-primary focus:ring-1 focus:ring-primary"
+                                            value={year}
+                                            onChange={(e) => setYear(e.target.value)}
+                                        >
+                                            <option value="">Select Year</option>
+                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                        </select>
+                                    </div>
+
+                                    <div className="divider my-2"></div>
+
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text font-medium text-error flex items-center gap-2">
+                                                Admin Key
+                                                <span className="tooltip tooltip-right" data-tip="Required for write access">
+                                                    <Info size={14} className="text-base-content/40" />
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <input
+                                            type="password"
+                                            className="input input-bordered w-full focus:border-error focus:ring-1 focus:ring-error"
+                                            placeholder="Enter secret key"
+                                            value={adminKey}
+                                            onChange={(e) => setAdminKey(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <button
+                                        className="btn btn-primary w-full mt-4 shadow-lg shadow-primary/20"
+                                        onClick={handleUpload}
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? <span className="loading loading-spinner"></span> : <><Upload size={18} /> Upload Data</>}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="alert alert-warning shadow-sm text-sm bg-warning/10 border-warning/20 text-warning-content">
+                            <AlertCircle size={18} />
+                            <span>Warning: Existing questions for the selected Subject & Year will be replaced.</span>
+                        </div>
+                    </div>
+
+                    {/* JSON Editor Panel */}
+                    <div className="lg:col-span-2">
+                        <div className="card bg-base-100 shadow-xl border border-base-300 h-full overflow-hidden">
+                            <div className="flex flex-col h-full">
+                                <div className="p-4 border-b border-base-300 flex justify-between items-center bg-base-200/50">
+                                    <div className="flex items-center gap-2 font-medium text-base-content">
+                                        <Code size={18} className="text-secondary" />
+                                        JSON Payload
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <div className="badge badge-ghost text-xs font-mono">JSON</div>
+                                        <button
+                                            className="btn btn-ghost btn-xs text-error hover:bg-error/10"
+                                            onClick={clearEditor}
+                                            disabled={!jsonInput}
+                                        >
+                                            <Trash2 size={14} /> Clear
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="flex-1 relative group bg-[#1e1e1e]">
+                                    <textarea
+                                        className="w-full h-full min-h-[600px] p-6 bg-transparent text-[#e0e0e0] font-mono text-sm resize-none focus:outline-none leading-relaxed selection:bg-primary/30"
+                                        placeholder="// Paste your JSON array here..."
+                                        value={jsonInput}
+                                        onChange={(e) => setJsonInput(e.target.value)}
+                                        spellCheck="false"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
