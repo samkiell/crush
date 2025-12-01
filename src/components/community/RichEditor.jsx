@@ -168,27 +168,27 @@ const RichEditor = () => {
 
                 {/* Main Form Card */}
                 <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl shadow-black/5 border border-base-content/5 overflow-hidden mb-6">
-                    <form id="create-post-form" onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <form id="create-post-form" onSubmit={handleSubmit} className="p-8 space-y-8">
 
                         {/* Content Textarea with Integrated Media */}
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             <div className="relative">
                                 <textarea
-                                    className="textarea w-full bg-transparent border-none focus:outline-none text-xl leading-relaxed resize-none min-h-[150px] p-0 placeholder:text-base-content/30"
+                                    className="textarea w-full bg-transparent border-none focus:outline-none text-xl leading-relaxed resize-none min-h-[200px] !p-6 placeholder:text-base-content/30"
                                     placeholder={placeholder}
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
                                     required
                                     autoFocus
                                 />
-                                <div className="absolute top-0 left-0 pointer-events-none text-xl leading-relaxed text-transparent select-none">
+                                <div className="absolute top-6 left-6 pointer-events-none text-xl leading-relaxed text-transparent select-none">
                                     {placeholder}<span className="animate-pulse border-r-2 border-primary ml-0.5 h-5 inline-block align-middle"></span>
                                 </div>
                             </div>
 
                             {/* Attachments Preview */}
                             {attachments.length > 0 && (
-                                <div className="flex flex-wrap gap-3 mt-4">
+                                <div className="flex flex-wrap gap-3 mt-4 px-6">
                                     {attachments.map((file, index) => (
                                         <div key={index} className="relative w-32 h-32 rounded-xl overflow-hidden border border-base-300 group">
                                             {file.type === 'image' || file.type.startsWith('image/') ? (
@@ -211,7 +211,7 @@ const RichEditor = () => {
                             )}
 
                             {/* Media Button & Character Count */}
-                            <div className="flex items-center justify-between pt-4 border-t border-base-content/5">
+                            <div className="flex items-center justify-between pt-4 border-t border-base-content/5 px-2">
                                 <label className="btn btn-ghost btn-sm gap-2 text-primary hover:bg-primary/10 rounded-full cursor-pointer">
                                     <ImagePlus className="w-5 h-5" />
                                     <span>Add Media</span>
@@ -230,14 +230,14 @@ const RichEditor = () => {
                         </div>
 
                         {/* Category & Tags */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
                             {/* Category */}
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-base-content/50 pl-1">
                                     Category
                                 </label>
                                 <select
-                                    className="select select-bordered w-full bg-base-200/50 rounded-xl focus:border-primary focus:outline-none"
+                                    className="select select-bordered w-full h-12 bg-base-200/50 rounded-xl focus:border-primary focus:outline-none px-4"
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                 >
@@ -248,16 +248,16 @@ const RichEditor = () => {
                             </div>
 
                             {/* Tags */}
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-base-content/50 pl-1">
                                     Tags
                                 </label>
                                 <div className="relative">
-                                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40" />
+                                    <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40" />
                                     <input
                                         type="text"
                                         placeholder="jamb, maths (comma separated)"
-                                        className="input input-bordered w-full bg-base-200/50 pl-10 rounded-xl focus:border-primary focus:outline-none"
+                                        className="input input-bordered w-full h-12 bg-base-200/50 pl-12 rounded-xl focus:border-primary focus:outline-none"
                                         value={tags}
                                         onChange={(e) => setTags(e.target.value)}
                                     />

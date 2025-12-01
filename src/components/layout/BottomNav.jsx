@@ -58,8 +58,13 @@ export default function BottomNav() {
             icon: MessageSquare,
         },
         {
-            label: 'Community',
-            href: '/community',
+            label: 'Upload',
+            href: '/admin/questions',
+            icon: Upload,
+        },
+        {
+            label: 'Users',
+            href: '/admin/users',
             icon: Users,
         },
     ];
