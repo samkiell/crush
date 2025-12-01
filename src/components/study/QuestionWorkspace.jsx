@@ -127,6 +127,21 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
         }
     }, [user]);
 
+    // Save progress to localStorage for Dashboard Resume Card
+    useEffect(() => {
+        if (questions.length > 0 && sessionId) {
+            const progress = Math.round(((currentQuestionIndex + 1) / questions.length) * 100);
+            const sessionData = {
+                title: `${subjectName || sessionId.split('-')[0]} ${sessionId.split('-')[1] || ''}`,
+                type: 'Study Session',
+                progress,
+                href: `/study/${sessionId}`,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('last_active_session', JSON.stringify(sessionData));
+        }
+    }, [currentQuestionIndex, questions, sessionId, subjectName]);
+
     // Check for premium lock when question changes
     useEffect(() => {
         if (!isPremium && currentQuestionIndex >= FREE_LIMIT) {

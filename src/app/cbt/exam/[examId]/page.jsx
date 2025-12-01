@@ -40,6 +40,19 @@ export default function ExamPage() {
     const [timeLeft, setTimeLeft] = useState(MOCK_EXAM_DATA.duration);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Save progress to localStorage for Dashboard Resume Card
+    useEffect(() => {
+        const progress = Math.round((currentQuestion / MOCK_EXAM_DATA.questions.length) * 100);
+        const sessionData = {
+            title: MOCK_EXAM_DATA.subject,
+            type: 'Exam Session',
+            progress,
+            href: `/cbt/exam/${examId}`,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('last_active_session', JSON.stringify(sessionData));
+    }, [currentQuestion, examId]);
+
     // Timer Logic
     useEffect(() => {
         const timer = setInterval(() => {

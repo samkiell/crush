@@ -8,17 +8,25 @@ import { stagger, variants } from '@/lib/motionConfig';
 export default function MomentumLayer({ user, stats }) {
     const firstName = user?.name?.split(' ')[0] || 'Scholar';
 
-    // Mock Active Session (Replace with real data later)
-    const activeSession = {
-        title: 'Mathematics 2014',
-        type: 'Study Session',
-        progress: 65,
-        href: '/study/mathematics-2014-all-topics'
-    };
-
     const [quote, setQuote] = useState('Ready to crush your goals today? 🚀');
+    const [activeSession, setActiveSession] = useState(null);
 
     useEffect(() => {
+        // Load active session from localStorage
+        const savedSession = localStorage.getItem('last_active_session');
+        if (savedSession) {
+            try {
+                const parsed = JSON.parse(savedSession);
+                // Optional: Check if session is too old (e.g., > 24 hours)
+                const ONE_DAY = 24 * 60 * 60 * 1000;
+                if (Date.now() - parsed.timestamp < ONE_DAY) {
+                    setActiveSession(parsed);
+                }
+            } catch (e) {
+                console.error('Failed to parse active session', e);
+            }
+        }
+
         const quotes = [
             "Crush your limits, one question at a time! 🚀",
             "Did you know? The brain is like a muscle—the more you use it, the stronger it gets. 💪",
@@ -85,25 +93,8 @@ export default function MomentumLayer({ user, stats }) {
         { label: 'Start Test', icon: Play, href: '/cbt', color: 'text-primary', bg: 'bg-primary/10' },
         { label: 'Study Mode', icon: BookOpen, href: '/study', color: 'text-secondary', bg: 'bg-secondary/10' },
         { label: 'Community', icon: Users, href: '/community', color: 'text-accent', bg: 'bg-accent/10' },
+        { label: 'Coming Soon', icon: HelpCircle, href: '#', color: 'text-info', bg: 'bg-info/10' },
     ];
-
-    if (activeSession) {
-        quickActions.push({
-            label: 'Continue',
-            icon: RotateCcw,
-            href: activeSession.href,
-            color: 'text-success',
-            bg: 'bg-success/10'
-        });
-    } else {
-        quickActions.push({
-            label: 'Coming Soon',
-            icon: HelpCircle,
-            href: '#',
-            color: 'text-info',
-            bg: 'bg-info/10'
-        });
-    }
 
     return (
         <motion.div
