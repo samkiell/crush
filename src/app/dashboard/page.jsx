@@ -10,13 +10,10 @@ import {
 } from '@/store/slices/dashboardSlice';
 import { usersAPI } from '@/services/api';
 
-// Import new dashboard components
-import HeroBanner from '@/components/dashboard/HeroBanner';
-import DailyPlanSection from '@/components/dashboard/DailyPlanSection';
-import AIInsightsPanel from '@/components/dashboard/AIInsightsPanel';
-import PerformanceDashboard from '@/components/dashboard/PerformanceDashboard';
-import GamificationHub from '@/components/dashboard/GamificationHub';
-import QuickActionsDock from '@/components/dashboard/QuickActionsDock';
+// Import new dashboard layers
+import MomentumLayer from '@/components/dashboard/MomentumLayer';
+import ProgressLayer from '@/components/dashboard/ProgressLayer';
+import DeepDiveLayer from '@/components/dashboard/DeepDiveLayer';
 
 export default function DashboardPage() {
   const dispatch = useDispatch();
@@ -87,37 +84,24 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-100">
-      {/* Main Dashboard Content */}
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
-        {/* Hero Banner */}
-        <HeroBanner user={user} stats={stats} />
+    <div className="min-h-screen bg-base-100 pb-20 md:pb-6">
+      <div className="container mx-auto px-4 py-6 max-w-7xl space-y-8">
 
-        {/* Quick Actions Dock */}
-        <div className="mt-6">
-          <QuickActionsDock />
-        </div>
+        {/* 1. Momentum Layer (Above the fold) */}
+        <section>
+          <MomentumLayer user={user} stats={stats} />
+        </section>
 
-        {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Today's Daily Plan */}
-            <DailyPlanSection stats={stats} />
+        {/* 2. Progress Layer */}
+        <section>
+          <ProgressLayer stats={stats} progress={progress} />
+        </section>
 
-            {/* Performance Dashboard */}
-            <PerformanceDashboard stats={stats} progress={progress} />
-          </div>
+        {/* 3. Deep Dive Layer (Collapsible) */}
+        <section>
+          <DeepDiveLayer stats={stats} user={user} />
+        </section>
 
-          {/* Right Column - Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
-            {/* AI Insights Panel */}
-            <AIInsightsPanel stats={stats} />
-
-            {/* Gamification Hub */}
-            <GamificationHub stats={stats} user={user} />
-          </div>
-        </div>
       </div>
     </div>
   );
