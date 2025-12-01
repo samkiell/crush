@@ -251,7 +251,7 @@ const Header = () => {
               {isMenuOpen ? (
                 <X className="w-6 h-6" />
               ) : isAuthenticated ? (
-                <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary ring-offset-2 ring-offset-base-100">
+                <div className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-primary ring-offset-1 ring-offset-base-100">
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (

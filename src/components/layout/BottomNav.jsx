@@ -4,9 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Home, BookOpen, MessageSquare, Users, Monitor } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/store/slices/authSlice';
 
 export default function BottomNav() {
     const pathname = usePathname();
+    const user = useSelector(selectUser);
 
     const navItems = [
         {
@@ -45,6 +48,7 @@ export default function BottomNav() {
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
                     const Icon = item.icon;
+                    const isProfileTab = item.label === 'CBT';
 
                     return (
                         <Link
@@ -72,9 +76,22 @@ export default function BottomNav() {
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <div className="relative">
-                                    <Icon
-                                        className={`w-6 h-6 ${isActive ? 'stroke-[2.5px]' : 'stroke-2'}`}
-                                    />
+                                    {isProfileTab ? (
+                                        <div className={`w-6 h-6 rounded-full overflow-hidden ring-2 ${isActive ? 'ring-primary' : 'ring-transparent'}`}>
+                                            {user?.avatar ? (
+                                                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-primary text-primary-content flex items-center justify-center text-[10px] font-bold">
+                                                    {user?.name?.charAt(0) || 'U'}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <Icon
+                                            className={`w-6 h-6 ${isActive ? 'stroke-[2.5px]' : 'stroke-2'}`}
+                                        />
+                                    )}
+
                                     {/* Optional: Notification dot example for Chat */}
                                     {item.label === 'Chat' && (
                                         <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-error rounded-full ring-2 ring-base-100 hidden" />

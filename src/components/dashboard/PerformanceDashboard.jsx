@@ -1,6 +1,7 @@
 'use client';
 
-import { Activity, TrendingUp, BarChart3, Target } from 'lucide-react';
+import Link from 'next/link';
+import { Activity, TrendingUp, BarChart3, Target, ArrowRight } from 'lucide-react';
 import AnalyticsChart from '../AnalyticsChart';
 
 export default function PerformanceDashboard({ stats, progress }) {
@@ -49,6 +50,13 @@ export default function PerformanceDashboard({ stats, progress }) {
 
     return (
         <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-base-content">Performance Overview</h2>
+                <Link href="/dashboard/analytics" className="btn btn-sm btn-ghost text-primary hover:bg-primary/10">
+                    View Full Analytics <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+            </div>
+
             {/* Performance Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Total Study Time */}
