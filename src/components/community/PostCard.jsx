@@ -113,7 +113,7 @@ const PostCard = ({ post }) => {
                             <div className="flex items-center gap-2 text-sm text-base-content/60">
                                 <span>@{post.author?.username || 'user'}</span>
                                 <span>·</span>
-                                <span>{formatDistanceToNow(new Date(post.createdAt))}</span>
+                                <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
                             </div>
                         </div>
 
@@ -140,7 +140,6 @@ const PostCard = ({ post }) => {
 
                     {/* Text Content */}
                     <div className="text-[15px] text-base-content leading-normal whitespace-pre-wrap mb-3 break-words line-clamp-4">
-                        {post.title && <h3 className="font-bold mb-1">{post.title}</h3>}
                         {post.content}
                     </div>
 

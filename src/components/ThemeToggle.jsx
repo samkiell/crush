@@ -76,7 +76,7 @@ export default function ThemeToggle({
 
     return (
         <div className="flex gap-2 p-1 bg-base-200 rounded-lg">
-            {availableThemes.map((theme) => {
+            {filteredThemes.map((theme) => {
                 const ThemeIcon = icons[theme];
                 const isActive = currentTheme === theme;
 
