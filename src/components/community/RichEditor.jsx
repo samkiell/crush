@@ -151,8 +151,8 @@ const RichEditor = () => {
 
     const contentLength = content.length;
     const categories = [
-        'General', 'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 
-        'Literature', 'Government', 'Economics', 'CRS', 'IRS', 'Geography', 
+        'General', 'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology',
+        'Literature', 'Government', 'Economics', 'CRS', 'IRS', 'Geography',
         'History', 'Commerce', 'Accounting'
     ];
 
@@ -167,9 +167,9 @@ const RichEditor = () => {
                 </div>
 
                 {/* Main Form Card */}
-                <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl shadow-black/5 border border-base-content/5 overflow-hidden">
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                        
+                <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl shadow-black/5 border border-base-content/5 overflow-hidden mb-6">
+                    <form id="create-post-form" onSubmit={handleSubmit} className="p-6 space-y-6">
+
                         {/* Content Textarea with Integrated Media */}
                         <div className="space-y-4">
                             <div className="relative">
