@@ -77,7 +77,7 @@ const CommunityLayout = ({ children }) => {
                 `}>
                     <div className="h-full overflow-y-auto p-6 lg:p-0 lg:sticky lg:top-24 scrollbar-none">
                         <div className="lg:bg-base-100/40 lg:backdrop-blur-md lg:rounded-3xl lg:p-6 lg:border lg:border-base-300">
-                            <SidebarContent navItems={navItems} pathname={pathname} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+                            <SidebarContent navItems={navItems} pathname={pathname} setIsMobileMenuOpen={setIsMobileMenuOpen} trendingTopics={trendingTopics} />
                         </div>
                     </div>
                 </aside>
@@ -139,7 +139,7 @@ const CommunityLayout = ({ children }) => {
     );
 };
 
-const SidebarContent = ({ navItems, pathname, setIsMobileMenuOpen }) => (
+const SidebarContent = ({ navItems, pathname, setIsMobileMenuOpen, trendingTopics }) => (
     <div className="space-y-8">
         {/* Mobile Close Button */}
         <div className="lg:hidden flex justify-end mb-2">
@@ -182,7 +182,7 @@ const SidebarContent = ({ navItems, pathname, setIsMobileMenuOpen }) => (
         <div>
             <h3 className="font-bold text-xs uppercase tracking-wider text-base-content/40 mb-4 px-3">Categories</h3>
             <ul className="space-y-1">
-                {['General', 'Exam Help', 'Study Tips', 'Career'].map((cat) => (
+                {['General', 'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Government'].map((cat) => (
                     <li key={cat}>
                         <Link
                             href={`/community?category=${cat}`}
@@ -193,6 +193,28 @@ const SidebarContent = ({ navItems, pathname, setIsMobileMenuOpen }) => (
                         </Link>
                     </li>
                 ))}
+            </ul>
+        </div>
+
+        {/* Trending Topics - Mobile Only */}
+        <div className="xl:hidden">
+            <h3 className="font-bold text-xs uppercase tracking-wider text-base-content/40 mb-4 px-3">Trending</h3>
+            <ul className="space-y-1">
+                {trendingTopics && trendingTopics.length > 0 ? (
+                    trendingTopics.map((topic, index) => (
+                        <li key={index}>
+                            <Link
+                                href={`/community?search=${topic}`}
+                                className="block px-4 py-2.5 rounded-xl text-sm font-medium text-base-content/70 hover:bg-base-200/50 hover:text-primary transition-colors"
+                                onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+                            >
+                                #{topic}
+                            </Link>
+                        </li>
+                    ))
+                ) : (
+                    <li className="px-4 py-2 text-sm text-base-content/60 italic">No trending topics.</li>
+                )}
             </ul>
         </div>
     </div>
