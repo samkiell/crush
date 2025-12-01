@@ -16,74 +16,17 @@ import {
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
-// Mock Questions Data
-const MOCK_QUESTIONS = [
-    {
-        id: 1,
-        text: "Which of the following cell organelles is responsible for cellular respiration?",
-        options: [
-            { id: 'A', text: 'Golgi Apparatus' },
-            { id: 'B', text: 'Mitochondria' },
-            { id: 'C', text: 'Endoplasmic Reticulum' },
-            { id: 'D', text: 'Lysosome' }
-        ],
-        correctOption: 'B',
-        explanation: "Mitochondria are known as the powerhouses of the cell. They are organelles that act like a digestive system which takes in nutrients, breaks them down, and creates energy rich molecules for the cell. The biochemical processes of the cell are known as cellular respiration.",
-    },
-    {
-        id: 2,
-        text: "What is the primary function of the ribosome?",
-        options: [
-            { id: 'A', text: 'Protein Synthesis' },
-            { id: 'B', text: 'Lipid Synthesis' },
-            { id: 'C', text: 'DNA Replication' },
-            { id: 'D', text: 'Photosynthesis' }
-        ],
-        correctOption: 'A',
-        explanation: "Ribosomes are the sites of protein synthesis. They read the sequence of the messenger RNA (mRNA) and, using the genetic code, translate the sequence of RNA bases into a sequence of amino acids.",
-    },
-    {
-        id: 3,
-        text: "Which phase of mitosis is characterized by the alignment of chromosomes at the equator?",
-        options: [
-            { id: 'A', text: 'Prophase' },
-            { id: 'B', text: 'Anaphase' },
-            { id: 'C', text: 'Metaphase' },
-            { id: 'D', text: 'Telophase' }
-        ],
-        correctOption: 'C',
-        explanation: "During metaphase, the spindle fibers attach to the centromere of each chromosome and align the chromosomes along the cell equator (metaphase plate).",
-    },
-    {
-        id: 4,
-        text: "What is the genetic material in most living organisms?",
-        options: [
-            { id: 'A', text: 'RNA' },
-            { id: 'B', text: 'Protein' },
-            { id: 'C', text: 'DNA' },
-            { id: 'D', text: 'Carbohydrate' }
-        ],
-        correctOption: 'C',
-        explanation: "Deoxyribonucleic acid (DNA) is the molecule that carries genetic information for the development and functioning of an organism.",
-    },
-    {
-        id: 5,
-        text: "Which of these is NOT a type of RNA?",
-        options: [
-            { id: 'A', text: 'mRNA' },
-            { id: 'B', text: 'tRNA' },
-            { id: 'C', text: 'rRNA' },
-            { id: 'D', text: 'dRNA' }
-        ],
-        correctOption: 'D',
-        explanation: "The three main types of RNA are messenger RNA (mRNA), transfer RNA (tRNA), and ribosomal RNA (rRNA). dRNA is not a standard type of RNA.",
-    }
-];
-
 const FREE_LIMIT = 3;
 
 export default function QuestionWorkspace({ sessionId, subjectName }) {
     const { user } = useSelector((state) => state.auth);
+    
+    // Data State
+    const [questions, setQuestions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Interaction State
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
@@ -94,7 +37,74 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     const [isPremium, setIsPremium] = useState(false);
     const [showPremiumLock, setShowPremiumLock] = useState(false);
 
-    const currentQuestion = MOCK_QUESTIONS[currentQuestionIndex];
+    const currentQuestion = questions[currentQuestionIndex];
+
+    // Fetch Questions
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                // Check cache first
+                const cacheKey = `questions_${sessionId}`;
+                const cached = localStorage.getItem(cacheKey);
+                const cachedTime = localStorage.getItem(`${cacheKey}_time`);
+                const ONE_HOUR = 60 * 60 * 1000;
+
+                if (cached && cachedTime && (Date.now() - parseInt(cachedTime) < ONE_HOUR)) {
+                    setQuestions(JSON.parse(cached));
+                    setLoading(false);
+                    return;
+                }
+
+                // Parse sessionId: subject-year-topic
+                // Example: mathematics-1978-all-topics
+                const partsArr = sessionId.split('-');
+                const yearIndex = partsArr.findIndex(p => /^\d{4}$/.test(p));
+                
+                if (yearIndex === -1) throw new Error('Invalid session ID format');
+                
+                const subject = partsArr.slice(0, yearIndex).join(' '); 
+                const year = partsArr[yearIndex];
+                
+                const res = await fetch(`/api/questions?subject=${subject}&year=${year}`);
+                if (!res.ok) throw new Error('Failed to load questions');
+                
+                const data = await res.json();
+                if (!data.questions || data.questions.length === 0) {
+                    throw new Error('No questions found for this session.');
+                }
+                
+                const formattedQuestions = data.questions.map(q => ({
+                    id: q.qid,
+                    text: q.question,
+                    options: Object.entries(q.options).map(([key, value]) => ({
+                        id: key,
+                        text: value
+                    })).filter(o => o.text), 
+                    correctOption: q.answer,
+                    explanation: q.explanation
+                }));
+                
+                setQuestions(formattedQuestions);
+                
+                // Save to cache
+                localStorage.setItem(cacheKey, JSON.stringify(formattedQuestions));
+                localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (sessionId) {
+            fetchQuestions();
+        }
+    }, [sessionId]);
 
     useEffect(() => {
         if (user) {
@@ -117,7 +127,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     };
 
     const handleNextQuestion = () => {
-        if (currentQuestionIndex < MOCK_QUESTIONS.length - 1) {
+        if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(prev => prev + 1);
             resetState();
         }
@@ -162,6 +172,30 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+                <p className="mt-4 text-base-content/60">Loading questions...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+                <AlertCircle className="w-12 h-12 text-error mb-4" />
+                <h3 className="text-xl font-bold mb-2">Error Loading Session</h3>
+                <p className="text-base-content/60 mb-6">{error}</p>
+                <button onClick={() => window.location.reload()} className="btn btn-primary">
+                    Try Again
+                </button>
+            </div>
+        );
+    }
+
+    if (!currentQuestion) return null;
+
     return (
         <div className="max-w-3xl mx-auto w-full relative">
             {/* Premium Lock Overlay */}
@@ -195,8 +229,8 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
             {/* Header / Progress */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2 text-sm font-medium text-base-content/60">
-                    <span className="bg-base-200 px-2 py-1 rounded-lg">Question {currentQuestionIndex + 1} / {MOCK_QUESTIONS.length}</span>
-                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg">{subjectName || sessionId.split('-')[0]}</span>
+                    <span className="bg-base-200 px-2 py-1 rounded-lg">Question {currentQuestionIndex + 1} / {questions.length}</span>
+                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg capitalize">{subjectName || sessionId.split('-')[0]}</span>
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -208,7 +242,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     </button>
                     <button
                         onClick={handleNextQuestion}
-                        disabled={currentQuestionIndex === MOCK_QUESTIONS.length - 1}
+                        disabled={currentQuestionIndex === questions.length - 1}
                         className="btn btn-sm btn-circle btn-ghost"
                     >
                         <ChevronRight className="w-5 h-5" />
@@ -320,7 +354,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                         Correct Answer: Option {currentQuestion.correctOption}
                                     </h4>
                                     <p className="text-base-content/80 leading-relaxed">
-                                        {currentQuestion.explanation}
+                                        {currentQuestion.explanation || "No explanation provided."}
                                     </p>
                                 </motion.div>
                             ) : (

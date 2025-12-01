@@ -6,44 +6,86 @@ import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Calendar, Layers, Lock, Sparkles, ChevronRight, GraduationCap } from 'lucide-react';
 
-// Mock Data
+// Mock Data for Icons and Display Names
 const SUBJECTS = [
     { id: 'math', name: 'Mathematics', icon: '📐' },
     { id: 'eng', name: 'English Language', icon: '📚' },
     { id: 'phy', name: 'Physics', icon: '⚡' },
     { id: 'chem', name: 'Chemistry', icon: '🧪' },
     { id: 'bio', name: 'Biology', icon: '🧬' },
+    { id: 'govt', name: 'Government', icon: '🏛️' },
+    { id: 'econ', name: 'Economics', icon: '📈' },
+    { id: 'lit', name: 'Literature', icon: '📖' },
+    { id: 'crs', name: 'CRS', icon: '✝️' },
+    { id: 'geo', name: 'Geography', icon: '🌍' },
 ];
-
-const TOPICS = {
-    math: ['Algebra', 'Geometry', 'Calculus', 'Statistics', 'Trigonometry'],
-    eng: ['Grammar', 'Comprehension', 'Oral English', 'Literature', 'Vocabulary'],
-    phy: ['Mechanics', 'Waves', 'Electricity', 'Magnetism', 'Modern Physics'],
-    chem: ['Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry', 'Stoichiometry'],
-    bio: ['Cell Biology', 'Genetics', 'Ecology', 'Evolution', 'Physiology'],
-};
-
-const YEARS = Array.from({ length: 25 }, (_, i) => 2024 - i); // 2000-2024
 
 export default function StudySetupPage() {
     const router = useRouter();
     const { user } = useSelector((state) => state.auth);
+
     const [selectedSubject, setSelectedSubject] = useState('');
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedTopic, setSelectedTopic] = useState('');
     const [isPremium, setIsPremium] = useState(false);
 
+    const [availableMetadata, setAvailableMetadata] = useState({});
+    const [availableYears, setAvailableYears] = useState([]);
+    const [loadingMetadata, setLoadingMetadata] = useState(true);
+
     useEffect(() => {
         if (user) {
-            // Check if user is premium (mock logic: check for 'premium' plan or similar)
             setIsPremium(user.isPremium || user.plan === 'premium' || false);
         }
     }, [user]);
 
-    const handleStartStudy = () => {
-        if (!selectedSubject || !selectedYear || !selectedTopic) return;
+    // Fetch Metadata (Subjects & Years)
+    useEffect(() => {
+        const fetchMetadata = async () => {
+            try {
+                // Check cache first
+                const cached = localStorage.getItem('study_metadata');
+                const cachedTime = localStorage.getItem('study_metadata_time');
+                const ONE_HOUR = 60 * 60 * 1000;
 
-        const slug = `${selectedSubject}-${selectedYear}-${selectedTopic.toLowerCase().replace(/\s+/g, '-')}`;
+                if (cached && cachedTime && (Date.now() - parseInt(cachedTime) < ONE_HOUR)) {
+                    setAvailableMetadata(JSON.parse(cached));
+                    setLoadingMetadata(false);
+                }
+
+                // Fetch fresh data
+                const res = await fetch('/api/study/metadata');
+                if (res.ok) {
+                    const data = await res.json();
+                    setAvailableMetadata(data.metadata);
+                    localStorage.setItem('study_metadata', JSON.stringify(data.metadata));
+                    localStorage.setItem('study_metadata_time', Date.now().toString());
+                }
+            } catch (error) {
+                console.error('Failed to fetch metadata', error);
+            } finally {
+                setLoadingMetadata(false);
+            }
+        };
+
+        fetchMetadata();
+    }, []);
+
+    // Update available years when subject changes
+    useEffect(() => {
+        if (selectedSubject && availableMetadata[selectedSubject]) {
+            setAvailableYears(availableMetadata[selectedSubject]);
+            setSelectedYear(''); // Reset year
+        } else {
+            setAvailableYears([]);
+        }
+    }, [selectedSubject, availableMetadata]);
+
+    const handleStartStudy = () => {
+        if (!selectedSubject || !selectedYear) return;
+        // Default to 'all-topics' if no topic selected
+        const topicSlug = selectedTopic ? selectedTopic.toLowerCase().replace(/\s+/g, '-') : 'all-topics';
+        const slug = `${selectedSubject}-${selectedYear}-${topicSlug}`;
         router.push(`/study/${slug}`);
     };
 
@@ -80,7 +122,7 @@ export default function StudySetupPage() {
                         transition={{ delay: 0.2 }}
                         className="text-base-content/60 max-w-lg mx-auto"
                     >
-                        Select your subject, year, and topic to generate a personalized study guide.
+                        Select your subject and year to start practicing. Content is fetched directly from our database.
                     </motion.p>
                 </div>
 
@@ -98,24 +140,72 @@ export default function StudySetupPage() {
                                 <BookOpen className="w-5 h-5 text-primary" />
                                 Select Subject
                             </h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                {SUBJECTS.map((subject) => (
-                                    <button
-                                        key={subject.id}
-                                        onClick={() => {
-                                            setSelectedSubject(subject.id);
-                                            setSelectedTopic(''); // Reset topic when subject changes
-                                        }}
-                                        className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-2 ${selectedSubject === subject.id
-                                            ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                                            : 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
-                                            }`}
-                                    >
-                                        <span className="text-2xl">{subject.icon}</span>
-                                        <span className="font-medium text-sm">{subject.name}</span>
-                                    </button>
-                                ))}
-                            </div>
+                            {loadingMetadata ? (
+                                <div className="flex justify-center py-8">
+                                    <span className="loading loading-spinner loading-md text-primary"></span>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    {SUBJECTS.map((subject) => {
+                                        // Find matching key in metadata
+                                        const dbKey = Object.keys(availableMetadata).find(k =>
+                                            k.toLowerCase().includes(subject.name.toLowerCase()) ||
+                                            subject.name.toLowerCase().includes(k.toLowerCase())
+                                        );
+
+                                        const hasData = !!dbKey;
+                                        const subjectKey = dbKey || subject.name.toLowerCase();
+
+                                        return (
+                                            <button
+                                                key={subject.id}
+                                                disabled={!hasData}
+                                                onClick={() => {
+                                                    setSelectedSubject(subjectKey);
+                                                    setSelectedTopic('');
+                                                }}
+                                                className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-2 ${selectedSubject === subjectKey
+                                                    ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                                                    : hasData
+                                                        ? 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
+                                                        : 'border-base-200 opacity-50 cursor-not-allowed bg-base-200/30'
+                                                    }`}
+                                            >
+                                                <span className="text-2xl">{subject.icon}</span>
+                                                <span className="font-medium text-sm">{subject.name}</span>
+                                                {!hasData && <span className="text-[10px] text-error">No Data</span>}
+                                            </button>
+                                        );
+                                    })}
+
+                                    {/* Show other subjects from DB that might not be in our icon list */}
+                                    {Object.keys(availableMetadata).map(key => {
+                                        const isMapped = SUBJECTS.some(s =>
+                                            key.toLowerCase().includes(s.name.toLowerCase()) ||
+                                            s.name.toLowerCase().includes(key.toLowerCase())
+                                        );
+
+                                        if (isMapped) return null;
+
+                                        return (
+                                            <button
+                                                key={key}
+                                                onClick={() => {
+                                                    setSelectedSubject(key);
+                                                    setSelectedTopic('');
+                                                }}
+                                                className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-2 ${selectedSubject === key
+                                                    ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                                                    : 'border-base-200 hover:border-primary/50 hover:bg-base-200/50'
+                                                    }`}
+                                            >
+                                                <span className="text-2xl">📝</span>
+                                                <span className="font-medium text-sm capitalize">{key}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
 
                         {/* Year Selection */}
@@ -132,68 +222,49 @@ export default function StudySetupPage() {
                                     </span>
                                 )}
                             </div>
-                            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                                {YEARS.map((year) => {
-                                    const locked = isYearLocked(year);
-                                    return (
-                                        <button
-                                            key={year}
-                                            disabled={locked}
-                                            onClick={() => setSelectedYear(year)}
-                                            className={`p-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden ${selectedYear === year
-                                                ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20'
-                                                : locked
-                                                    ? 'bg-base-200/50 text-base-content/30 cursor-not-allowed'
-                                                    : 'bg-base-100 border border-base-200 hover:border-secondary hover:text-secondary'
-                                                }`}
-                                        >
-                                            {year}
-                                            {locked && (
-                                                <div className="absolute inset-0 flex items-center justify-center bg-base-200/80 backdrop-blur-[1px]">
-                                                    <Lock className="w-3 h-3 text-base-content/40" />
-                                                </div>
-                                            )}
-                                        </button>
-                                    );
-                                })}
-                            </div>
+
+                            {!selectedSubject ? (
+                                <div className="text-center py-8 text-base-content/40 text-sm">
+                                    Please select a subject first.
+                                </div>
+                            ) : availableYears.length === 0 ? (
+                                <div className="text-center py-8 text-base-content/40 text-sm">
+                                    No years found for this subject.
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                                    {availableYears.map((year) => {
+                                        const locked = isYearLocked(year);
+                                        return (
+                                            <button
+                                                key={year}
+                                                disabled={locked}
+                                                onClick={() => setSelectedYear(year)}
+                                                className={`p-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden ${selectedYear === year
+                                                    ? 'bg-secondary text-secondary-content shadow-lg shadow-secondary/20'
+                                                    : locked
+                                                        ? 'bg-base-200/50 text-base-content/30 cursor-not-allowed'
+                                                        : 'bg-base-100 border border-base-200 hover:border-secondary hover:text-secondary'
+                                                    }`}
+                                            >
+                                                {year}
+                                                {locked && (
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-base-200/80 backdrop-blur-[1px]">
+                                                        <Lock className="w-3 h-3 text-base-content/40" />
+                                                    </div>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
                             {!isPremium && (
                                 <div className="mt-4 p-3 bg-base-200/50 rounded-xl text-xs text-center text-base-content/60">
                                     Upgrade to Premium to unlock all years (2021-2024).
                                 </div>
                             )}
                         </div>
-
-                        {/* Topic Selection */}
-                        <AnimatePresence>
-                            {selectedSubject && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm overflow-hidden"
-                                >
-                                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                        <Layers className="w-5 h-5 text-accent" />
-                                        Select Topic
-                                    </h3>
-                                    <div className="flex flex-wrap gap-2">
-                                        {TOPICS[selectedSubject]?.map((topic) => (
-                                            <button
-                                                key={topic}
-                                                onClick={() => setSelectedTopic(topic)}
-                                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${selectedTopic === topic
-                                                    ? 'bg-accent text-accent-content border-accent'
-                                                    : 'bg-base-100 border-base-200 hover:border-accent/50'
-                                                    }`}
-                                            >
-                                                {topic}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
                     </motion.div>
 
                     {/* Right Column: Summary & Action */}
@@ -214,8 +285,8 @@ export default function StudySetupPage() {
                                 <div className="space-y-4 mb-8 relative z-10">
                                     <div className="flex justify-between items-center p-3 rounded-xl bg-base-200/50">
                                         <span className="text-sm text-base-content/60">Subject</span>
-                                        <span className="font-semibold">
-                                            {SUBJECTS.find(s => s.id === selectedSubject)?.name || '-'}
+                                        <span className="font-semibold capitalize">
+                                            {selectedSubject || '-'}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center p-3 rounded-xl bg-base-200/50">
@@ -225,14 +296,14 @@ export default function StudySetupPage() {
                                     <div className="flex justify-between items-center p-3 rounded-xl bg-base-200/50">
                                         <span className="text-sm text-base-content/60">Topic</span>
                                         <span className="font-semibold text-right max-w-[150px] truncate">
-                                            {selectedTopic || '-'}
+                                            {selectedTopic || 'All Topics'}
                                         </span>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={handleStartStudy}
-                                    disabled={!selectedSubject || !selectedYear || !selectedTopic}
+                                    disabled={!selectedSubject || !selectedYear}
                                     className="btn btn-primary w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20 disabled:bg-base-300 disabled:text-base-content/40 flex items-center justify-center gap-2"
                                 >
                                     Start Study
