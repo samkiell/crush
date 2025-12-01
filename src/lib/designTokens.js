@@ -4,11 +4,11 @@
 
 export const colors = {
   light: {
-    primary: '#2563eb',
-    secondary: '#f59e0b',
-    accent: '#10b981',
-    bg: '#f8fafc',
-    text: '#111827',
+    primary: '#FFC107',
+    secondary: '#E9ECEF',
+    accent: '#FFA000',
+    bg: '#FFFFFF',
+    text: '#212529',
   },
   dark: {
     primary: '#3b82f6',
