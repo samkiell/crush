@@ -138,7 +138,7 @@ export default function MomentumLayer({ user, stats }) {
                         <h2 className="text-lg font-semibold opacity-90">JAMB Countdown</h2>
                         <div className="flex items-baseline gap-2 mt-1">
                             <span className="text-5xl font-bold font-display">{daysRemaining}</span>
-                            <span className="text-xl opacity-80">days left</span>
+                            <span className="text-xl opacity-80">days left 🔥</span>
                         </div>
                     </div>
 

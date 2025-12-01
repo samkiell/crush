@@ -170,9 +170,9 @@ const Header = () => {
               className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 transition-transform hover:rotate-12"
               aria-label="Toggle theme"
             >
-              {(!mounted || theme === 'light') && <Sun className="w-5 h-5" />}
-              {mounted && theme === 'dark' && <Moon className="w-5 h-5" />}
-              {mounted && theme === 'eye-care' && <Eye className="w-5 h-5" />}
+              {(!mounted || theme === 'light') && <Sun className="w-6 h-6" />}
+              {mounted && theme === 'dark' && <Moon className="w-6 h-6" />}
+              {mounted && theme === 'eye-care' && <Eye className="w-6 h-6" />}
             </button>
 
             {isAuthenticated && (
@@ -183,7 +183,7 @@ const Header = () => {
                   className="btn btn-ghost btn-circle btn-sm hover:bg-base-content/10 relative"
                   title="Notifications"
                 >
-                  <Bell className="w-5 h-5" />
+                  <Bell className="w-6 h-6" />
                   {/* Unread count badge - replace 3 with actual unread count from Redux */}
                   <span className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold border-2 border-base-100 shadow-sm">
                     3
