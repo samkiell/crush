@@ -49,9 +49,14 @@ const Feed = () => {
     }
 
     return (
-        <div className="space-y-4">
-            {posts.map((post) => (
-                <PostCard key={post._id} post={post} />
+        <div className="flex flex-col gap-8">
+            {posts.map((post, index) => (
+                <div key={post._id}>
+                    <PostCard post={post} />
+                    {index < posts.length - 1 && (
+                        <hr className="border-t border-base-300 my-8 mx-4" />
+                    )}
+                </div>
             ))}
 
             {posts.length === 0 && !loading && (
