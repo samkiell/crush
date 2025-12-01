@@ -8,8 +8,10 @@ import { Home, BookOpen, MessageSquare, Users, Monitor, Upload, UserCog } from '
 
 export default function BottomNav() {
     const pathname = usePathname();
-    const { user } = useSelector((state) => state.auth);
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
     const isAdmin = user?.role === 'admin';
+
+    if (!isAuthenticated) return null;
 
     const studentNavItems = [
         {
