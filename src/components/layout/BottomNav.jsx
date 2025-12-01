@@ -1,14 +1,17 @@
 'use client';
 
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Home, BookOpen, MessageSquare, Users, Monitor } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, Users, Monitor, Upload, UserCog } from 'lucide-react';
 
 export default function BottomNav() {
     const pathname = usePathname();
+    const { user } = useSelector((state) => state.auth);
+    const isAdmin = user?.role === 'admin';
 
-    const navItems = [
+    const studentNavItems = [
         {
             label: 'Home',
             href: '/dashboard',
@@ -35,6 +38,36 @@ export default function BottomNav() {
             icon: Monitor,
         },
     ];
+
+    const adminNavItems = [
+        {
+            label: 'Home',
+            href: '/dashboard',
+            icon: Home,
+        },
+        {
+            label: 'Community',
+            href: '/community',
+            icon: Users,
+        },
+        {
+            label: 'Chat',
+            href: '/chat',
+            icon: MessageSquare,
+        },
+        {
+            label: 'Upload',
+            href: '/admin/questions/upload',
+            icon: Upload,
+        },
+        {
+            label: 'Users',
+            href: '/admin/users',
+            icon: UserCog,
+        },
+    ];
+
+    const navItems = isAdmin ? adminNavItems : studentNavItems;
 
     return (
         <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">

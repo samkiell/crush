@@ -25,7 +25,7 @@ export async function POST(req) {
 
     // Validate each question structure
     for (const q of questions) {
-      if (!q.qid || !q.question || !q.options || !q.answer) {
+      if (!q.qid || !q.question || !q.options) {
         return NextResponse.json(
           { message: `Invalid question format for QID: ${q.qid || 'unknown'}` },
           { status: 400 }
@@ -49,7 +49,7 @@ export async function POST(req) {
       qid: q.qid,
       question: q.question,
       options: q.options,
-      answer: q.answer.toUpperCase(),
+      answer: q.answer ? q.answer.toUpperCase() : undefined,
       explanation: q.explanation || '',
     }));
 
