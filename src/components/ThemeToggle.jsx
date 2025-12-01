@@ -3,15 +3,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, Eye } from 'lucide-react';
-import { themeConfig } from '@/lib/designTokens';
-
 import { usePathname } from 'next/navigation';
+import { useTheme } from '@/utils/theme';
 
 export default function ThemeToggle({
     availableThemes = ['light', 'dark', 'eye-care'],
     variant = 'compact'
 }) {
-    const [currentTheme, setCurrentTheme] = useState('light');
+    const { theme: currentTheme, setTheme: setCurrentTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
 
@@ -20,17 +19,11 @@ export default function ThemeToggle({
 
     useEffect(() => {
         setMounted(true);
-        const savedTheme = localStorage.getItem(themeConfig.storageKey) || 'light';
-        // Allow keeping eye-care if already set, even if navigating away, until changed
-        const theme = availableThemes.includes(savedTheme) ? savedTheme : availableThemes[0];
-        setCurrentTheme(theme);
-        document.documentElement.setAttribute('data-theme', theme);
-    }, [availableThemes]);
+    }, []);
 
     const handleThemeChange = (theme) => {
         setCurrentTheme(theme);
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem(themeConfig.storageKey, theme);
+        // The ThemeProvider will handle localStorage and DOM updates
     };
 
     const cycleTheme = () => {
@@ -49,7 +42,7 @@ export default function ThemeToggle({
         'eye-care': Eye,
     };
 
-    const Icon = icons[currentTheme];
+    const Icon = icons[currentTheme] || Sun;
 
     if (variant === 'compact') {
         return (

@@ -17,7 +17,7 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem("d2c_theme");
+        const saved = localStorage.getItem("crushedu-theme");
         return saved || "light";
       } catch (err) {
         return "light";
@@ -29,7 +29,7 @@ export const ThemeProvider = ({ children }) => {
   // Hydrate from localStorage on client only - mostly for ensuring state sync
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("d2c_theme");
+      const saved = localStorage.getItem("crushedu-theme");
       if (saved && saved !== theme) setTheme(saved);
     } catch (err) {
       // ignore
@@ -42,7 +42,7 @@ export const ThemeProvider = ({ children }) => {
       document.documentElement.setAttribute("data-theme", theme);
     }
     try {
-      localStorage.setItem("d2c_theme", theme);
+      localStorage.setItem("crushedu-theme", theme);
     } catch (err) {
       // ignore
     }

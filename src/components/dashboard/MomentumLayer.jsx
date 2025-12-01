@@ -8,6 +8,65 @@ import { stagger, variants } from '@/lib/motionConfig';
 export default function MomentumLayer({ user, stats }) {
     const firstName = user?.name?.split(' ')[0] || 'Scholar';
 
+    const [quote, setQuote] = useState('Ready to crush your goals today? 🚀');
+
+    useEffect(() => {
+        const quotes = [
+            "Crush your limits, one question at a time! 🚀",
+            "Did you know? The brain is like a muscle—the more you use it, the stronger it gets. 💪",
+            "What’s one new thing you’ll master today?",
+            "Success is the sum of small efforts, repeated day in and day out.",
+            "Don't just study hard, study smart with CrushEdu.",
+            "Your only limit is your mind. Crush it!",
+            "Fact: Spaced repetition is the most effective way to learn. 🧠",
+            "Are you ready to turn your dreams into reality?",
+            "Every pro was once a beginner. Keep going!",
+            "Consistency is key. You're doing great!",
+            "Believe you can and you're halfway there.",
+            "Crush the exam, own your future.",
+            "Did you know? Teaching someone else is the best way to learn.",
+            "What if you gave it 100% today?",
+            "The future belongs to those who prepare for it today.",
+            "Stay focused, stay hungry, stay Crushing.",
+            "Mistakes are proof that you are trying.",
+            "Fact: Taking breaks actually helps memory retention. ⏸️",
+            "You are capable of more than you know.",
+            "Make today count!",
+            "Don't watch the clock; do what it does. Keep going.",
+            "CrushEdu is here to fuel your journey.",
+            "Success doesn't come to you, you go to it.",
+            "Did you know? Hydration boosts brain function. Drink up! 💧",
+            "What’s your goal for this session?",
+            "Dream big, study hard, Crush everything.",
+            "The secret of getting ahead is getting started.",
+            "Your potential is endless.",
+            "Fact: Writing things down helps you remember them better. ✍️",
+            "Be stronger than your excuses.",
+            "You’re building your future, one answer at a time.",
+            "Crush the doubt, unleash the scholar.",
+            "It always seems impossible until it's done.",
+            "Did you know? Classical music can improve concentration. 🎵",
+            "Who are you doing this for? Keep them in mind.",
+            "Strive for progress, not perfection.",
+            "The best way to predict the future is to create it.",
+            "You have what it takes to Crush this exam!",
+            "Fact: Sleep is crucial for memory consolidation. 😴",
+            "Don't stop until you're proud.",
+            "Every study session brings you closer to victory.",
+            "Crush your fears with preparation.",
+            "Did you know? Visualizing success improves performance. 👁️",
+            "What’s the one topic you want to conquer today?",
+            "Discipline is choosing between what you want now and what you want most.",
+            "You are a force to be reckoned with.",
+            "Keep calm and Crush on.",
+            "Fact: A positive mindset increases problem-solving ability. 😊",
+            "Your hard work will pay off. Believe it.",
+            "Let's make history today. Ready to Crush it?"
+        ];
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        setQuote(randomQuote);
+    }, []);
+
     // Calculate days until JAMB (Main Exam: April 25, 2026)
     const examDate = new Date('2026-04-25');
     const today = new Date();
