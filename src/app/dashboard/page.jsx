@@ -14,6 +14,7 @@ import { usersAPI } from '@/services/api';
 import MomentumLayer from '@/components/dashboard/MomentumLayer';
 import ProgressLayer from '@/components/dashboard/ProgressLayer';
 import DeepDiveLayer from '@/components/dashboard/DeepDiveLayer';
+import AdminCMSLayer from '@/components/dashboard/AdminCMSLayer';
 
 export default function DashboardPage() {
   const dispatch = useDispatch();
@@ -80,24 +81,36 @@ export default function DashboardPage() {
     );
   }
 
+  const isAdmin = user?.role === 'admin';
+
   return (
     <div className="min-h-screen bg-base-100 pb-20 md:pb-6">
       <div className="container mx-auto px-4 py-6 max-w-7xl space-y-8">
 
         {/* 1. Momentum Layer (Above the fold) */}
+        {/* For Admins, this only shows Wallet + Countdown */}
         <section>
           <MomentumLayer user={user} stats={stats} />
         </section>
 
-        {/* 2. Progress Layer */}
-        <section>
-          <ProgressLayer stats={stats} progress={progress} />
-        </section>
+        {/* 2. Admin CMS vs Student Progress */}
+        {isAdmin ? (
+          <section>
+            <AdminCMSLayer />
+          </section>
+        ) : (
+          <>
+            {/* 2. Progress Layer */}
+            <section>
+              <ProgressLayer stats={stats} progress={progress} />
+            </section>
 
-        {/* 3. Deep Dive Layer (Collapsible) */}
-        <section>
-          <DeepDiveLayer stats={stats} user={user} />
-        </section>
+            {/* 3. Deep Dive Layer (Collapsible) */}
+            <section>
+              <DeepDiveLayer stats={stats} user={user} />
+            </section>
+          </>
+        )}
 
       </div>
     </div>

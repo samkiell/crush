@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Calendar, Play, BookOpen, Users, ArrowRight, Wallet, Plus, HelpCircle, Upload } from 'lucide-react';
+import { Flame, Calendar, Play, BookOpen, Users, ArrowRight, Wallet, Plus, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 
@@ -77,10 +77,7 @@ export default function MomentumLayer({ user, stats }) {
         { label: 'Start Test', icon: Play, href: '/cbt', color: 'text-primary', bg: 'bg-primary/10' },
         { label: 'Study Mode', icon: BookOpen, href: '/study', color: 'text-secondary', bg: 'bg-secondary/10' },
         { label: 'Community', icon: Users, href: '/community', color: 'text-accent', bg: 'bg-accent/10' },
-        ...(user?.role === 'admin'
-            ? [{ label: 'Upload Qs', icon: Upload, href: '/admin/questions/upload', color: 'text-warning', bg: 'bg-warning/10' }]
-            : [{ label: 'Coming Soon', icon: HelpCircle, href: '#', color: 'text-info', bg: 'bg-info/10' }]
-        ),
+        { label: 'Coming Soon', icon: HelpCircle, href: '#', color: 'text-info', bg: 'bg-info/10' },
     ];
 
     return (
@@ -156,50 +153,54 @@ export default function MomentumLayer({ user, stats }) {
                     </div>
                 </motion.div>
 
-                {/* 3. Quick Actions */}
-                <motion.div
-                    variants={stagger.container(0.05)}
-                    className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-3"
-                >
-                    {quickActions.map((action) => (
-                        <Link key={action.label} href={action.href} className="block h-full">
-                            <motion.div
-                                variants={variants.fadeUp}
-                                whileHover={{ y: -2 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-primary/20 transition-all h-full"
-                            >
-                                <div className={`p-3 rounded-xl ${action.bg} ${action.color} mb-2`}>
-                                    <action.icon className="w-6 h-6" />
-                                </div>
-                                <span className="text-sm font-semibold text-base-content/80 text-center">{action.label}</span>
-                            </motion.div>
-                        </Link>
-                    ))}
-                </motion.div>
+                {/* 3. Quick Actions (Hidden for Admin) */}
+                {user?.role !== 'admin' && (
+                    <motion.div
+                        variants={stagger.container(0.05)}
+                        className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-3"
+                    >
+                        {quickActions.map((action) => (
+                            <Link key={action.label} href={action.href} className="block h-full">
+                                <motion.div
+                                    variants={variants.fadeUp}
+                                    whileHover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="flex flex-col items-center justify-center p-4 rounded-2xl bg-base-100 border border-base-200 shadow-sm hover:shadow-md hover:border-primary/20 transition-all h-full"
+                                >
+                                    <div className={`p-3 rounded-xl ${action.bg} ${action.color} mb-2`}>
+                                        <action.icon className="w-6 h-6" />
+                                    </div>
+                                    <span className="text-sm font-semibold text-base-content/80 text-center">{action.label}</span>
+                                </motion.div>
+                            </Link>
+                        ))}
+                    </motion.div>
+                )}
 
-                {/* 4. Streak Card */}
-                <motion.div
-                    variants={variants.scale}
-                    className="md:col-span-4 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-6 flex flex-col justify-center shadow-sm relative overflow-hidden"
-                >
-                    <div className="flex items-center justify-between relative z-10">
-                        <div>
-                            <p className="text-sm text-base-content/60 font-medium mb-1">Daily Streak</p>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-4xl font-bold text-orange-600">{stats?.streak || 0}</span>
-                                <span className="text-sm text-orange-600/80">days</span>
+                {/* 4. Streak Card (Hidden for Admin) */}
+                {user?.role !== 'admin' && (
+                    <motion.div
+                        variants={variants.scale}
+                        className="md:col-span-4 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-6 flex flex-col justify-center shadow-sm relative overflow-hidden"
+                    >
+                        <div className="flex items-center justify-between relative z-10">
+                            <div>
+                                <p className="text-sm text-base-content/60 font-medium mb-1">Daily Streak</p>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-4xl font-bold text-orange-600">{stats?.streak || 0}</span>
+                                    <span className="text-sm text-orange-600/80">days</span>
+                                </div>
+                                <p className="text-xs text-base-content/50 mt-1">You're on fire! 🔥</p>
                             </div>
-                            <p className="text-xs text-base-content/50 mt-1">You're on fire! 🔥</p>
-                        </div>
-                        <div className="relative">
-                            <div className="p-4 bg-orange-500 rounded-full text-white shadow-lg shadow-orange-500/30">
-                                <Flame className="w-8 h-8 fill-current" />
+                            <div className="relative">
+                                <div className="p-4 bg-orange-500 rounded-full text-white shadow-lg shadow-orange-500/30">
+                                    <Flame className="w-8 h-8 fill-current" />
+                                </div>
+                                <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-20" />
                             </div>
-                            <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-20" />
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                )}
             </div>
         </motion.div>
     );
