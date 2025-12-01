@@ -218,35 +218,6 @@ export default function MomentumLayer({ user, stats }) {
                                 </div>
                             </div>
                         </motion.div>
-
-                        {/* Resume Card */}
-                        {activeSession && (
-                            <motion.div
-                                variants={variants.scale}
-                                className="bg-base-100 border border-base-200 rounded-3xl p-5 shadow-sm relative overflow-hidden group hover:border-primary/50 transition-colors"
-                            >
-                                <Link href={activeSession.href} className="block relative z-10">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-2">
-                                            <div className="p-2 bg-primary/10 text-primary rounded-lg">
-                                                <RotateCcw className="w-4 h-4" />
-                                            </div>
-                                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Resume</span>
-                                        </div>
-                                        <span className="text-xs font-mono text-base-content/60">{activeSession.progress}%</span>
-                                    </div>
-
-                                    <h3 className="font-bold text-base mb-1 truncate">{activeSession.title}</h3>
-                                    <p className="text-xs text-base-content/60 mb-3">{activeSession.type}</p>
-
-                                    <div className="w-full bg-base-200 h-1.5 rounded-full overflow-hidden">
-                                        <div
-                                            className="bg-primary h-full rounded-full transition-all duration-500"
-                                            style={{ width: `${activeSession.progress}%` }}
-                                        />
-                                    </div>
-                                </Link>
-                            </motion.div>
                         )}
                     </div>
                 )}

@@ -1,15 +1,36 @@
 'use client';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database, Activity, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
+import api from '@/services/api';
 
 export default function AdminCMSLayer() {
+    const [statsData, setStatsData] = useState({
+        totalUsers: 0,
+        totalQuestions: 0,
+        activeNow: 0,
+        dailyExams: 0
+    });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const res = await api.get('/admin/stats');
+                setStatsData(res.data);
+            } catch (error) {
+                console.error('Failed to fetch admin stats:', error);
+            }
+        };
+        fetchStats();
+    }, []);
+
     const stats = [
-        { label: 'Total Users', value: '1,234', change: '+12%', icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
-        { label: 'Questions', value: '15.4k', change: '+5%', icon: Database, color: 'text-secondary', bg: 'bg-secondary/10' },
-        { label: 'Active Now', value: '42', change: '+8%', icon: Activity, color: 'text-success', bg: 'bg-success/10' },
-        { label: 'Daily Exams', value: '156', change: '+23%', icon: TrendingUp, color: 'text-accent', bg: 'bg-accent/10' },
+        { label: 'Total Users', value: statsData.totalUsers.toLocaleString(), change: 'Total', icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
+        { label: 'Questions', value: statsData.totalQuestions.toLocaleString(), change: 'Total', icon: Database, color: 'text-secondary', bg: 'bg-secondary/10' },
+        { label: 'Active Now', value: statsData.activeNow.toLocaleString(), change: 'Online', icon: Activity, color: 'text-success', bg: 'bg-success/10' },
+        { label: 'Daily Exams', value: statsData.dailyExams.toLocaleString(), change: 'Last 24h', icon: TrendingUp, color: 'text-accent', bg: 'bg-accent/10' },
     ];
 
     const adminActions = [
