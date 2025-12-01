@@ -8,8 +8,8 @@ import { stagger, variants } from '@/lib/motionConfig';
 export default function MomentumLayer({ user, stats }) {
     const firstName = user?.name?.split(' ')[0] || 'Scholar';
 
-    // Calculate days until JAMB (Example date: April 19, 2026)
-    const examDate = new Date('2026-04-19');
+    // Calculate days until JAMB (Main Exam: April 25, 2026)
+    const examDate = new Date('2026-04-25');
     const today = new Date();
     const timeDiff = examDate.getTime() - today.getTime();
     const daysRemaining = Math.max(0, Math.ceil(timeDiff / (1000 * 3600 * 24)));
@@ -30,8 +30,14 @@ export default function MomentumLayer({ user, stats }) {
         >
             {/* Greeting & Subtitle */}
             <motion.div variants={variants.fadeUp} className="px-1">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    Hello, {firstName}
+                <h1 className="text-3xl font-bold text-primary">
+                    {(() => {
+                        const hour = new Date().getHours();
+                        if (hour < 12) return 'Good Morning';
+                        if (hour < 18) return 'Good Afternoon';
+                        if (hour < 22) return 'Good Evening';
+                        return 'Good Night';
+                    })()}, {firstName}
                 </h1>
                 <p className="text-base-content/70 font-medium">
                     Ready to crush your goals today? 🚀
@@ -64,7 +70,7 @@ export default function MomentumLayer({ user, stats }) {
                                     style={{ width: `${Math.max(0, Math.min(100, 100 - (daysRemaining / 365) * 100))}%` }}
                                 />
                             </div>
-                            <p className="text-sm opacity-80">Keep pushing! You're getting closer.</p>
+                            <p className="text-sm opacity-80">Main Exam: April 25 - May 5, 2026</p>
                         </div>
                     </div>
                 </motion.div>
