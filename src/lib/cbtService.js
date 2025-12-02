@@ -29,8 +29,9 @@ export const processAnswers = async (sessionId, answers) => {
   }
 
   // Update session progress
-  const count = await CbtAnswer.countDocuments({ sessionId });
-  await CbtSession.findByIdAndUpdate(sessionId, { answeredCount: count });
+  if (sessionId.match(/^[0-9a-fA-F]{24}$/)) {
+    await CbtSession.findByIdAndUpdate(sessionId, { answeredCount: count });
+  }
 
   return results;
 };

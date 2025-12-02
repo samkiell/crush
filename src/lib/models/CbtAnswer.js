@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 
 const CbtAnswerSchema = new mongoose.Schema(
   {
-    sessionId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CbtSession",
-      required: true,
-    },
+    sessionId: { type: String, required: true },
     questionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Question",

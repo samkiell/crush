@@ -46,11 +46,11 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
              <ChevronLeft />
            </Link>
            <div>
-             <h1 className="font-bold text-sm md:text-base capitalize leading-tight">
-               {subject} {year}
+             <h1 className="font-bold text-sm md:text-base leading-tight">
+               JAMB • {year}
              </h1>
-             <p className="text-xs text-base-content/60 font-mono">
-               Question {currentIndex + 1} of {questions.length} • {subject}
+             <p className="text-xs text-base-content/60 font-mono capitalize">
+               Question {currentIndex + 1}/{questions.length} • {subject?.replace(/-/g, ' ')}
              </p>
            </div>
         </div>
