@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+// Force model rebuild in development
+if (process.env.NODE_ENV === "development") {
+  delete mongoose.models.CbtAnswer;
+}
+
 const CbtAnswerSchema = new mongoose.Schema(
   {
     sessionId: { type: String, required: true },
