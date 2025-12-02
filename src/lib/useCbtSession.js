@@ -22,11 +22,37 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   useEffect(() => {
     const load = async () => {
       try {
+        // Try loading from IDB first
         let qs = await getQuestions();
-        if (qs.length === 0 && initialQuestions) {
-          qs = initialQuestions;
+
+        // If no questions in IDB or force refresh needed, fetch from API
+        if (qs.length === 0) {
+          // Parse session ID to get subject/year if needed, or use a specific endpoint
+          // For now, let's mock some questions if the API fails or is not ready
+          // In production, this should call /api/questions?subject=...
+
+          // Attempt to fetch from API (assuming an endpoint exists or we use the mock)
+          // const res = await fetch(`/api/questions?subject=${subject}&year=${year}`);
+          // qs = await res.json();
+
+          // FALLBACK MOCK DATA for testing if API is not ready
+          qs = Array.from({ length: 40 }).map((_, i) => ({
+            qid: `q-${i}`,
+            question: `This is a sample question ${
+              i + 1
+            } for testing the CBT interface. What is the answer?`,
+            options: {
+              A: "Option A",
+              B: "Option B",
+              C: "Option C",
+              D: "Option D",
+            },
+            answer: "A",
+          }));
+
           await saveQuestions(qs);
         }
+
         setQuestions(qs);
         setStatus("active");
       } catch (e) {

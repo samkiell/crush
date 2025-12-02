@@ -75,8 +75,9 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
         {/* Question Area */}
         <div className="bg-base-100 rounded-2xl shadow-sm p-6 relative overflow-hidden min-h-[60vh]">
           {status === 'loading' ? (
-             <div className="flex items-center justify-center h-full">
+             <div className="flex flex-col items-center justify-center h-full gap-4">
                <span className="loading loading-spinner loading-lg text-primary"></span>
+               <p className="text-base-content/60 animate-pulse font-medium">Loading your session...</p>
              </div>
           ) : (
             <QuestionView
