@@ -76,7 +76,6 @@ const Header = () => {
 
   const baseLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Exams', href: '/exam', icon: BookOpen },
     { name: 'Study', href: '/study', icon: Library },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },

@@ -60,12 +60,12 @@ export const questionsAPI = {
   deleteQuestion: (id) => api.delete(`/questions/${id}`),
 };
 
-export const examsAPI = {
-  getExams: () => api.get('/exams'),
-  getExam: (id) => api.get(`/exams/${id}`),
-  createExam: (exam) => api.post('/exams', exam),
-  submitExam: (examId, answers) => api.post(`/exams/${examId}/submit`, { answers }),
-  getResults: () => api.get('/exams/results'),
+export const cbtAPI = {
+  getExams: () => api.get('/cbt'),
+  getExam: (id) => api.get(`/cbt/${id}`),
+  createExam: (exam) => api.post('/cbt', exam),
+  submitExam: (examId, answers) => api.post(`/cbt/${examId}/submit`, { answers }),
+  getResults: () => api.get('/cbt/results'),
 };
 
 export const usersAPI = {
