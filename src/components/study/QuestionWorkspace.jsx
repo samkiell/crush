@@ -267,7 +267,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     <button
                         onClick={handlePrevQuestion}
                         disabled={currentQuestionIndex === 0}
-                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3"
+                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3 !flex !flex-row !items-center"
                     >
                         <ChevronLeft className="w-6 h-6 sm:w-5 sm:h-5" />
                         <span className="hidden sm:inline">Previous</span>
@@ -275,7 +275,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     <button
                         onClick={handleNextQuestion}
                         disabled={currentQuestionIndex === questions.length - 1}
-                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3"
+                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3 !flex !flex-row !items-center"
                     >
                         <span className="hidden sm:inline">Next</span>
                         <ChevronRight className="w-6 h-6 sm:w-5 sm:h-5" />

@@ -480,36 +480,36 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                 <button
                     onClick={handlePrevQuestion}
                     disabled={currentQuestionIndex === 0}
-                    className="btn btn-outline rounded-xl gap-2"
+                    className="btn btn-outline rounded-xl gap-2 !flex !flex-row !items-center"
                 >
                     <ChevronLeft className="w-5 h-5" />
-                    Previous
+                    <span>Previous</span>
                 </button>
 
                 {currentQuestionIndex === questions.length - 1 ? (
                     examStatus === 'active' ? (
                         <button
                             onClick={handleSubmitExam}
-                            className="btn btn-primary rounded-xl gap-2 px-8"
+                            className="btn btn-primary rounded-xl gap-2 px-8 !flex !flex-row !items-center"
                         >
-                            Submit Exam
+                            <span>Submit Exam</span>
                             <Flag className="w-5 h-5" />
                         </button>
                     ) : (
                         <button
                             onClick={() => router.push('/cbt')}
-                            className="btn btn-primary rounded-xl gap-2"
+                            className="btn btn-primary rounded-xl gap-2 !flex !flex-row !items-center"
                         >
-                            Finish Review
+                            <span>Finish Review</span>
                             <CheckCircle className="w-5 h-5" />
                         </button>
                     )
                 ) : (
                     <button
                         onClick={handleNextQuestion}
-                        className="btn btn-outline rounded-xl gap-2"
+                        className="btn btn-outline rounded-xl gap-2 !flex !flex-row !items-center"
                     >
-                        Next
+                        <span>Next</span>
                         <ChevronRight className="w-5 h-5" />
                     </button>
                 )}
