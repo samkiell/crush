@@ -40,29 +40,33 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
   return (
     <div className="min-h-screen bg-base-200 flex flex-col">
       {/* Header */}
-      <header className="bg-base-100 shadow-sm px-4 py-3 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-3">
+      <header className="bg-base-100 shadow-sm px-4 py-4 sticky top-0 z-30">
+        <div className="flex items-center gap-3 mb-4">
            <Link href="/cbt" className="btn btn-ghost btn-sm btn-circle">
              <ChevronLeft />
            </Link>
            <div>
-             <h1 className="font-bold text-sm md:text-base leading-tight">
-               JAMB • {year}
+             <h1 className="font-bold text-lg leading-tight">
+               CBT Session
              </h1>
-             <p className="text-xs text-base-content/60 font-mono capitalize">
-               Question {currentIndex + 1}/{questions.length} • {subject?.replace(/-/g, ' ')}
+             <p className="text-sm text-base-content/60 font-mono">
+               JAMB {year}
              </p>
+           </div>
+           
+           <div className="ml-auto flex items-center gap-2 font-mono text-sm font-bold bg-base-200 px-3 py-1.5 rounded-lg">
+             <Clock size={16} className={timeLeft < 300000 ? 'text-error animate-pulse' : 'text-primary'} />
+             <span>{formatTime(timeLeft)}</span>
            </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 font-mono text-sm md:text-base font-bold bg-base-200 px-3 py-1.5 rounded-lg">
-            <Clock size={16} className={timeLeft < 300000 ? 'text-error animate-pulse' : 'text-primary'} />
-            <span>{formatTime(timeLeft)}</span>
-          </div>
-          <button onClick={() => setShowNav(!showNav)} className="btn btn-ghost btn-sm btn-circle md:hidden">
-            <Grid size={20} />
-          </button>
+        <div className="flex items-center justify-between text-sm font-medium px-1">
+          <span className="text-base-content/80">
+            Question {currentIndex + 1} / {questions.length}
+          </span>
+          <span className="capitalize text-base-content/80">
+            {subject?.replace(/-/g, ' ')}
+          </span>
         </div>
       </header>
 
