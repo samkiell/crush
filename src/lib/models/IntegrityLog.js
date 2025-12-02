@@ -2,8 +2,7 @@ import mongoose from "mongoose";
 
 const IntegrityLogSchema = new mongoose.Schema({
   sessionId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "CbtSession",
+    type: String,
     required: true,
   },
   eventType: { type: String, required: true },

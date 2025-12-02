@@ -17,20 +17,21 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+export const viewport = {
+  themeColor: '#ece9e1ff',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata = {
   title: "DEVOUR TO CRUSH - JAMB Exam Prep",
   description: "Comprehensive JAMB exam preparation platform",
   manifest: '/manifest.json',
-  themeColor: '#ece9e1ff',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'D2C',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
   },
 };
 

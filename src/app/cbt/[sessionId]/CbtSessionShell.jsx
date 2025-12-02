@@ -9,7 +9,7 @@ import FlagReportModal from '@/components/FlagReportModal.client';
 import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 import Link from 'next/link';
 
-export default function CbtSessionShell({ sessionId }) {
+export default function CbtSessionShell({ sessionId, subject, year }) {
   const {
     questions,
     currentIndex,
@@ -40,18 +40,23 @@ export default function CbtSessionShell({ sessionId }) {
   return (
     <div className="min-h-screen bg-base-200 flex flex-col">
       {/* Header */}
-      <header className="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-2">
+      <header className="bg-base-100 shadow-sm px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center gap-3">
            <Link href="/cbt" className="btn btn-ghost btn-sm btn-circle">
              <ChevronLeft />
            </Link>
-           <div className="font-bold text-sm md:text-base">
-             Q{currentIndex + 1} <span className="text-base-content/50">/ {questions.length}</span>
+           <div>
+             <h1 className="font-bold text-sm md:text-base capitalize leading-tight">
+               {subject} {year}
+             </h1>
+             <p className="text-xs text-base-content/60 font-mono">
+               Question {currentIndex + 1} of {questions.length} • {subject}
+             </p>
            </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 font-mono text-lg font-bold bg-base-200 px-3 py-1 rounded-lg">
+          <div className="flex items-center gap-2 font-mono text-sm md:text-base font-bold bg-base-200 px-3 py-1.5 rounded-lg">
             <Clock size={16} className={timeLeft < 300000 ? 'text-error animate-pulse' : 'text-primary'} />
             <span>{formatTime(timeLeft)}</span>
           </div>
