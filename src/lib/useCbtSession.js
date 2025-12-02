@@ -27,28 +27,57 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
 
         // If no questions in IDB or force refresh needed, fetch from API
         if (qs.length === 0) {
-          // Parse session ID to get subject/year if needed, or use a specific endpoint
-          // For now, let's mock some questions if the API fails or is not ready
-          // In production, this should call /api/questions?subject=...
+          // Parse session ID: subject-year-topic
+          const parts = sessionId.split("-");
+          const subject = parts[0];
+          const year = parts[1];
 
-          // Attempt to fetch from API (assuming an endpoint exists or we use the mock)
-          // const res = await fetch(`/api/questions?subject=${subject}&year=${year}`);
-          // qs = await res.json();
-
-          // FALLBACK MOCK DATA for testing if API is not ready
-          qs = Array.from({ length: 40 }).map((_, i) => ({
-            qid: `q-${i}`,
-            question: `This is a sample question ${
-              i + 1
-            } for testing the CBT interface. What is the answer?`,
-            options: {
-              A: "Option A",
-              B: "Option B",
-              C: "Option C",
-              D: "Option D",
-            },
-            answer: "A",
-          }));
+          if (subject && year) {
+            try {
+              const res = await fetch(
+                `/api/questions?subject=${subject}&year=${year}`
+              );
+              if (res.ok) {
+                const data = await res.json();
+                if (data.questions && data.questions.length > 0) {
+                  qs = data.questions;
+                } else {
+                  throw new Error("No questions found");
+                }
+              } else {
+                throw new Error("Failed to fetch questions");
+              }
+            } catch (err) {
+              console.error("API fetch failed, falling back to mock", err);
+              // Fallback mock only if API fails
+              qs = Array.from({ length: 40 }).map((_, i) => ({
+                qid: `q-${i}`,
+                question: `This is a sample question ${
+                  i + 1
+                } (Fallback). Real questions failed to load.`,
+                options: {
+                  A: "Option A",
+                  B: "Option B",
+                  C: "Option C",
+                  D: "Option D",
+                },
+                answer: "A",
+              }));
+            }
+          } else {
+            // Fallback if ID format is wrong
+            qs = Array.from({ length: 40 }).map((_, i) => ({
+              qid: `q-${i}`,
+              question: `This is a sample question ${i + 1} (Invalid ID).`,
+              options: {
+                A: "Option A",
+                B: "Option B",
+                C: "Option C",
+                D: "Option D",
+              },
+              answer: "A",
+            }));
+          }
 
           await saveQuestions(qs);
         }

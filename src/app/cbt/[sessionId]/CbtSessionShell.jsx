@@ -142,7 +142,12 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       </div>
 
       {/* Modals/Overlays */}
-      {showCal && <CrushCal onClose={() => setShowCal(false)} />}
+      {showCal && (
+        <CrushCal 
+          onClose={() => setShowCal(false)} 
+          isDocked={true} // Always docked/inline for better UX as requested
+        />
+      )}
       {showFlag && (
         <FlagReportModal 
           sessionId={sessionId} 
