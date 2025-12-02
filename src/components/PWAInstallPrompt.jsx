@@ -68,7 +68,7 @@ export default function PWAInstallPrompt() {
 
     return (
         <div className="fixed bottom-4 right-4 z-50 max-w-sm">
-            <div className="bg-base-200 rounded-xl shadow-xl p-4 border border-base-300">
+            <div className="bg-base-800 rounded-xl shadow-xl p-4 border border-base-300">
                 <div className="flex items-start gap-3">
                     <div className="text-3xl">📱</div>
                     <div className="flex-1">
@@ -79,13 +79,13 @@ export default function PWAInstallPrompt() {
                         <div className="flex gap-2">
                             <button
                                 onClick={handleInstallClick}
-                                className="btn btn-primary btn-sm rounded-lg"
+                                className="btn btn-primary btn-sm rounded-lg border-none"
                             >
                                 Install
                             </button>
                             <button
                                 onClick={handleDismiss}
-                                className="btn btn-ghost btn-sm rounded-lg"
+                                className="btn btn-ghost btn-sm rounded-lg text-neutral-content hover:bg-neutral-focus"
                             >
                                 Later
                             </button>
