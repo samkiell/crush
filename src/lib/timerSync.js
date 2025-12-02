@@ -9,10 +9,15 @@ export const syncServerTime = async () => {
   // For this implementation, we'll return 0 or fetch from a time endpoint
   try {
     const start = Date.now();
-    // Assuming we have a time endpoint or just use the session start response
-    // const res = await fetch('/api/time');
-    // const serverTime = res.data.time;
-    // return serverTime - (Date.now() + start) / 2;
+    // We can use the status endpoint to get server time implicitly if it returned current time,
+    // but for now let's just assume local time is close enough or implement a specific time endpoint.
+    // However, to be robust:
+    const res = await fetch("/api/cbt/time"); // We need to create this or use an existing one
+    if (res.ok) {
+      const data = await res.json();
+      const serverTime = new Date(data.time).getTime();
+      return serverTime - (Date.now() + start) / 2;
+    }
     return 0;
   } catch (e) {
     return 0;

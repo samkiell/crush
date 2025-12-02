@@ -71,9 +71,23 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
       if (queue.length === 0) return;
 
       // Process queue
-      // This is a placeholder for the actual API call
-      // In a real implementation, you would batch these and send to the backend
-      // console.log('Syncing', queue.length, 'items');
+      try {
+        const answers = queue.filter((item) => item.type === "answer");
+        if (answers.length > 0) {
+          await fetch(`/api/cbt/${sessionId}/answer`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ answers }),
+          });
+
+          // Clear synced items
+          for (const item of answers) {
+            await clearSyncQueueItem(item.id); // Assuming id is the key in IDB
+          }
+        }
+      } catch (e) {
+        console.error("Sync failed", e);
+      }
     };
     const interval = setInterval(sync, 10000);
     return () => clearInterval(interval);

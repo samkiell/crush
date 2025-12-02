@@ -6,37 +6,26 @@ This module implements a robust, offline-capable Computer Based Test (CBT) syste
 ## Setup Instructions
 
 ### 1. Backend Setup
-The backend is located in the `/backend` directory.
+The backend logic is now integrated into the Next.js application in `src/app/api/cbt` and `src/lib`.
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Configure Environment Variables:
-   Copy `.env.example` to `.env` and update the values:
-   ```bash
-   cp .env.example .env
-   ```
-   Ensure `MONGODB_URI` points to your MongoDB instance.
+1. **Environment Variables**:
+   Ensure your `.env.local` includes `MONGODB_URI` and `JWT_SECRET`.
 
-4. Run the Server:
-   ```bash
-   npm run dev
-   ```
-   The server will start on port 5000 (default).
+2. **Database**:
+   The application uses the existing MongoDB connection in `src/lib/db.js`.
+
+3. **API Routes**:
+   - `/api/cbt/start`
+   - `/api/cbt/[sessionId]/answer`
+   - `/api/cbt/[sessionId]/integrity`
+   - `/api/cbt/[sessionId]/submit`
+   - `/api/cbt/[sessionId]/status`
+   - `/api/admin/sessions/kill`
 
 ### 2. Frontend Integration
 The frontend components are integrated into the existing Next.js app in `src/`.
 
-1. Install frontend dependencies (if not already done):
-   ```bash
-   npm install idb
-   ```
-2. Register the Service Worker:
+1. **Service Worker**:
    Ensure your `src/app/layout.jsx` or entry point registers the service worker located at `/sw.js` for offline support.
    
    Example registration code to add to a client component (e.g., `src/components/ServiceWorkerRegister.jsx`):

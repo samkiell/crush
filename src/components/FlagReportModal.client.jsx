@@ -9,7 +9,7 @@ export default function FlagReportModal({ sessionId, questionId, isOpen, onClose
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      await fetch(`http://localhost:5000/api/cbt/${sessionId}/integrity`, {
+      await fetch(`/api/cbt/${sessionId}/integrity`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
