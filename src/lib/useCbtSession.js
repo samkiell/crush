@@ -51,6 +51,54 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
     return () => clearInterval(interval);
   }, [endTime]);
 
+  // Integrity Listeners
+  useEffect(() => {
+    if (status !== "active") return;
+
+    const logIntegrity = async (type, details = {}) => {
+      try {
+        await fetch(`/api/cbt/${sessionId}/integrity`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventType: type,
+            details,
+            severity: "medium",
+          }),
+        });
+      } catch (e) {
+        console.error("Integrity log failed", e);
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        logIntegrity("visibility_hidden", { timestamp: Date.now() });
+        // Optional: Show warning or blur content
+      } else {
+        logIntegrity("visibility_visible", { timestamp: Date.now() });
+      }
+    };
+
+    const handleBlur = () => {
+      logIntegrity("window_blur", { timestamp: Date.now() });
+    };
+
+    const handleFocus = () => {
+      logIntegrity("window_focus", { timestamp: Date.now() });
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleBlur);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [status, sessionId]);
+
   // Online status
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);

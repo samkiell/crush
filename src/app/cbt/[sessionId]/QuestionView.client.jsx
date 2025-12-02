@@ -12,6 +12,9 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
       className="flex flex-col h-full"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
+      onCopy={(e) => e.preventDefault()}
+      onPaste={(e) => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="prose dark:prose-invert max-w-none flex-1 select-none">
