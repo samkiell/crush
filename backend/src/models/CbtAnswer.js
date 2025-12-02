@@ -1,0 +1,25 @@
+import mongoose from "mongoose";
+
+const CbtAnswerSchema = new mongoose.Schema(
+  {
+    sessionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CbtSession",
+      required: true,
+    },
+    questionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question",
+      required: true,
+    },
+    selectedOption: { type: String },
+    isCorrect: { type: Boolean },
+    timeSpent: { type: Number },
+    syncedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
+CbtAnswerSchema.index({ sessionId: 1, questionId: 1 }, { unique: true });
+
+export default mongoose.model("CbtAnswer", CbtAnswerSchema);
