@@ -2,7 +2,7 @@ CrushEdu Place International – README
 
 A unified JAMB preparation ecosystem built for scale. Verified past questions, CBT precision, analytics, structured study content, and a learner driven community.
 
-![Current Plan](/D2C Doc.md)
+update readme[Current Plan](/D2C Doc.md)
 
 
 1. Executive Summary and Strategic Objective
