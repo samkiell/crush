@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload, Sparkles, Flag, Bookmark } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload, Sparkles, Flag, Bookmark, Map } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
@@ -88,6 +88,7 @@ const Header = () => {
     { name: 'Users', href: '/admin/users', icon: Users },
     { name: 'Upload', href: '/admin/questions/upload', icon: Upload },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
+    { name: 'Routes', href: '/routes', icon: Map },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
   ];
