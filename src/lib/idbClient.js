@@ -4,6 +4,7 @@ const DB_NAME = "crush-cbt-db";
 const STORE_QUESTIONS = "questions";
 const STORE_ANSWERS = "answers";
 const STORE_SYNC_QUEUE = "syncQueue";
+const STORE_BOOKMARKS = "bookmarks";
 
 export const initDB = async () => {
   return openDB(DB_NAME, 1, {
@@ -19,6 +20,9 @@ export const initDB = async () => {
           keyPath: "id",
           autoIncrement: true,
         });
+      }
+      if (!db.objectStoreNames.contains(STORE_BOOKMARKS)) {
+        db.createObjectStore(STORE_BOOKMARKS, { keyPath: "questionId" });
       }
     },
   });
@@ -55,4 +59,19 @@ export const getSyncQueue = async () => {
 export const clearSyncQueueItem = async (id) => {
   const db = await initDB();
   await db.delete(STORE_SYNC_QUEUE, id);
+};
+
+export const saveBookmarkLocal = async (bookmark) => {
+  const db = await initDB();
+  await db.put(STORE_BOOKMARKS, bookmark);
+};
+
+export const removeBookmarkLocal = async (questionId) => {
+  const db = await initDB();
+  await db.delete(STORE_BOOKMARKS, questionId);
+};
+
+export const getBookmarks = async () => {
+  const db = await initDB();
+  return db.getAll(STORE_BOOKMARKS);
 };

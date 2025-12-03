@@ -1,8 +1,9 @@
 'use client';
 import AudioReader from '@/components/AudioReader.client';
 import { useSwipe } from '@/lib/swipeHandler';
+import { Star } from 'lucide-react';
 
-export default function QuestionView({ question, selectedOption, onSelect, onNext, onPrev }) {
+export default function QuestionView({ question, selectedOption, onSelect, onNext, onPrev, isBookmarked, onToggleBookmark }) {
   const { onTouchStart, onTouchEnd } = useSwipe(onNext, onPrev);
 
   if (!question) return <div className="p-8 text-center">Loading question...</div>;
@@ -16,13 +17,19 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
       onPaste={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-4 gap-4">
         <div className="prose dark:prose-invert max-w-none flex-1 select-none">
           <h3 className="text-lg font-medium leading-relaxed">
             {question.question}
           </h3>
         </div>
-        <div className="ml-4">
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button 
+            onClick={onToggleBookmark}
+            className={`btn btn-circle btn-sm ${isBookmarked ? 'btn-warning text-white' : 'btn-ghost text-base-content/30'}`}
+          >
+            <Star size={18} className={isBookmarked ? 'fill-current' : ''} />
+          </button>
           <AudioReader text={question.question} />
         </div>
       </div>

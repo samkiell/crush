@@ -6,6 +6,9 @@ import {
   saveAnswerLocal,
   getSyncQueue,
   clearSyncQueueItem,
+  getBookmarks,
+  saveBookmarkLocal,
+  removeBookmarkLocal,
 } from "./idbClient";
 import { timerSync } from "./timerSync";
 
@@ -13,6 +16,7 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({}); // { questionId: option }
+  const [bookmarks, setBookmarks] = useState(new Set());
   const [timeLeft, setTimeLeft] = useState(0);
   const [totalDuration, setTotalDuration] = useState(2 * 60 * 60 * 1000); // Default 2 hours
   const [status, setStatus] = useState("loading");
@@ -143,6 +147,14 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
         }
 
         setQuestions(qs);
+
+        // Load Bookmarks
+        const savedBookmarks = await getBookmarks();
+        const sessionBookmarks = savedBookmarks
+          .filter((b) => b.sessionId === sessionId)
+          .map((b) => b.questionId);
+        setBookmarks(new Set(sessionBookmarks));
+
         setStatus("active");
 
         // Init session in backend
@@ -280,6 +292,18 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
     await saveAnswerLocal({ questionId, selectedOption: option, sessionId });
   };
 
+  const toggleBookmark = async (questionId) => {
+    const newBookmarks = new Set(bookmarks);
+    if (newBookmarks.has(questionId)) {
+      newBookmarks.delete(questionId);
+      await removeBookmarkLocal(questionId);
+    } else {
+      newBookmarks.add(questionId);
+      await saveBookmarkLocal({ questionId, sessionId, timestamp: Date.now() });
+    }
+    setBookmarks(newBookmarks);
+  };
+
   const next = useCallback(
     () => setCurrentIndex((i) => Math.min(i + 1, questions.length - 1)),
     [questions.length]
@@ -303,5 +327,7 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
     prev,
     jumpTo,
     submit,
+    bookmarks,
+    toggleBookmark,
   };
 };
