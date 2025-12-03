@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import User from '@/lib/models/User';
-import jwt from 'jsonwebtoken';
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import User from "@/lib/models/User";
+import jwt from "jsonwebtoken";
 
 export async function POST(req) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req) {
     // Validate required fields
     if (!email || !password) {
       return NextResponse.json(
-        { message: 'Abeg, enter your email/username and password' },
+        { message: "Abeg, enter your email/username and password" },
         { status: 400 }
       );
     }
@@ -19,12 +19,12 @@ export async function POST(req) {
     // Find user with password field (check email or username)
     // We use the 'email' field from the request as the identifier
     const user = await User.findOne({
-      $or: [{ email: email }, { username: email }]
-    }).select('+password');
+      $or: [{ email: email }, { username: email }],
+    }).select("+password");
 
     if (!user) {
       return NextResponse.json(
-        { message: 'We no fit find this account. You don register?' },
+        { message: "We no fit find this account. You don register?" },
         { status: 401 }
       );
     }
@@ -34,14 +34,14 @@ export async function POST(req) {
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { message: 'Details no correct. Check am well' },
+        { message: "Details no correct. Check am well" },
         { status: 401 }
       );
     }
 
     // Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '30d',
+      expiresIn: "30d",
     });
 
     return NextResponse.json({
@@ -50,16 +50,15 @@ export async function POST(req) {
       email: user.email,
       username: user.username,
       role: user.role,
+      plan: user.plan,
       avatar: user.avatar,
       token,
     });
-
   } catch (error) {
-    console.error('Login Error:', error);
+    console.error("Login Error:", error);
     return NextResponse.json(
-      { message: 'Network dey do strong head, try again' },
+      { message: "Network dey do strong head, try again" },
       { status: 500 }
     );
   }
 }
-
