@@ -234,7 +234,11 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                 <QuestionNavigator
                 total={questions.length}
                 current={currentIndex}
-                answers={answers} 
+                answers={Object.keys(answers).reduce((acc, k) => {
+                    const idx = questions.findIndex(q => q.qid === k);
+                    if (idx >= 0) acc[idx] = true;
+                    return acc;
+                }, {})} 
                 onJump={(i) => { jumpTo(i); setShowNav(false); }}
                 />
             </div>
