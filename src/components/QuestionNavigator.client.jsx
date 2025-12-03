@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 
 export default function QuestionNavigator({ total, current, answers, bookmarks = new Set(), onJump }) {
   return (
-    <div className="grid grid-cols-5 gap-2 p-4 overflow-y-auto max-h-60 custom-scrollbar">
+    <div className=" text-white grid grid-cols-5 gap-2 p-4 overflow-y-auto max-h-60 custom-scrollbar">
       {Array.from({ length: total }).map((_, i) => {
         const isCurrent = i === current;
         const isAnswered = answers[i];
@@ -12,7 +12,7 @@ export default function QuestionNavigator({ total, current, answers, bookmarks =
 
         // Determine base style
         // Determine base style - Enforcing Dark Theme Look for All Modes
-        let style = "bg-neutral text-neutral-content/70 hover:bg-neutral-focus border border-neutral-content/20 shadow-sm hover:shadow-md hover:border-primary/30"; // Unanswered
+        let style = "text-white bg-neutral text-neutral-content/70 hover:bg-neutral-focus border border-neutral-content/20 shadow-sm hover:shadow-md hover:border-primary/30"; // Unanswered
         if (isAnswered) style = "bg-success text-white border-success shadow-md shadow-success/20"; // Answered
         if (isCurrent) style = "bg-primary text-white ring-2 ring-primary ring-offset-2 ring-offset-neutral border-primary shadow-lg shadow-primary/30 scale-110 z-10"; // Current
         
