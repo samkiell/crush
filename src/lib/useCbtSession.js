@@ -22,6 +22,29 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   useEffect(() => {
     const load = async () => {
       try {
+        // 1. Fetch Session Status & Time
+        let sessionEndTime = endTime;
+        if (!sessionEndTime) {
+          try {
+            const statusRes = await fetch(`/api/cbt/${sessionId}/status`);
+            if (statusRes.ok) {
+              const statusData = await statusRes.json();
+              if (statusData.endTime) {
+                sessionEndTime = new Date(statusData.endTime).getTime();
+              }
+            }
+          } catch (err) {
+            console.error("Failed to fetch session status", err);
+          }
+        }
+
+        // If still no endTime (e.g. offline start), set a default 2 hours from now for testing
+        // In real app, we should block or handle this better
+        if (!sessionEndTime) {
+          sessionEndTime = Date.now() + 2 * 60 * 60 * 1000;
+        }
+
+        // 2. Load Questions
         // Try loading from IDB first
         let qs = await getQuestions();
 
@@ -84,6 +107,23 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
 
         setQuestions(qs);
         setStatus("active");
+
+        // Start Timer Logic with fetched endTime
+        const interval = setInterval(() => {
+          const left = calculateTimeLeft(sessionEndTime);
+          setTimeLeft(left);
+          if (left <= 0) {
+            setStatus("submitted");
+            clearInterval(interval);
+          }
+        }, 1000);
+
+        // Cleanup interval on unmount is tricky inside useEffect,
+        // so we might need to move this to a ref or separate effect.
+        // For now, let's update the state endTime so the other effect picks it up.
+        // But wait, the other effect depends on `endTime` prop.
+        // Let's use a local state for sessionEndTime.
+        setInternalEndTime(sessionEndTime);
       } catch (e) {
         console.error("Failed to load questions", e);
         setStatus("error");
@@ -92,11 +132,15 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
     load();
   }, [initialQuestions]);
 
+  const [internalEndTime, setInternalEndTime] = useState(endTime);
+
   // Timer
   useEffect(() => {
-    if (!endTime) return;
+    const targetTime = internalEndTime || endTime;
+    if (!targetTime) return;
+
     const interval = setInterval(() => {
-      const left = calculateTimeLeft(endTime);
+      const left = calculateTimeLeft(targetTime);
       setTimeLeft(left);
       if (left <= 0) {
         setStatus("submitted");
@@ -104,7 +148,7 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [endTime]);
+  }, [endTime, internalEndTime]);
 
   // Integrity Listeners
   useEffect(() => {

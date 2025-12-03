@@ -74,7 +74,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
            </div>
         </div>
 
-        <div className="flex items-center gap-2 text-sm font-medium px-1 border-t border-base-200 pt-2">
+        <div className="flex items-center gap-2 text-sm font-medium px-1 pt-2">
           <span className="text-base-content/80">
             Question {currentIndex + 1} / {questions.length}
           </span>
