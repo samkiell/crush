@@ -34,7 +34,13 @@ export async function POST(req) {
     }
 
     // Check if user already exists (email or username)
-    const userExists = await User.findOne({ $or: [{ email }, { username }] });
+    // We use regex for case-insensitive username check
+    const userExists = await User.findOne({ 
+      $or: [
+        { email }, 
+        { username: { $regex: new RegExp(`^${username}$`, 'i') } }
+      ] 
+    });
 
     if (userExists) {
       const message = userExists.email === email 

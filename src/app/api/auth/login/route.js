@@ -19,7 +19,10 @@ export async function POST(req) {
     // Find user with password field (check email or username)
     // We use the 'email' field from the request as the identifier
     const user = await User.findOne({
-      $or: [{ email: email }, { username: email }],
+      $or: [
+        { email: email },
+        { username: { $regex: new RegExp(`^${email}$`, "i") } },
+      ],
     }).select("+password");
 
     if (!user) {
