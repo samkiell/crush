@@ -49,15 +49,6 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
           )
         ))}
       </div>
-
-      <div className="flex justify-between mt-auto pt-4 border-t border-base-200">
-        <button onClick={onPrev} className="btn btn-outline btn-sm md:btn-md gap-2">
-           Prev
-        </button>
-        <button onClick={onNext} className="btn btn-primary btn-sm md:btn-md gap-2 text-white">
-           Next
-        </button>
-      </div>
     </div>
   );
 }
