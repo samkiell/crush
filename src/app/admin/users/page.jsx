@@ -304,107 +304,139 @@ export default function UserManagementPage() {
             {/* Actions Modal */}
             {selectedUser && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
-                    <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-lg p-0 overflow-hidden relative flex flex-col max-h-[90vh]">
+                    <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden relative flex flex-col max-h-[90vh] border border-base-200">
                         {/* Modal Header */}
-                        <div className="p-6 border-b border-base-200 bg-base-200/30 flex justify-between items-start">
+                        <div className="p-6 border-b border-base-200 bg-base-100 flex justify-between items-start sticky top-0 z-10">
                             <div>
-                                <h3 className="text-xl font-bold">Manage User</h3>
+                                <h3 className="text-xl font-bold text-base-content">Manage User</h3>
                                 <p className="text-base-content/60 text-sm mt-1">Update permissions and account status</p>
                             </div>
                             <button 
                                 onClick={() => setSelectedUser(null)}
-                                className="btn btn-sm btn-circle btn-ghost"
+                                className="btn btn-sm btn-circle btn-ghost hover:bg-base-200 transition-colors"
                             >
                                 <X size={20} />
                             </button>
                         </div>
 
                         {/* Modal Content */}
-                        <div className="p-6 overflow-y-auto space-y-6">
+                        <div className="p-6 overflow-y-auto space-y-8 bg-base-100">
                             {/* User Info */}
-                            <div className="flex items-center gap-4 p-4 bg-base-200/50 rounded-2xl">
+                            <div className="flex items-center gap-4 p-4 bg-base-200/50 rounded-2xl border border-base-200">
                                 <div className="avatar placeholder">
-                                    <div className="bg-neutral text-neutral-content rounded-full w-12 h-12 flex items-center justify-center">
-                                        <span className="text-lg font-bold">{selectedUser.name?.charAt(0) || 'U'}</span>
+                                    <div className="bg-neutral text-neutral-content rounded-full w-14 h-14 flex items-center justify-center ring-2 ring-base-300 ring-offset-2 ring-offset-base-100">
+                                        <span className="text-xl font-bold">{selectedUser.name?.charAt(0) || 'U'}</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="font-bold text-lg">{selectedUser.name}</div>
+                                    <div className="font-bold text-lg text-base-content">{selectedUser.name}</div>
                                     <div className="text-sm opacity-60 font-mono">{selectedUser.email}</div>
+                                    <div className="flex gap-2 mt-2">
+                                         <span className="badge badge-sm badge-ghost font-mono text-xs">
+                                            Joined: {new Date(selectedUser.createdAt).toLocaleDateString()}
+                                         </span>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Plan Selection */}
                             <div className="space-y-3">
-                                <label className="text-xs font-bold uppercase tracking-wider opacity-50 ml-1">Subscription Plan</label>
-                                <div className="grid grid-cols-2 gap-3">
+                                <label className="text-xs font-bold uppercase tracking-wider opacity-50 ml-1 flex items-center gap-2">
+                                    <BookOpen size={14} /> Subscription Plan
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {/* Free Plan Option */}
                                     <button 
                                         onClick={() => handleUpdateUser(selectedUser._id, { plan: 'free' })}
-                                        className={`btn h-auto py-3 flex flex-col gap-1 relative ${selectedUser.plan === 'free' ? 'btn-neutral ring-2 ring-offset-2 ring-neutral' : 'btn-outline border-base-300'}`}
+                                        className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 flex flex-col gap-3 hover:shadow-md ${
+                                            selectedUser.plan === 'free' 
+                                            ? 'border-neutral bg-neutral/5 ring-1 ring-neutral/20' 
+                                            : 'border-base-200 hover:border-base-300 bg-base-100'
+                                        }`}
                                     >
-                                        {selectedUser.plan === 'free' && (
-                                            <div className="absolute top-2 right-2 text-xs bg-base-100 text-base-content px-1.5 rounded-md font-bold shadow-sm">
-                                                Active
+                                        <div className="flex justify-between items-start w-full">
+                                            <div className={`p-2 rounded-xl ${selectedUser.plan === 'free' ? 'bg-neutral text-neutral-content' : 'bg-base-200 text-base-content/70'}`}>
+                                                <BookOpen size={20} />
                                             </div>
-                                        )}
-                                        <BookOpen size={20} />
-                                        <span>Free Plan</span>
+                                            {selectedUser.plan === 'free' && (
+                                                <div className="badge badge-neutral badge-sm font-bold">ACTIVE</div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-base-content">Free Plan</div>
+                                            <div className="text-xs text-base-content/60 mt-1">Standard access to basic features</div>
+                                        </div>
                                     </button>
+
+                                    {/* Premium Plan Option */}
                                     <button 
                                         onClick={() => handleUpdateUser(selectedUser._id, { plan: 'premium' })}
-                                        className={`btn h-auto py-3 flex flex-col gap-1 relative ${selectedUser.plan === 'premium' ? 'btn-secondary text-white ring-2 ring-offset-2 ring-secondary' : 'btn-outline border-base-300'}`}
+                                        className={`relative p-4 rounded-2xl border-2 text-left transition-all duration-200 flex flex-col gap-3 hover:shadow-md ${
+                                            selectedUser.plan === 'premium' 
+                                            ? 'border-secondary bg-secondary/5 ring-1 ring-secondary/20' 
+                                            : 'border-base-200 hover:border-base-300 bg-base-100'
+                                        }`}
                                     >
-                                        {selectedUser.plan === 'premium' && (
-                                            <div className="absolute top-2 right-2 text-xs bg-white text-secondary px-1.5 rounded-md font-bold shadow-sm">
-                                                Active
+                                        <div className="flex justify-between items-start w-full">
+                                            <div className={`p-2 rounded-xl ${selectedUser.plan === 'premium' ? 'bg-secondary text-secondary-content' : 'bg-base-200 text-base-content/70'}`}>
+                                                <Crown size={20} />
                                             </div>
-                                        )}
-                                        <Crown size={20} />
-                                        <span>Premium</span>
+                                            {selectedUser.plan === 'premium' && (
+                                                <div className="badge badge-secondary badge-sm font-bold">ACTIVE</div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-base-content">Premium</div>
+                                            <div className="text-xs text-base-content/60 mt-1">Full access to all features & exams</div>
+                                        </div>
                                     </button>
                                 </div>
                             </div>
 
                             {/* Role Selection */}
                             <div className="space-y-3">
-                                <label className="text-xs font-bold uppercase tracking-wider opacity-50 ml-1">User Role</label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    <button 
-                                        onClick={() => handleUpdateUser(selectedUser._id, { role: 'student' })}
-                                        className={`btn btn-sm ${selectedUser.role === 'student' ? 'btn-primary' : 'btn-ghost bg-base-200'}`}
-                                    >
-                                        Student
-                                    </button>
-                                    <button 
-                                        onClick={() => handleUpdateUser(selectedUser._id, { role: 'tutor' })}
-                                        className={`btn btn-sm ${selectedUser.role === 'tutor' ? 'btn-accent text-white' : 'btn-ghost bg-base-200'}`}
-                                    >
-                                        Tutor
-                                    </button>
-                                    <button 
-                                        onClick={() => handleUpdateUser(selectedUser._id, { role: 'admin' })}
-                                        className={`btn btn-sm ${selectedUser.role === 'admin' ? 'btn-neutral' : 'btn-ghost bg-base-200'}`}
-                                    >
-                                        Admin
-                                    </button>
+                                <label className="text-xs font-bold uppercase tracking-wider opacity-50 ml-1 flex items-center gap-2">
+                                    <Shield size={14} /> User Role
+                                </label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {['student', 'tutor', 'admin'].map((role) => (
+                                        <button 
+                                            key={role}
+                                            onClick={() => handleUpdateUser(selectedUser._id, { role })}
+                                            className={`btn h-auto py-3 capitalize flex flex-col gap-1 border-2 ${
+                                                selectedUser.role === role 
+                                                ? role === 'admin' ? 'btn-neutral border-neutral' 
+                                                  : role === 'tutor' ? 'btn-accent border-accent text-white'
+                                                  : 'btn-primary border-primary'
+                                                : 'btn-ghost bg-base-100 border-base-200 hover:border-base-300'
+                                            }`}
+                                        >
+                                            {selectedUser.role === role && <CheckCircle size={16} className="mb-1" />}
+                                            {role}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
 
                             {/* Danger Zone */}
-                            <div className="space-y-3 pt-4 border-t border-base-200">
-                                <label className="text-xs font-bold uppercase tracking-wider text-error ml-1">Danger Zone</label>
+                            <div className="space-y-4 pt-6 border-t border-base-200">
+                                <label className="text-xs font-bold uppercase tracking-wider text-error ml-1 flex items-center gap-2">
+                                    <Ban size={14} /> Danger Zone
+                                </label>
                                 
-                                <div className="flex items-center justify-between p-3 bg-error/5 rounded-xl border border-error/10">
-                                    <div className="flex items-center gap-3">
-                                        <Ban className="w-5 h-5 text-error" />
+                                <div className="flex items-center justify-between p-4 bg-error/5 rounded-2xl border border-error/10 hover:border-error/30 transition-colors">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-2 bg-error/10 rounded-xl text-error">
+                                            <Ban size={20} />
+                                        </div>
                                         <div>
-                                            <div className="font-bold text-sm">Suspend Account</div>
-                                            <div className="text-xs opacity-60">Temporarily disable access</div>
+                                            <div className="font-bold text-base-content">Suspend Account</div>
+                                            <div className="text-xs text-base-content/60">Temporarily disable user access</div>
                                         </div>
                                     </div>
                                     <input 
                                         type="checkbox" 
-                                        className="toggle toggle-error toggle-sm"
+                                        className="toggle toggle-error"
                                         checked={selectedUser.isSuspended}
                                         onChange={(e) => handleUpdateUser(selectedUser._id, { isSuspended: e.target.checked })}
                                     />
@@ -412,9 +444,9 @@ export default function UserManagementPage() {
 
                                 <button 
                                     onClick={() => handleDeleteUser(selectedUser._id)}
-                                    className="btn btn-error btn-outline btn-sm w-full gap-2"
+                                    className="btn btn-error btn-outline w-full gap-2 hover:bg-error hover:text-white transition-all"
                                 >
-                                    <Trash2 size={16} /> Delete User Permanently
+                                    <Trash2 size={18} /> Delete User Permanently
                                 </button>
                             </div>
                         </div>

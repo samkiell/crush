@@ -115,7 +115,7 @@ export default function CBTIntegrityGuard({ sessionId, children }) {
   // --- Render Locked State ---
   if (isLocked) {
     return (
-      <div className="fixed inset-0 z-50 bg-base-100 flex flex-col items-center justify-center p-8 text-center">
+      <div className="fixed z-50 bg-base-100 flex flex-col items-center justify-center p-8 text-center">
         <div className="w-24 h-24 bg-error/10 rounded-full flex items-center justify-center mb-6">
           <Lock className="w-12 h-12 text-error" />
         </div>
