@@ -31,6 +31,10 @@ export default function ExamSetupPage() {
   const [isPremium, setIsPremium] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
 
+  const [availableMetadata, setAvailableMetadata] = useState({});
+  const [availableYears, setAvailableYears] = useState([]);
+  const [loadingMetadata, setLoadingMetadata] = useState(true);
+
   const yearSectionRef = useRef(null);
   const summarySectionRef = useRef(null);
 
@@ -51,10 +55,6 @@ export default function ExamSetupPage() {
       }, 300);
     }
   }, [selectedYear]);
-
-  const [availableMetadata, setAvailableMetadata] = useState({});
-  const [availableYears, setAvailableYears] = useState([]);
-  const [loadingMetadata, setLoadingMetadata] = useState(true);
 
   useEffect(() => {
     if (user) {

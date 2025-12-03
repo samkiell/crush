@@ -28,6 +28,9 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     bookmarks
   } = useCbtSession({ sessionId, endTime: null, initialQuestions: null }); // Pass actual props if available
 
+  console.log('CbtSessionShell hook values:', { jumpTo: !!jumpTo, status });
+
+
   const [showCal, setShowCal] = useState(false);
   const [showNav, setShowNav] = useState(false);
   const [showFlag, setShowFlag] = useState(false);
@@ -133,7 +136,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                   onPrev={prev}
                   isBookmarked={bookmarks.has(currentQuestion?.qid)}
                   onToggleBookmark={() => toggleBookmark(currentQuestion?.qid)}
-                  showExplanation={examStatus !== 'active'}
+                  showExplanation={status !== 'active'}
                 />
               )}
             </div>
