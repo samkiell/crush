@@ -136,7 +136,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
 
     useEffect(() => {
         if (user) {
-            setIsPremium(user.isPremium || user.plan === 'premium' || false);
+            setIsPremium(user.isPremium || user.plan === 'premium' || user.role === 'admin' || false);
         }
     }, [user]);
 

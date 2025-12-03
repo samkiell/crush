@@ -4,13 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CheckCircle2, XCircle, Bot, BookOpen, Volume2, ArrowLeft } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 export default function CbtReview({ sessionId }) {
   const router = useRouter();
+  const { user } = useSelector((state) => state.auth);
+  // Admin or Premium gets access
+  const isPremium = user?.isPremium || user?.plan === 'premium' || user?.role === 'admin';
+
   const [loading, setLoading] = useState(true);
-  const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [generatingAi, setGeneratingAi] = useState(false);
 
   useEffect(() => {
     fetchReviewData();
@@ -169,13 +171,19 @@ export default function CbtReview({ sessionId }) {
                     Crush AI
                   </div>
                   {!currentQuestion.aiExplanation && (
-                    <button 
-                      onClick={handleGenerateAi}
-                      disabled={generatingAi}
-                      className="btn btn-xs btn-primary btn-outline"
-                    >
-                      {generatingAi ? 'Thinking...' : 'Explain with AI'}
-                    </button>
+                    isPremium ? (
+                      <button 
+                        onClick={handleGenerateAi}
+                        disabled={generatingAi}
+                        className="btn btn-xs btn-primary btn-outline"
+                      >
+                        {generatingAi ? 'Thinking...' : 'Explain with AI'}
+                      </button>
+                    ) : (
+                      <span className="text-xs text-base-content/40 flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" /> Premium Only
+                      </span>
+                    )
                   )}
                 </div>
                 
