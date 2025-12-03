@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Users, Search, MoreVertical, Shield, Trash2, Mail } from 'lucide-react';
+import { Users, Search, MoreVertical, Shield, Trash2, Mail, Ban, CheckCircle, Edit, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedUser, setSelectedUser] = useState(null); // For actions modal
 
     useEffect(() => {
         fetchUsers();
@@ -41,13 +41,50 @@ export default function UserManagementPage() {
             
             if (res.ok) {
                 toast.success(`Session for ${userName} terminated.`);
-                fetchUsers(); // Refresh list
+                fetchUsers(); 
             } else {
                 toast.error('Failed to kill session');
             }
         } catch (error) {
             console.error('Kill session error', error);
             toast.error('Error killing session');
+        }
+    };
+
+    const handleUpdateUser = async (userId, updates) => {
+        try {
+            const res = await fetch(`/api/admin/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates),
+            });
+            if (res.ok) {
+                toast.success('User updated successfully');
+                fetchUsers();
+                setSelectedUser(null);
+            } else {
+                toast.error('Failed to update user');
+            }
+        } catch (error) {
+            toast.error('Error updating user');
+        }
+    };
+
+    const handleDeleteUser = async (userId) => {
+        if (!confirm('Are you sure you want to DELETE this user? This action cannot be undone.')) return;
+        try {
+            const res = await fetch(`/api/admin/users/${userId}`, {
+                method: 'DELETE',
+            });
+            if (res.ok) {
+                toast.success('User deleted');
+                fetchUsers();
+                setSelectedUser(null);
+            } else {
+                toast.error('Failed to delete user');
+            }
+        } catch (error) {
+            toast.error('Error deleting user');
         }
     };
 
@@ -87,7 +124,6 @@ export default function UserManagementPage() {
                             <tr className="bg-base-200/50">
                                 <th>User</th>
                                 <th>Role</th>
-                                <th>Plan</th>
                                 <th>Status</th>
                                 <th>Joined</th>
                                 <th>Actions</th>
@@ -97,14 +133,14 @@ export default function UserManagementPage() {
                             {loading ? (
                                 [...Array(5)].map((_, i) => (
                                     <tr key={i}>
-                                        <td colSpan="6" className="text-center py-4">
+                                        <td colSpan="5" className="text-center py-4">
                                             <div className="h-8 bg-base-200 rounded animate-pulse w-full"></div>
                                         </td>
                                     </tr>
                                 ))
                             ) : filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="6" className="text-center py-8 text-base-content/60">
+                                    <td colSpan="5" className="text-center py-8 text-base-content/60">
                                         No users found.
                                     </td>
                                 </tr>
@@ -119,7 +155,10 @@ export default function UserManagementPage() {
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <div className="font-bold">{user.name}</div>
+                                                    <div className="font-bold flex items-center gap-2">
+                                                        {user.name}
+                                                        {user.isSuspended && <span className="text-error text-xs font-bold">(Suspended)</span>}
+                                                    </div>
                                                     <div className="text-xs opacity-50">{user.email}</div>
                                                 </div>
                                             </div>
@@ -130,16 +169,20 @@ export default function UserManagementPage() {
                                             </span>
                                         </td>
                                         <td>
-                                            <span className={`badge ${user.plan === 'premium' ? 'badge-secondary' : 'badge-outline'} badge-sm`}>
-                                                {user.plan || 'Free'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {user.activeSessionId ? (
-                                                <span className="badge badge-error badge-sm animate-pulse gap-1">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
-                                                    In Exam
-                                                </span>
+                                            {user.isSuspended ? (
+                                                <span className="badge badge-error badge-sm">Suspended</span>
+                                            ) : user.activeSession ? (
+                                                user.activeSession.mode === 'cbt' ? (
+                                                    <span className="badge badge-error badge-sm animate-pulse gap-1">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                                        In Exam
+                                                    </span>
+                                                ) : (
+                                                    <span className="badge badge-info badge-sm gap-1">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                                        Studying
+                                                    </span>
+                                                )
                                             ) : (
                                                 <span className="badge badge-ghost badge-sm opacity-50">Idle</span>
                                             )}
@@ -149,16 +192,19 @@ export default function UserManagementPage() {
                                         </td>
                                         <td>
                                             <div className="flex items-center gap-2">
-                                                {user.activeSessionId && (
+                                                {user.activeSession && user.activeSession.mode === 'cbt' && (
                                                     <button 
-                                                        onClick={() => handleKillSession(user.activeSessionId, user.name)}
+                                                        onClick={() => handleKillSession(user.activeSession.sessionId, user.name)}
                                                         className="btn btn-error btn-xs text-white"
                                                         title="Kill Active Session"
                                                     >
                                                         <Shield className="w-3 h-3" /> Kill
                                                     </button>
                                                 )}
-                                                <button className="btn btn-ghost btn-xs">
+                                                <button 
+                                                    onClick={() => setSelectedUser(user)}
+                                                    className="btn btn-ghost btn-xs"
+                                                >
                                                     <MoreVertical className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -170,6 +216,68 @@ export default function UserManagementPage() {
                     </table>
                 </div>
             </div>
+
+            {/* Actions Modal */}
+            {selectedUser && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-base-100 rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+                        <button 
+                            onClick={() => setSelectedUser(null)}
+                            className="absolute top-4 right-4 btn btn-sm btn-circle btn-ghost"
+                        >
+                            <X size={20} />
+                        </button>
+                        
+                        <h3 className="text-xl font-bold mb-1">Manage User</h3>
+                        <p className="text-base-content/60 mb-6">{selectedUser.name} ({selectedUser.email})</p>
+
+                        <div className="flex flex-col gap-3">
+                            {/* Role Toggle */}
+                            <div className="flex items-center justify-between p-3 bg-base-200 rounded-xl">
+                                <div className="flex items-center gap-3">
+                                    <Shield className="w-5 h-5 text-primary" />
+                                    <div>
+                                        <div className="font-bold">Admin Privileges</div>
+                                        <div className="text-xs opacity-60">Grant full access to dashboard</div>
+                                    </div>
+                                </div>
+                                <input 
+                                    type="checkbox" 
+                                    className="toggle toggle-primary"
+                                    checked={selectedUser.role === 'admin'}
+                                    onChange={(e) => handleUpdateUser(selectedUser._id, { role: e.target.checked ? 'admin' : 'student' })}
+                                />
+                            </div>
+
+                            {/* Suspend Toggle */}
+                            <div className="flex items-center justify-between p-3 bg-base-200 rounded-xl">
+                                <div className="flex items-center gap-3">
+                                    <Ban className="w-5 h-5 text-error" />
+                                    <div>
+                                        <div className="font-bold">Suspend Account</div>
+                                        <div className="text-xs opacity-60">Prevent user from logging in</div>
+                                    </div>
+                                </div>
+                                <input 
+                                    type="checkbox" 
+                                    className="toggle toggle-error"
+                                    checked={selectedUser.isSuspended}
+                                    onChange={(e) => handleUpdateUser(selectedUser._id, { isSuspended: e.target.checked })}
+                                />
+                            </div>
+
+                            <div className="divider">DANGER ZONE</div>
+
+                            <button 
+                                onClick={() => handleDeleteUser(selectedUser._id)}
+                                className="btn btn-error btn-outline w-full gap-2"
+                            >
+                                <Trash2 size={18} /> Delete User Permanently
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
