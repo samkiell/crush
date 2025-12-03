@@ -5,7 +5,7 @@ import IntegrityLog from "@/lib/models/IntegrityLog";
 export async function POST(request, { params }) {
   try {
     await dbConnect();
-    const { sessionId } = params;
+    const { sessionId } = await params;
     const body = await request.json();
 
     await IntegrityLog.create({
