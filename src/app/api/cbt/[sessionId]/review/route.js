@@ -7,7 +7,7 @@ import Question from "@/lib/models/Question";
 export async function GET(request, { params }) {
   try {
     await dbConnect();
-    const { sessionId } = params;
+    const { sessionId } = await params;
 
     // 1. Load Session
     const session = await CbtSession.findOne({ sessionId });
