@@ -269,25 +269,25 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
         {/* Submit Confirmation Modal */}
         {showSubmitConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-              <div className="bg-base-100 rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100">
-                  <div className="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-base-100 rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-base-200">
+                  <div className="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-warning/10">
                       <AlertTriangle size={32} className="text-warning" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Submit Session?</h3>
-                  <p className="text-base-content/70 mb-6">
+                  <h3 className="text-xl font-bold mb-2 text-base-content">Submit Session?</h3>
+                  <p className="text-base-content/70 mb-8 leading-relaxed">
                       Are you sure you want to submit? You cannot modify your answers after submission.
                   </p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                       <button 
                           onClick={() => setShowSubmitConfirm(false)} 
-                          className="btn btn-ghost"
+                          className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content rounded-xl"
                           disabled={isSubmitting}
                       >
                           Cancel
                       </button>
                       <button 
                           onClick={handleSubmit} 
-                          className="btn btn-primary text-white"
+                          className="btn btn-primary text-white rounded-xl shadow-lg shadow-primary/30"
                           disabled={isSubmitting}
                       >
                           {isSubmitting ? <span className="loading loading-spinner"></span> : 'Yes, Submit'}
