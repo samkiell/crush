@@ -12,8 +12,8 @@ export const useSwipe = (onLeft, onRight) => {
   };
 
   const handleGesture = () => {
-    if (touchEndX < touchStartX - 50) onRight(); // Swipe Left -> Next
-    if (touchEndX > touchStartX + 50) onLeft(); // Swipe Right -> Prev
+    if (touchEndX < touchStartX - 50) onLeft(); // Swipe Left (Right to Left) -> Next
+    if (touchEndX > touchStartX + 50) onRight(); // Swipe Right (Left to Right) -> Prev
   };
 
   return { onTouchStart, onTouchEnd };

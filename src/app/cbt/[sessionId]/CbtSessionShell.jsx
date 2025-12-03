@@ -40,38 +40,51 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
   return (
     <div className="min-h-screen bg-base-200 flex flex-col">
       {/* Header */}
-      <header className="bg-base-100 shadow-sm px-4 py-4 sticky top-0 z-30">
-        <div className="flex items-center gap-3 mb-4">
-           <Link href="/cbt" className="btn btn-ghost btn-sm btn-circle">
-             <ChevronLeft />
-           </Link>
-           <div>
-             <h1 className="font-bold text-lg leading-tight">
-               CBT Session
-             </h1>
-             <p className="text-sm text-base-content/60 font-mono">
-               JAMB {year}
-             </p>
+      <header className="bg-base-100 shadow-sm px-4 py-3 sticky top-0 z-30">
+        <div className="flex items-center justify-between mb-2">
+           <div className="flex items-center gap-2">
+             <Link href="/cbt" className="btn btn-ghost btn-sm btn-circle">
+               <ChevronLeft />
+             </Link>
+             <div>
+               <h1 className="font-bold text-base leading-tight">
+                 CBT Session
+               </h1>
+               <p className="text-xs text-base-content/60 font-mono">
+                 JAMB {year}
+               </p>
+             </div>
            </div>
            
-           <div className="ml-auto flex items-center gap-2 font-mono text-sm font-bold bg-base-200 px-3 py-1.5 rounded-lg">
-             <Clock size={16} className={timeLeft < 300000 ? 'text-error animate-pulse' : 'text-primary'} />
-             <span>{formatTime(timeLeft)}</span>
+           <div className="flex items-center gap-2">
+             <div className="flex items-center gap-2 font-mono text-sm font-bold bg-base-200 px-3 py-1.5 rounded-lg mr-1">
+               <Clock size={16} className={timeLeft < 300000 ? 'text-error animate-pulse' : 'text-primary'} />
+               <span>{formatTime(timeLeft)}</span>
+             </div>
+             
+             {/* Mobile Top Controls */}
+             <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle md:hidden">
+               <Calculator size={20} />
+             </button>
+             <button onClick={() => setShowNav(!showNav)} className="btn btn-ghost btn-sm btn-circle md:hidden">
+               <Grid size={20} />
+             </button>
            </div>
         </div>
 
-        <div className="flex items-center justify-between text-sm font-medium px-1">
+        <div className="flex items-center gap-2 text-sm font-medium px-1 border-t border-base-200 pt-2">
           <span className="text-base-content/80">
             Question {currentIndex + 1} / {questions.length}
           </span>
-          <span className="capitalize text-base-content/80">
+          <span className="text-base-content/40">•</span>
+          <span className="capitalize text-base-content/80 truncate">
             {subject?.replace(/-/g, ' ')}
           </span>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 grid md:grid-cols-[1fr_300px] gap-6">
+      <main className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 grid md:grid-cols-[1fr_300px] gap-6 pb-20 md:pb-6">
         {/* Question Area */}
         <div className="bg-base-100 rounded-2xl shadow-sm p-6 relative overflow-hidden min-h-[60vh]">
           {status === 'loading' ? (
@@ -127,14 +140,9 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
           <ChevronLeft size={24} />
         </button>
         
-        <div className="flex gap-2">
-          <button onClick={() => setShowCal(true)} className="btn btn-circle btn-ghost">
-            <Calculator size={20} />
-          </button>
-          <button onClick={() => setShowFlag(true)} className="btn btn-circle btn-ghost text-error">
-            <Flag size={20} />
-          </button>
-        </div>
+        <button onClick={() => setShowFlag(true)} className="btn btn-ghost gap-2 text-error text-xs font-bold uppercase tracking-wider">
+          <Flag size={16} /> Report Issue
+        </button>
 
         <button onClick={next} className="btn btn-circle btn-primary text-white" disabled={currentIndex === questions.length - 1}>
           <ChevronRight size={24} />

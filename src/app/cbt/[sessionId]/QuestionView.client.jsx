@@ -27,7 +27,7 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
         </div>
       </div>
 
-      <div className="space-y-3 mt-4">
+      <div className="space-y-3 mt-4 mb-8">
         {['A', 'B', 'C', 'D', 'E'].map((opt) => (
           question.options[opt] && (
             <button
@@ -39,15 +39,24 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
                   : 'bg-base-100 border-base-300 hover:bg-base-200'}
               `}
             >
-              <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border
-                ${selectedOption === opt ? 'bg-primary text-white border-primary' : 'border-base-content/30 text-base-content/70'}
+              <span className={`flex-shrink-0 font-bold
+                ${selectedOption === opt ? 'text-primary' : 'text-base-content/70'}
               `}>
-                {opt}
+                {opt}.
               </span>
               <span className="text-base-content/90">{question.options[opt]}</span>
             </button>
           )
         ))}
+      </div>
+
+      <div className="flex justify-between mt-auto pt-4 border-t border-base-200">
+        <button onClick={onPrev} className="btn btn-outline btn-sm md:btn-md gap-2">
+           Prev
+        </button>
+        <button onClick={onNext} className="btn btn-primary btn-sm md:btn-md gap-2 text-white">
+           Next
+        </button>
       </div>
     </div>
   );
