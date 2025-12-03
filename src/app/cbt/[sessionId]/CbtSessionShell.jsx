@@ -62,6 +62,18 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                <span>{formatTime(timeLeft)}</span>
              </div>
              
+             {/* Theme Toggle */}
+             <div className="dropdown dropdown-end">
+               <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-circle">
+                 <Menu size={20} />
+               </div>
+               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 border border-base-200 mt-4">
+                 <li><button onClick={() => document.documentElement.setAttribute('data-theme', 'light')}>Light Theme</button></li>
+                 <li><button onClick={() => document.documentElement.setAttribute('data-theme', 'dark')}>Dark Theme</button></li>
+                 <li><button onClick={() => document.documentElement.setAttribute('data-theme', 'eye-care')}>Eye Care Theme</button></li>
+               </ul>
+             </div>
+
              {/* Mobile Top Controls */}
              <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle md:hidden">
                <Calculator size={20} />
@@ -167,13 +179,24 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       
       {/* Mobile Nav Drawer */}
       {showNav && (
-        <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setShowNav(false)}>
-          <div className="absolute right-0 top-0 bottom-0 w-64 bg-base-100 p-4" onClick={e => e.stopPropagation()}>
-            <h3 className="font-bold mb-4">Questions</h3>
+        <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNav(false)}>
+          <div 
+            className="absolute right-0 top-16 bottom-0 w-72 bg-base-100 border-l border-base-200 p-4 shadow-2xl overflow-y-auto" 
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <Grid size={20} /> Navigator
+              </h3>
+              <button onClick={() => setShowNav(false)} className="btn btn-sm btn-circle btn-ghost">
+                <X size={20} />
+              </button>
+            </div>
+            
             <QuestionNavigator
               total={questions.length}
               current={currentIndex}
-              answers={answers} // Need to map properly
+              answers={answers} 
               onJump={(i) => { jumpTo(i); setShowNav(false); }}
             />
           </div>

@@ -51,9 +51,9 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
   if (!expanded && isDocked) {
     return (
       <div className="bg-base-100 border-b border-base-200 p-2 flex items-center justify-between sticky top-0 z-20 shadow-sm">
-        <div className="font-mono text-xl font-bold px-2 truncate max-w-[200px]">{display}</div>
+        <div className="font-mono text-xl font-bold px-2 truncate max-w-[200px] text-base-content">{display}</div>
         <div className="flex gap-2">
-           <button onClick={() => setExpanded(true)} className="btn btn-sm btn-ghost btn-square">
+           <button onClick={() => setExpanded(true)} className="btn btn-sm btn-ghost btn-square text-base-content">
              <Maximize2 size={18} />
            </button>
            <button onClick={onClose} className="btn btn-sm btn-ghost btn-square text-error">
@@ -65,10 +65,17 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
   }
 
   return (
-    <div className={`
-      ${isDocked ? 'absolute top-0 right-0 m-4 w-80 shadow-2xl z-50' : 'fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]'}
-    `}>
-      <div className={`bg-base-100 p-4 rounded-2xl shadow-2xl border border-base-300 flex flex-col gap-3 ${!isDocked && 'w-full max-w-sm mx-4'}`}>
+    <>
+      {/* Backdrop for click-outside closing */}
+      <div 
+        className={`fixed inset-0 z-40 ${isDocked ? 'bg-black/10' : 'bg-black/50 backdrop-blur-sm'}`} 
+        onClick={onClose}
+      />
+      
+      <div className={`
+        ${isDocked ? 'absolute top-16 right-4 w-80 shadow-2xl z-50' : 'fixed inset-0 z-50 flex items-center justify-center pointer-events-none'}
+      `}>
+        <div className={`bg-base-100 p-4 rounded-2xl shadow-2xl border border-base-300 flex flex-col gap-3 pointer-events-auto ${!isDocked && 'w-full max-w-sm mx-4'}`}>
         
         {/* Header */}
         <div className="flex justify-between items-center">
