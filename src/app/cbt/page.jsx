@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
@@ -30,6 +30,27 @@ export default function ExamSetupPage() {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [isPremium, setIsPremium] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+
+  const yearSectionRef = useRef(null);
+  const summarySectionRef = useRef(null);
+
+  // Auto-scroll to Year section when Subject is selected and years are loaded
+  useEffect(() => {
+    if (selectedSubject && availableYears.length > 0 && yearSectionRef.current) {
+      setTimeout(() => {
+        yearSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [selectedSubject, availableYears]);
+
+  // Auto-scroll to Summary section when Year is selected
+  useEffect(() => {
+    if (selectedYear && summarySectionRef.current) {
+      setTimeout(() => {
+        summarySectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [selectedYear]);
 
   const [availableMetadata, setAvailableMetadata] = useState({});
   const [availableYears, setAvailableYears] = useState([]);
@@ -222,7 +243,7 @@ export default function ExamSetupPage() {
             </div>
 
             {/* Year Selection */}
-            <div className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm">
+            <div ref={yearSectionRef} className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-secondary" />
@@ -288,7 +309,7 @@ export default function ExamSetupPage() {
             className="lg:col-span-1"
           >
             <div className="sticky top-6">
-              <div className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+              <div ref={summarySectionRef} className="bg-base-100 border border-base-200 rounded-3xl p-6 shadow-xl relative overflow-hidden">
                 {/* Background decoration */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/5 rounded-full blur-3xl -ml-16 -mb-16"></div>

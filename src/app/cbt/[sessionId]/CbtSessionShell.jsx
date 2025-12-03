@@ -23,7 +23,9 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     markAnswer,
     next,
     prev,
-    toggleBookmark
+    toggleBookmark,
+    jumpTo,
+    bookmarks
   } = useCbtSession({ sessionId, endTime: null, initialQuestions: null }); // Pass actual props if available
 
   const [showCal, setShowCal] = useState(false);

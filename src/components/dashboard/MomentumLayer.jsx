@@ -113,12 +113,17 @@ export default function MomentumLayer({ user, stats }) {
                     <div>
                         <h1 className="text-lg font-bold text-primary">
                             {(() => {
-                                const hour = new Date().getHours();
-                                if (hour < 12) return 'Good Morning';
-                                if (hour < 18) return 'Good Afternoon';
-                                if (hour < 22) return 'Good Evening';
-                                return 'Good Night';
-                            })()}, {firstName}
+                                const [greeting, setGreeting] = useState('');
+                                useEffect(() => {
+                                    const hour = new Date().getHours();
+                                    if (hour < 12) setGreeting('Good Morning');
+                                    else if (hour < 18) setGreeting('Good Afternoon');
+                                    else if (hour < 22) setGreeting('Good Evening');
+                                    else setGreeting('Good Night');
+                                }, []);
+                                return greeting;
+                            })()}
+                            {firstName && `, ${firstName}`}
                         </h1>
                         <p className="text-xs text-base-content/70 font-medium">
                             {quote}
