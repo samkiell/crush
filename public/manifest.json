@@ -2,7 +2,9 @@
   "name": "DEVOUR TO CRUSH",
   "short_name": "D2C",
   "description": "Your ultimate JAMB exam preparation platform. Master the questions, Crush the exam, and Secure your future.",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
@@ -62,7 +64,14 @@
     {
       "src": "/screenshots/home.png",
       "sizes": "1280x720",
-      "type": "image/png"
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+        "src": "/screenshots/mobile.png",
+        "sizes": "720x1280",
+        "type": "image/png",
+        "form_factor": "narrow"
     }
   ],
   "shortcuts": [
@@ -71,36 +80,22 @@
       "short_name": "Exam",
       "description": "Start a new mock exam",
       "url": "/exam",
-      "icons": [
-        {
-          "src": "/logo_main.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "/logo_main.png", "sizes": "192x192" }]
     },
     {
       "name": "Practice Questions",
       "short_name": "Questions",
       "description": "Practice JAMB questions",
       "url": "/study",
-      "icons": [
-        {
-          "src": "/logo_main.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "/logo_main.png", "sizes": "192x192" }]
     },
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
       "description": "View your progress",
       "url": "/dashboard",
-      "icons": [
-        {
-          "src": "/logo_main.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "/logo_main.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }

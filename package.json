@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run build:sw",
+    "build:sw": "workbox injectManifest workbox-config.js",
     "start": "next start",
     "lint": "eslint"
   },
@@ -52,6 +53,7 @@
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "tailwindcss": "^4",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "workbox-cli": "^7.4.0"
   }
 }

@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import AuthInitializer from "../components/AuthInitializer";
 import FooterWrapper from "../components/layout/FooterWrapper";
 import BottomNav from "../components/layout/BottomNav";
+import RegisterSW from "./register-sw";
 import Loading from "./loading";
 import { Suspense } from "react";
 
@@ -74,6 +75,7 @@ export default function RootLayout({ children }) {
             <BottomNav />
             <ToastProvider />
             <PWAInstallPrompt />
+            <RegisterSW />
           </ReduxProvider>
         </ThemeWrapper>
       </body>
