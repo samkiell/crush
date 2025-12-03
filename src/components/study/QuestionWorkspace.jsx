@@ -275,7 +275,8 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     if (!currentQuestion) return null;
 
     return (
-        <div className="max-w-3xl mx-auto w-full relative pb-20" {...swipeHandlers}>
+    return (
+        <div className="max-w-5xl mx-auto w-full relative pb-20 md:grid md:grid-cols-[1fr_300px] gap-6" {...swipeHandlers}>
             {/* Premium Lock Overlay */}
             <AnimatePresence>
                 {showPremiumLock && (
@@ -304,97 +305,126 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                 )}
             </AnimatePresence>
 
-            {/* Header / Progress */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2 text-sm font-medium text-base-content/60">
-                    <span className="bg-base-200 px-2 py-1 rounded-lg">Question {currentQuestionIndex + 1} / {questions.length}</span>
-                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg capitalize">{subjectName || sessionId.split('-')[0]}</span>
-                </div>
-                
-                {/* Mobile Top Controls */}
-                <div className="flex gap-1 md:hidden">
-                     <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle">
-                       <Calculator size={20} />
-                     </button>
-                     <button onClick={() => setShowNav(!showNav)} className="btn btn-ghost btn-sm btn-circle">
-                       <Grid size={20} />
-                     </button>
+            {/* Left Column: Header + Question Card + Explanation */}
+            <div className="flex flex-col">
+                {/* Header / Progress */}
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2 text-sm font-medium text-base-content/60">
+                        <span className="bg-base-200 px-2 py-1 rounded-lg">Question {currentQuestionIndex + 1} / {questions.length}</span>
+                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg capitalize">{subjectName || sessionId.split('-')[0]}</span>
+                    </div>
+                    
+                    {/* Mobile Top Controls */}
+                    <div className="flex gap-1 md:hidden">
+                        <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle">
+                        <Calculator size={20} />
+                        </button>
+                        <button onClick={() => setShowNav(!showNav)} className="btn btn-ghost btn-sm btn-circle">
+                        <Grid size={20} />
+                        </button>
+                    </div>
+
+                    <div className="hidden md:flex gap-2">
+                        <button onClick={() => setShowCal(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
+                            <Calculator size={16} /> Calculator
+                        </button>
+                    </div>
                 </div>
 
-                <div className="hidden md:flex gap-2">
-                    <button onClick={() => setShowCal(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
-                        <Calculator size={16} /> Calculator
-                    </button>
-                    <button onClick={() => setShowNav(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
-                        <Grid size={16} /> Nav
-                    </button>
+                {/* Question Card */}
+                <div className="bg-base-100 border border-base-200 rounded-3xl p-6 md:p-8 shadow-sm mb-6">
+                    <h2 className="text-xl md:text-2xl font-semibold mb-8 leading-relaxed">
+                        {currentQuestion.text}
+                    </h2>
+
+                    <div className="space-y-3">
+                        {currentQuestion.options.map((option) => {
+                            const isSelected = selectedOption === option.id;
+                            const isCorrect = option.id === currentQuestion.correctOption;
+
+                            let cardStyle = "border-base-200 hover:border-primary/50 hover:bg-base-200/50";
+                            let icon = null;
+
+                            if (isAnswered) {
+                                if (isSelected && isCorrect) {
+                                    cardStyle = "border-success bg-success/10 text-success-content";
+                                    icon = <CheckCircle className="w-5 h-5 text-success" />;
+                                } else if (isSelected && !isCorrect) {
+                                    cardStyle = "border-error bg-error/10 text-error-content";
+                                    icon = <XCircle className="w-5 h-5 text-error" />;
+                                } else if (!isSelected && isCorrect) {
+                                    cardStyle = "border-success border-dashed bg-success/5";
+                                    icon = <CheckCircle className="w-5 h-5 text-success opacity-50" />;
+                                } else {
+                                    cardStyle = "opacity-50 border-base-200";
+                                }
+                            } else if (isSelected) {
+                                cardStyle = "border-primary bg-primary/5";
+                            }
+
+                            return (
+                                <motion.button
+                                    key={option.id}
+                                    onClick={() => handleOptionSelect(option.id)}
+                                    disabled={isAnswered}
+                                    whileHover={!isAnswered ? { scale: 1.01 } : {}}
+                                    whileTap={!isAnswered ? { scale: 0.99 } : {}}
+                                    className={`w-full p-4 rounded-xl border-2 text-left flex items-center justify-between transition-all ${cardStyle}`}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${isSelected || (isAnswered && isCorrect) ? 'bg-base-100 shadow-sm' : 'bg-base-200'
+                                            }`}>
+                                            {option.id}
+                                        </span>
+                                        <span className="font-medium">{option.text}</span>
+                                    </div>
+                                    {icon}
+                                </motion.button>
+                            );
+                        })}
+                    </div>
+                    
+                    {/* Desktop Prev/Next Buttons inside card */}
+                    <div className="hidden md:flex justify-between items-center mt-8 pt-6 border-t border-base-200">
+                        <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2 flex items-center">
+                            <ChevronLeft size={20} /> Prev
+                        </button>
+                        <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider flex items-center">
+                            <Flag size={16} /> Report
+                        </button>
+                        <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center">
+                            Next <ChevronRight size={20} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Question Card */}
-            <div className="bg-base-100 border border-base-200 rounded-3xl p-6 md:p-8 shadow-sm mb-6">
-                <h2 className="text-xl md:text-2xl font-semibold mb-8 leading-relaxed">
-                    {currentQuestion.text}
-                </h2>
-
-                <div className="space-y-3">
-                    {currentQuestion.options.map((option) => {
-                        const isSelected = selectedOption === option.id;
-                        const isCorrect = option.id === currentQuestion.correctOption;
-
-                        let cardStyle = "border-base-200 hover:border-primary/50 hover:bg-base-200/50";
-                        let icon = null;
-
-                        if (isAnswered) {
-                            if (isSelected && isCorrect) {
-                                cardStyle = "border-success bg-success/10 text-success-content";
-                                icon = <CheckCircle className="w-5 h-5 text-success" />;
-                            } else if (isSelected && !isCorrect) {
-                                cardStyle = "border-error bg-error/10 text-error-content";
-                                icon = <XCircle className="w-5 h-5 text-error" />;
-                            } else if (!isSelected && isCorrect) {
-                                cardStyle = "border-success border-dashed bg-success/5";
-                                icon = <CheckCircle className="w-5 h-5 text-success opacity-50" />;
-                            } else {
-                                cardStyle = "opacity-50 border-base-200";
-                            }
-                        } else if (isSelected) {
-                            cardStyle = "border-primary bg-primary/5";
-                        }
-
-                        return (
-                            <motion.button
-                                key={option.id}
-                                onClick={() => handleOptionSelect(option.id)}
-                                disabled={isAnswered}
-                                whileHover={!isAnswered ? { scale: 1.01 } : {}}
-                                whileTap={!isAnswered ? { scale: 0.99 } : {}}
-                                className={`w-full p-4 rounded-xl border-2 text-left flex items-center justify-between transition-all ${cardStyle}`}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${isSelected || (isAnswered && isCorrect) ? 'bg-base-100 shadow-sm' : 'bg-base-200'
-                                        }`}>
-                                        {option.id}
-                                    </span>
-                                    <span className="font-medium">{option.text}</span>
-                                </div>
-                                {icon}
-                            </motion.button>
-                        );
-                    })}
-                </div>
-                
-                {/* Desktop Prev/Next Buttons inside card */}
-                <div className="hidden md:flex justify-between items-center mt-8 pt-6 border-t border-base-200">
-                     <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2 flex items-center">
-                         <ChevronLeft size={20} /> Prev
-                     </button>
-                     <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider flex items-center">
-                         <Flag size={16} /> Report
-                     </button>
-                     <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center">
-                         Next <ChevronRight size={20} />
-                     </button>
+            {/* Sidebar (Desktop) */}
+            <div className="hidden md:flex flex-col gap-4 pt-[52px]"> {/* pt to align with content below header */}
+                <div className="bg-base-100 rounded-2xl shadow-sm p-4 flex-1 flex flex-col max-h-[calc(100vh-100px)] sticky top-24">
+                    <h3 className="font-bold mb-4 flex items-center gap-2">
+                        <Grid size={18} /> Navigator
+                    </h3>
+                    <div className="flex-1 overflow-y-auto">
+                        <QuestionNavigator
+                            total={questions.length}
+                            current={currentQuestionIndex}
+                            answers={Object.keys(answers).reduce((acc, k) => {
+                                const idx = questions.findIndex(q => q.id === k);
+                                if (idx >= 0) acc[idx] = true;
+                                return acc;
+                            }, {})}
+                            onJump={(i) => { setCurrentQuestionIndex(i); resetState(); }}
+                        />
+                    </div>
+                    <div className="pt-4 mt-4 border-t border-base-200">
+                        <button 
+                            onClick={() => setShowSummary(true)} 
+                            className="btn btn-primary w-full text-white shadow-lg shadow-primary/20"
+                        >
+                            Finish Session
+                        </button>
+                    </div>
                 </div>
             </div>
 

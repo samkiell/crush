@@ -94,9 +94,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                 <button onClick={() => setShowCal(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
                     <Calculator size={16} /> Calculator
                 </button>
-                <button onClick={() => setShowNav(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
-                    <Grid size={16} /> Nav
-                </button>
              </div>
            </div>
         </div>
@@ -113,7 +110,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-3xl mx-auto w-full p-4 md:p-6 pb-20 md:pb-6">
+      <main className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 grid md:grid-cols-[1fr_300px] gap-6 pb-20 md:pb-6">
         {/* Question Area */}
         <div className="bg-base-100 rounded-2xl shadow-sm relative overflow-hidden min-h-[60vh] flex flex-col mb-6">
           <div className="p-6 flex-1">
@@ -144,6 +141,35 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
              <button onClick={next} disabled={currentIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center">
                  Next <ChevronRight size={20} />
              </button>
+          </div>
+        </div>
+
+        {/* Sidebar (Desktop) */}
+        <div className="hidden md:flex flex-col gap-4">
+          <div className="bg-base-100 rounded-2xl shadow-sm p-4 flex-1 flex flex-col">
+            <h3 className="font-bold mb-4 flex items-center gap-2">
+              <Grid size={18} /> Navigator
+            </h3>
+            <div className="flex-1 overflow-y-auto max-h-[400px]">
+                <QuestionNavigator
+                total={questions.length}
+                current={currentIndex}
+                answers={Object.keys(answers).reduce((acc, k) => {
+                    const idx = questions.findIndex(q => q.qid === k);
+                    if (idx >= 0) acc[idx] = true;
+                    return acc;
+                }, {})}
+                onJump={jumpTo}
+                />
+            </div>
+            <div className="pt-4 mt-4 border-t border-base-200">
+                <button 
+                    onClick={() => setShowSubmitConfirm(true)} 
+                    className="btn btn-primary w-full text-white shadow-lg shadow-primary/20"
+                >
+                    Submit Session
+                </button>
+            </div>
           </div>
         </div>
       </main>
