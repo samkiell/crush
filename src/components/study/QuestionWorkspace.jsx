@@ -24,6 +24,9 @@ import QuestionNavigator from '@/components/QuestionNavigator.client';
 import FlagReportModal from '@/components/FlagReportModal.client';
 import { useSwipe } from '@/lib/swipeHandler';
 import ReactMarkdown from 'react-markdown';
+import AudioReader from '@/components/AudioReader.client';
+import { Star } from 'lucide-react';
+import { saveBookmarkLocal, removeBookmarkLocal, getBookmarks } from '@/lib/idbClient';
 
 const FREE_LIMIT = 3;
 
@@ -61,6 +64,31 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     const [showCal, setShowCal] = useState(false);
     const [showNav, setShowNav] = useState(false);
     const [showFlag, setShowFlag] = useState(false);
+    const [bookmarks, setBookmarks] = useState(new Set());
+
+    // Load bookmarks
+    useEffect(() => {
+        const loadBookmarks = async () => {
+            const saved = await getBookmarks();
+            // Filter bookmarks for this session/subject if needed, or just load all question IDs
+            // The IDB stores objects with questionId.
+            const ids = new Set(saved.map(b => b.questionId));
+            setBookmarks(ids);
+        };
+        loadBookmarks();
+    }, []);
+
+    const toggleBookmark = async (questionId) => {
+        const newBookmarks = new Set(bookmarks);
+        if (newBookmarks.has(questionId)) {
+            newBookmarks.delete(questionId);
+            await removeBookmarkLocal(questionId);
+        } else {
+            newBookmarks.add(questionId);
+            await saveBookmarkLocal({ questionId, sessionId, timestamp: Date.now() });
+        }
+        setBookmarks(newBookmarks);
+    };
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -340,9 +368,23 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
 
                 {/* Question Card */}
                 <div className="bg-base-100 border border-base-200 rounded-3xl p-6 md:p-8 shadow-sm mb-6">
-                    <h2 className="text-xl md:text-2xl font-semibold mb-8 leading-relaxed">
-                        {currentQuestion.text}
-                    </h2>
+                    <div className="flex justify-between items-start mb-8 gap-4">
+                        <h2 className="text-xl md:text-2xl font-semibold leading-relaxed flex-1">
+                            {currentQuestion.text}
+                        </h2>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                            <button 
+                                onClick={() => toggleBookmark(currentQuestion.id)}
+                                className={`btn btn-circle btn-sm ${bookmarks.has(currentQuestion.id) ? 'btn-warning text-white' : 'btn-ghost text-base-content/30'}`}
+                            >
+                                <Star size={18} className={bookmarks.has(currentQuestion.id) ? 'fill-current' : ''} />
+                            </button>
+                            <AudioReader 
+                                text={currentQuestion.text} 
+                                options={currentQuestion.options}
+                            />
+                        </div>
+                    </div>
 
                     <div className="space-y-3">
                         {currentQuestion.options.map((option) => {
@@ -493,9 +535,12 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                     animate={{ opacity: 1 }}
                                     className="prose prose-sm max-w-none"
                                 >
-                                    <h4 className="text-base font-semibold mb-2 flex items-center gap-2">
-                                        <CheckCircle className="w-4 h-4 text-success" />
-                                        Correct Answer: Option {currentQuestion.correctOption}
+                                    <h4 className="text-base font-semibold mb-2 flex items-center justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <CheckCircle className="w-4 h-4 text-success" />
+                                            Correct Answer: Option {currentQuestion.correctOption}
+                                        </div>
+                                        <AudioReader text={currentQuestion.explanation || "No explanation provided."} />
                                     </h4>
                                     <p className="text-base-content/80 leading-relaxed">
                                         {currentQuestion.explanation || "No explanation provided."}

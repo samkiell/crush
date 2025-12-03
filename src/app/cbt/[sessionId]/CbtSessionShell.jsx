@@ -23,9 +23,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     markAnswer,
     next,
     prev,
-    jumpTo,
-    submit,
-    bookmarks,
     toggleBookmark
   } = useCbtSession({ sessionId, endTime: null, initialQuestions: null }); // Pass actual props if available
 
