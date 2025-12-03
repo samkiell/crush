@@ -23,6 +23,7 @@ import CrushCal from '@/components/CrushCal.client';
 import QuestionNavigator from '@/components/QuestionNavigator.client';
 import FlagReportModal from '@/components/FlagReportModal.client';
 import { useSwipe } from '@/lib/swipeHandler';
+import ReactMarkdown from 'react-markdown';
 
 const FREE_LIMIT = 3;
 
@@ -524,7 +525,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                                             <Bot className="w-4 h-4 text-secondary" />
                                                         </div>
                                                         <div className="bg-base-200/50 rounded-2xl rounded-tl-none p-4 text-base-content/80">
-                                                            {aiExplanation}
+                                                            <ReactMarkdown>{aiExplanation}</ReactMarkdown>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CheckCircle2, XCircle, Bot, BookOpen, Volume2, ArrowLeft } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import ReactMarkdown from 'react-markdown';
 
 export default function CbtReview({ sessionId }) {
   const router = useRouter();
@@ -188,9 +189,9 @@ export default function CbtReview({ sessionId }) {
                 </div>
                 
                 {currentQuestion.aiExplanation ? (
-                  <p className="text-base-content/80 leading-relaxed">
-                    {currentQuestion.aiExplanation}
-                  </p>
+                  <div className="text-base-content/80 leading-relaxed prose prose-sm max-w-none">
+                    <ReactMarkdown>{currentQuestion.aiExplanation}</ReactMarkdown>
+                  </div>
                 ) : (
                   <p className="text-base-content/40 text-sm italic">
                     Tap above to get a personalized explanation from Crush AI.
