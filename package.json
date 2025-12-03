@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npm run build:sw",
+    "build": "next build",
     "build:sw": "workbox injectManifest workbox-config.js",
     "start": "next start",
     "lint": "eslint"
