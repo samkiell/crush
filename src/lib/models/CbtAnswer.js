@@ -21,6 +21,10 @@ const CbtAnswerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    questionId: {
+      type: String,
+      required: true,
+    },
     answer: {
       type: String, // 'A', 'B', 'C', 'D'
       required: true,

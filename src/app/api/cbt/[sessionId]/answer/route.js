@@ -48,6 +48,7 @@ export async function POST(request, { params }) {
               sessionId,
               userId: session.userId,
               qIndex,
+              questionId: ans.questionId,
               answer: ans.selectedOption,
               correct: isCorrect,
             },

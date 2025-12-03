@@ -12,6 +12,14 @@ export default function UserManagementPage() {
 
     useEffect(() => {
         fetchUsers();
+        
+        // Auto-refresh when back online
+        const handleOnline = () => {
+            toast.success('Connection restored. Refreshing users...');
+            fetchUsers();
+        };
+        window.addEventListener('online', handleOnline);
+        return () => window.removeEventListener('online', handleOnline);
     }, []);
 
     const fetchUsers = async () => {
@@ -175,7 +183,7 @@ export default function UserManagementPage() {
                                 <th className="w-12 text-center border-r border-base-200/50">#</th>
                                 <th className="py-4 pl-6 border-r border-base-200/50">User Identity</th>
                                 <th className="hidden md:table-cell border-r border-base-200/50">Role</th>
-                                <th className="hidden md:table-cell border-r border-base-200/50">Current Plan</th>
+                                <th className="border-r border-base-200/50">Current Plan</th>
                                 <th className="border-r border-base-200/50">Live Status</th>
                                 <th className="hidden lg:table-cell border-r border-base-200/50">Joined Date</th>
                                 <th className="pr-6 text-right">Actions</th>
@@ -233,7 +241,7 @@ export default function UserManagementPage() {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="hidden md:table-cell border-r border-base-200/50">
+                                        <td className="border-r border-base-200/50">
                                             <span className={`badge ${user.plan === 'premium' ? 'badge-secondary' : 'badge-outline'} badge-sm gap-1`}>
                                                 {user.plan === 'premium' && <Crown size={10} />}
                                                 {user.plan || 'Free'}
@@ -332,15 +340,25 @@ export default function UserManagementPage() {
                                 <div className="grid grid-cols-2 gap-3">
                                     <button 
                                         onClick={() => handleUpdateUser(selectedUser._id, { plan: 'free' })}
-                                        className={`btn h-auto py-3 flex flex-col gap-1 ${selectedUser.plan === 'free' ? 'btn-neutral' : 'btn-outline border-base-300'}`}
+                                        className={`btn h-auto py-3 flex flex-col gap-1 relative ${selectedUser.plan === 'free' ? 'btn-neutral ring-2 ring-offset-2 ring-neutral' : 'btn-outline border-base-300'}`}
                                     >
+                                        {selectedUser.plan === 'free' && (
+                                            <div className="absolute top-2 right-2 text-xs bg-base-100 text-base-content px-1.5 rounded-md font-bold shadow-sm">
+                                                Active
+                                            </div>
+                                        )}
                                         <BookOpen size={20} />
                                         <span>Free Plan</span>
                                     </button>
                                     <button 
                                         onClick={() => handleUpdateUser(selectedUser._id, { plan: 'premium' })}
-                                        className={`btn h-auto py-3 flex flex-col gap-1 ${selectedUser.plan === 'premium' ? 'btn-secondary text-white' : 'btn-outline border-base-300'}`}
+                                        className={`btn h-auto py-3 flex flex-col gap-1 relative ${selectedUser.plan === 'premium' ? 'btn-secondary text-white ring-2 ring-offset-2 ring-secondary' : 'btn-outline border-base-300'}`}
                                     >
+                                        {selectedUser.plan === 'premium' && (
+                                            <div className="absolute top-2 right-2 text-xs bg-white text-secondary px-1.5 rounded-md font-bold shadow-sm">
+                                                Active
+                                            </div>
+                                        )}
                                         <Crown size={20} />
                                         <span>Premium</span>
                                     </button>
