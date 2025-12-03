@@ -61,7 +61,7 @@ export default function UserManagementPage() {
             if (res.ok) {
                 toast.success('User updated successfully');
                 fetchUsers();
-                setSelectedUser(null);
+                setSelectedUser(null); // Close modal
             } else {
                 toast.error('Failed to update user');
             }
@@ -79,7 +79,7 @@ export default function UserManagementPage() {
             if (res.ok) {
                 toast.success('User deleted');
                 fetchUsers();
-                setSelectedUser(null);
+                setSelectedUser(null); // Close modal
             } else {
                 toast.error('Failed to delete user');
             }
@@ -124,6 +124,7 @@ export default function UserManagementPage() {
                             <tr className="bg-base-200/50">
                                 <th>User</th>
                                 <th>Role</th>
+                                <th>Plan</th>
                                 <th>Status</th>
                                 <th>Joined</th>
                                 <th>Actions</th>
@@ -133,14 +134,14 @@ export default function UserManagementPage() {
                             {loading ? (
                                 [...Array(5)].map((_, i) => (
                                     <tr key={i}>
-                                        <td colSpan="5" className="text-center py-4">
+                                        <td colSpan="6" className="text-center py-4">
                                             <div className="h-8 bg-base-200 rounded animate-pulse w-full"></div>
                                         </td>
                                     </tr>
                                 ))
                             ) : filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="text-center py-8 text-base-content/60">
+                                    <td colSpan="6" className="text-center py-8 text-base-content/60">
                                         No users found.
                                     </td>
                                 </tr>
@@ -166,6 +167,11 @@ export default function UserManagementPage() {
                                         <td>
                                             <span className={`badge ${user.role === 'admin' ? 'badge-primary' : 'badge-ghost'} badge-sm`}>
                                                 {user.role}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span className={`badge ${user.plan === 'premium' ? 'badge-secondary' : 'badge-outline'} badge-sm`}>
+                                                {user.plan || 'Free'}
                                             </span>
                                         </td>
                                         <td>
