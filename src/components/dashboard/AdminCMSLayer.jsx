@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database, Activity, TrendingUp } from 'lucide-react';
+import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database, Activity, TrendingUp, Flag } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 import api from '@/services/api';
@@ -87,6 +87,15 @@ export default function AdminCMSLayer() {
             color: 'text-warning',
             bg: 'bg-warning/10',
             border: 'border-warning/20',
+        },
+        {
+            title: 'Reports',
+            description: 'View and manage user reports',
+            icon: Flag,
+            href: '/admin/reports',
+            color: 'text-error',
+            bg: 'bg-error/10',
+            border: 'border-error/20',
         },
         {
             title: 'Security Logs',
