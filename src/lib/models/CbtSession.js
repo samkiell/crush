@@ -10,7 +10,6 @@ const CbtSessionSchema = new mongoose.Schema(
     sessionId: {
       type: String,
       required: true,
-      unique: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -67,6 +66,9 @@ const CbtSessionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Compound index to ensure a user can only have one session per exam ID
+CbtSessionSchema.index({ sessionId: 1, userId: 1 }, { unique: true });
 
 export default mongoose.models.CbtSession ||
   mongoose.model("CbtSession", CbtSessionSchema);

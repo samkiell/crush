@@ -12,14 +12,10 @@ export async function POST(request, { params }) {
     const { sessionId } = await params;
 
     // 1. Load Session
-    const session = await CbtSession.findOne({ sessionId });
+    // 1. Load Session
+    const session = await CbtSession.findOne({ sessionId, userId: user._id });
     if (!session) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
-    }
-
-    // Check ownership
-    if (session.userId.toString() !== user._id.toString()) {
-      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
     }
 
     // 2. Check status

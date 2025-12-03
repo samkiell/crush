@@ -12,7 +12,8 @@ export async function POST(request, { params }) {
     const { questions, subject, year, totalQuestions } = body;
 
     // Check if session exists
-    let session = await CbtSession.findOne({ sessionId });
+    // Check if session exists for this user
+    let session = await CbtSession.findOne({ sessionId, userId: user._id });
 
     if (session) {
       // Session exists, maybe update last active time?
