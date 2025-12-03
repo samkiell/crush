@@ -63,11 +63,11 @@ export default function FlagReportModal({ question, isOpen, onClose }) {
         {question && (
             <div className="bg-base-200/50 p-3 rounded-lg mb-4 text-sm">
                 <div className="flex justify-between mb-1">
-                    <span className="font-bold capitalize">{question.subject}</span>
-                    <span className="opacity-60">{question.year}</span>
+                    <span className="font-bold capitalize">{question.subject || 'Unknown Subject'}</span>
+                    <span className="opacity-60">{question.year || 'Unknown Year'}</span>
                 </div>
-                <div className="text-xs opacity-40 mb-2 font-mono">ID: {question.qid || question._id}</div>
-                <p className="line-clamp-2 opacity-80 italic">"{question.question}"</p>
+                <div className="text-xs opacity-40 mb-2 font-mono">ID: {question.qid || question.id || question._id || 'N/A'}</div>
+                <p className="line-clamp-2 opacity-80 italic">"{question.question || question.text || 'No question text'}"</p>
             </div>
         )}
 
