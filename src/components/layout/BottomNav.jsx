@@ -48,9 +48,9 @@ export default function BottomNav() {
             icon: Home,
         },
         {
-            label: 'Reports',
-            href: '/admin/reports',
-            icon: Flag,
+            label: 'Routes',
+            href: '/routes',
+            icon: Map,
         },
         {
             label: 'Chat',
@@ -99,16 +99,16 @@ export default function BottomNav() {
                             )}
 
                             <motion.div
-                                className={`flex flex-col items-center gap-1 transition-colors duration-300 ${isActive
-                                    ? 'text-primary'
-                                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                                className={`flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition-all duration-300 ${isActive
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/30 translate-y-[-4px]'
+                                    : 'text-base-content/60 hover:text-base-content hover:bg-base-200/50'
                                     }`}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <div className="relative">
                                     <Icon
-                                        className={`w-6 h-6 ${isActive ? 'stroke-[2.5px]' : 'stroke-2'}`}
+                                        className={`w-5 h-5 ${isActive ? 'stroke-[2.5px]' : 'stroke-2'}`}
                                     />
                                     {/* Optional: Notification dot example for Chat */}
                                     {item.label === 'Chat' && (
@@ -116,7 +116,7 @@ export default function BottomNav() {
                                     )}
                                 </div>
 
-                                <span className={`text-[10px] font-medium ${isActive ? 'font-semibold' : ''}`}>
+                                <span className={`text-[10px] font-medium ${isActive ? 'font-bold' : ''}`}>
                                     {item.label}
                                 </span>
                             </motion.div>
