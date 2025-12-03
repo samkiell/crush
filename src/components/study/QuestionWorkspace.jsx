@@ -632,7 +632,10 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                 Continue Studying
                             </button>
                             <button 
-                                onClick={() => window.location.href = '/dashboard'} 
+                                onClick={() => {
+                                    localStorage.removeItem('last_active_session');
+                                    window.location.href = '/dashboard';
+                                }} 
                                 className="btn btn-ghost w-full"
                             >
                                 Exit Session

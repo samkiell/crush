@@ -235,7 +235,7 @@ export default function MomentumLayer({ user, stats }) {
                                             <span className="text-[10px] font-bold text-primary">{activeSession.progress}% Completed</span>
                                         </div>
                                     </div>
-                                </motion.div>
+                                </div>
                             </Link>
                         )}
 
