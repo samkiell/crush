@@ -22,7 +22,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     next,
     prev,
     jumpTo,
-    submitSession
+    submit
   } = useCbtSession({ sessionId, endTime: null, initialQuestions: null }); // Pass actual props if available
 
   const [showCal, setShowCal] = useState(false);
@@ -43,8 +43,11 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
-      await submitSession();
-      router.push(`/cbt/${sessionId}/summary`);
+      await submit();
+      // router.push is handled in hook now, but keeping it here as backup or removing it?
+      // The hook does router.push. So we don't strictly need it here, but it doesn't hurt if hook returns data and we wait.
+      // However, if hook redirects, this component unmounts.
+      // Let's just call submit().
     } catch (error) {
       console.error("Submission failed", error);
       setIsSubmitting(false);

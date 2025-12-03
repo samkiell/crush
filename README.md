@@ -175,3 +175,48 @@ OpenAPI documentation
 Storybook foundations
 
 AI recommendation blueprint
+
+## CBT Implementation Details
+
+### How Submit Works
+1. User clicks "Submit" in the CBT interface.
+2. `useCbtSession` hook calls `POST /api/cbt/[sessionId]/submit`.
+3. Backend:
+   - Validates session status is "active".
+   - Calculates score based on stored `CbtAnswer`s vs `CbtSession` questions.
+   - Updates `CbtSession` status to "submitted" and saves summary stats.
+   - Returns summary data.
+4. Frontend redirects to `/cbt/[sessionId]/summary`.
+
+### Summary Flow
+- Route: `/cbt/[sessionId]/summary`
+- Page fetches session data server-side from MongoDB.
+- Passes summary stats (score, percentage, time, etc.) to `CbtSummary.client.jsx`.
+- Displays a visual score card and performance breakdown.
+
+### Review Flow
+- Route: `/cbt/[sessionId]/review`
+- Component `CbtReview.client.jsx` fetches detailed review data from `/api/cbt/[sessionId]/review`.
+- Backend joins `CbtSession` questions with `CbtAnswer`s and `Question` details.
+- Returns questions with user's answer, correct answer, and tutor explanation.
+- UI renders questions in a read-only mode with correct/wrong highlighting.
+- "Ask AI" button triggers `/api/ai/explain` if no AI explanation exists.
+
+### AI Explanations
+- Endpoint: `/api/ai/explain`
+- Uses Google Gemini Pro (via `@google/generative-ai`).
+- Generates personalized explanations based on question, options, correct answer, and user's answer.
+- Saves generated explanation to `CbtAnswer` in MongoDB for future retrieval.
+
+### API Endpoints
+- `POST /api/cbt/[sessionId]/submit`: Finalize session and calculate score.
+- `GET /api/cbt/[sessionId]/review`: Fetch questions and answers for review.
+- `POST /api/ai/explain`: Generate AI explanation for a question.
+
+### Required Env Variables
+- `MONGODB_URI`: Connection string for MongoDB.
+- `GEMINI_API_KEY`: API key for Google Gemini AI.
+
+### Mongoose Connection
+- Located in `src/lib/db.js`.
+- Uses a global cached connection (`global.mongoose`) to prevent connection exhaustion in Next.js hot-reload development environment.

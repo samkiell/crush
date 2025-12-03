@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   saveQuestions,
   getQuestions,
@@ -255,7 +256,9 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   );
   const jumpTo = useCallback((i) => setCurrentIndex(i), []);
 
-  const submitSession = async () => {
+  const router = useRouter();
+
+  const submit = async () => {
     try {
       setStatus("submitting");
 
@@ -271,6 +274,10 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
 
       const data = await res.json();
       setStatus("submitted");
+
+      // 3. Redirect to summary
+      router.push(`/cbt/${sessionId}/summary`);
+
       return data; // Returns summary
     } catch (e) {
       console.error("Submit error:", e);
@@ -290,6 +297,6 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
     next,
     prev,
     jumpTo,
-    submitSession,
+    submit,
   };
 };
