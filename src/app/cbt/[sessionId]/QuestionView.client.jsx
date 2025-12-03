@@ -30,7 +30,11 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
           >
             <Star size={18} className={isBookmarked ? 'fill-current' : ''} />
           </button>
-          <AudioReader text={question.question} />
+          <AudioReader 
+            text={question.question} 
+            options={question.options}
+            explanation={question.explanation}
+          />
         </div>
       </div>
 
