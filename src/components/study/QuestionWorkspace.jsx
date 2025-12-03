@@ -12,9 +12,17 @@ import {
     ChevronLeft,
     RotateCcw,
     BookOpen,
-    Bot
+    Bot,
+    Calculator,
+    Grid,
+    Flag,
+    X
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import CrushCal from '@/components/CrushCal.client';
+import QuestionNavigator from '@/components/QuestionNavigator.client';
+import FlagReportModal from '@/components/FlagReportModal.client';
+import { useSwipe } from '@/lib/swipeHandler';
 
 const FREE_LIMIT = 3;
 
@@ -47,6 +55,11 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     const [loadingAi, setLoadingAi] = useState(false);
     const [isPremium, setIsPremium] = useState(false);
     const [showPremiumLock, setShowPremiumLock] = useState(false);
+
+    // Modals State
+    const [showCal, setShowCal] = useState(false);
+    const [showNav, setShowNav] = useState(false);
+    const [showFlag, setShowFlag] = useState(false);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -202,6 +215,16 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
         }
     };
 
+    // Swipe Handlers
+    const swipeHandlers = useSwipe({
+        onLeft: () => {
+             if (currentQuestionIndex < questions.length - 1) handleNextQuestion();
+        },
+        onRight: () => {
+             if (currentQuestionIndex > 0) handlePrevQuestion();
+        }
+    });
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-4">
@@ -228,7 +251,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     if (!currentQuestion) return null;
 
     return (
-        <div className="max-w-3xl mx-auto w-full relative">
+        <div className="max-w-3xl mx-auto w-full relative pb-20" {...swipeHandlers}>
             {/* Premium Lock Overlay */}
             <AnimatePresence>
                 {showPremiumLock && (
@@ -263,7 +286,24 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     <span className="bg-base-200 px-2 py-1 rounded-lg">Question {currentQuestionIndex + 1} / {questions.length}</span>
                     <span className="bg-primary/10 text-primary px-2 py-1 rounded-lg capitalize">{subjectName || sessionId.split('-')[0]}</span>
                 </div>
-                <div className="flex gap-2">
+                
+                {/* Mobile Top Controls */}
+                <div className="flex gap-1 md:hidden">
+                     <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle">
+                       <Calculator size={20} />
+                     </button>
+                     <button onClick={() => setShowNav(!showNav)} className="btn btn-ghost btn-sm btn-circle">
+                       <Grid size={20} />
+                     </button>
+                </div>
+
+                <div className="hidden md:flex gap-2">
+                    <button onClick={() => setShowCal(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
+                        <Calculator size={16} /> Cal
+                    </button>
+                    <button onClick={() => setShowNav(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
+                        <Grid size={16} /> Nav
+                    </button>
                     <button
                         onClick={handlePrevQuestion}
                         disabled={currentQuestionIndex === 0}
@@ -334,6 +374,19 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                             </motion.button>
                         );
                     })}
+                </div>
+                
+                {/* Desktop Prev/Next Buttons inside card */}
+                <div className="hidden md:flex justify-between mt-8 pt-6 border-t border-base-200">
+                     <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2">
+                         <ChevronLeft size={20} /> Prev
+                     </button>
+                     <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider">
+                         <Flag size={16} /> Report
+                     </button>
+                     <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2">
+                         Next <ChevronRight size={20} />
+                     </button>
                 </div>
             </div>
 
@@ -434,6 +487,60 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Mobile Footer Controls */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-base-100 border-t border-base-200 p-3 flex justify-between items-center z-30 safe-area-bottom">
+                <button onClick={handlePrevQuestion} className="btn btn-circle btn-ghost" disabled={currentQuestionIndex === 0}>
+                    <ChevronLeft size={24} />
+                </button>
+                
+                <button onClick={() => setShowFlag(true)} className="btn btn-ghost gap-2 text-error text-xs font-bold uppercase tracking-wider">
+                    <Flag size={16} /> Report Issue
+                </button>
+
+                <button onClick={handleNextQuestion} className="btn btn-circle btn-primary text-white" disabled={currentQuestionIndex === questions.length - 1}>
+                    <ChevronRight size={24} />
+                </button>
+            </div>
+
+            {/* Modals */}
+            {showCal && (
+                <CrushCal 
+                    onClose={() => setShowCal(false)} 
+                />
+            )}
+            {showFlag && (
+                <FlagReportModal 
+                    sessionId={sessionId} 
+                    questionId={currentQuestion?.id} 
+                    isOpen={showFlag} 
+                    onClose={() => setShowFlag(false)} 
+                />
+            )}
+            {showNav && (
+                <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNav(false)}>
+                    <div 
+                        className="absolute right-0 top-16 bottom-0 w-72 bg-base-100/95 backdrop-blur-md border-l border-base-content/10 p-4 shadow-2xl overflow-y-auto" 
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                <Grid size={20} /> Navigator
+                            </h3>
+                            <button onClick={() => setShowNav(false)} className="btn btn-sm btn-circle btn-ghost">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        
+                        <QuestionNavigator
+                            total={questions.length}
+                            current={currentQuestionIndex}
+                            answers={{}} // Study mode doesn't track answers in the same way, or we can add it
+                            onJump={(i) => { setCurrentQuestionIndex(i); setShowNav(false); resetState(); }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
