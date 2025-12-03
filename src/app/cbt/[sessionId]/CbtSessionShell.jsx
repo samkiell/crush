@@ -10,8 +10,6 @@ import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X, Aler
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import CbtTimerBar from '@/components/cbt/CbtTimerBar';
-
 export default function CbtSessionShell({ sessionId, subject, year }) {
   const {
     questions,
@@ -35,6 +33,14 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
+  // Format time
+  const formatTime = (ms) => {
+    const s = Math.floor((ms / 1000) % 60);
+    const m = Math.floor((ms / 1000 / 60) % 60);
+    const h = Math.floor((ms / 1000 / 60 / 60));
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
@@ -47,13 +53,15 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
   };
 
   const currentQuestion = questions[currentIndex];
+  
+  // Calculate percentage for low time warning (20%)
+  const percentageLeft = totalDuration > 0 ? (timeLeft / totalDuration) * 100 : 100;
+  const isLowTime = percentageLeft < 20;
 
   return (
-    <div className="min-h-screen bg-base-200 flex flex-col pt-14">
-      <CbtTimerBar timeLeft={timeLeft} totalDuration={totalDuration} />
-      
+    <div className="min-h-screen bg-base-200 flex flex-col">
       {/* Header */}
-      <header className="bg-base-100 shadow-sm px-4 py-3 sticky top-14 z-30">
+      <header className="bg-base-100 shadow-sm px-4 py-3 sticky top-0 z-30">
         <div className="flex items-center justify-between mb-2">
            <div className="flex items-center gap-2">
              <Link href="/cbt" className="btn btn-ghost btn-sm btn-circle">
@@ -70,6 +78,11 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
            </div>
            
            <div className="flex items-center gap-2">
+             <div className={`flex items-center gap-2 font-mono text-sm font-bold px-3 py-1.5 rounded-lg mr-1 transition-colors ${isLowTime ? 'bg-error/10 text-error animate-pulse' : 'bg-base-200 text-primary'}`}>
+               <Clock size={16} className={isLowTime ? 'text-error' : 'text-primary'} />
+               <span>{formatTime(timeLeft)}</span>
+             </div>
+
              {/* Mobile Top Controls */}
              <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle md:hidden">
                <Calculator size={20} />
