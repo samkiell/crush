@@ -19,17 +19,27 @@ import { ExpirationPlugin } from "workbox-expiration";
 import { BackgroundSyncPlugin } from "workbox-background-sync";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
 
+// ---------------------------------------------------------------------------
+// 1. SETUP & CONFIGURATION
+// ---------------------------------------------------------------------------
+
+self.skipWaiting();
 clientsClaim();
 
-// 1. Precache & Cleanup
-// This will be replaced by the list of files to precache during the build
-precacheAndRoute(self.__WB_MANIFEST);
+// Detect Development Mode
+// process.env.NODE_ENV is replaced by Webpack at build time
+const isDev = process.env.NODE_ENV === "development";
 
-cleanupOutdatedCaches();
+console.log(
+  `Service Worker running in ${isDev ? "DEVELOPMENT" : "PRODUCTION"} mode.`
+);
 
-// 2. Background Sync Queues
+// ---------------------------------------------------------------------------
+// 2. BACKGROUND SYNC (Common for both environments)
+// ---------------------------------------------------------------------------
+
 const cbtSyncPlugin = new BackgroundSyncPlugin("cbt-answers-queue", {
-  maxRetentionTime: 24 * 60, // Retry for max of 24 Hours (specified in minutes)
+  maxRetentionTime: 24 * 60, // 24 Hours
 });
 
 const integritySyncPlugin = new BackgroundSyncPlugin("integrity-queue", {
@@ -47,99 +57,18 @@ const notesSyncPlugin = new BackgroundSyncPlugin("notes-sync-queue", {
   maxRetentionTime: 24 * 60,
 });
 
-// 3. Runtime Caching
-
-// API GET Requests (StaleWhileRevalidate)
-registerRoute(
-  ({ url }) => url.pathname.startsWith("/api/"),
-  new StaleWhileRevalidate({
-    cacheName: "api-cache",
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 24 * 60 * 60, // 1 Day
-      }),
-    ],
-  })
-);
-
-// Questions JSON from MongoDB (simulated path or specific API)
-// Assuming questions are fetched via /api/questions or similar
-registerRoute(
-  ({ url }) => url.pathname.includes("/questions"),
-  new CacheFirst({
-    cacheName: "questions-cache",
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 100,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 Days
-      }),
-    ],
-  })
-);
-
-// Images (CacheFirst)
-registerRoute(
-  ({ request }) => request.destination === "image",
-  new CacheFirst({
-    cacheName: "images-cache",
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-      }),
-    ],
-  })
-);
-
-// Fonts (CacheFirst)
-registerRoute(
-  ({ url }) =>
-    url.origin === "https://fonts.googleapis.com" ||
-    url.origin === "https://fonts.gstatic.com",
-  new CacheFirst({
-    cacheName: "google-fonts",
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 30,
-        maxAgeSeconds: 365 * 24 * 60 * 60, // 1 Year
-      }),
-    ],
-  })
-);
-
-// Scripts and Styles (StaleWhileRevalidate)
-registerRoute(
-  ({ request }) =>
-    request.destination === "script" || request.destination === "style",
-  new StaleWhileRevalidate({
-    cacheName: "static-resources",
-  })
-);
-
-// 4. Background Sync Routes (POST/PUT/DELETE)
-
+// Register Sync Routes (POST/PUT/DELETE)
 registerRoute(
   ({ url, request }) =>
     url.pathname.includes("/api/cbt/submit") && request.method === "POST",
-  new NetworkOnly({
-    plugins: [cbtSyncPlugin],
-  }),
+  new NetworkOnly({ plugins: [cbtSyncPlugin] }),
   "POST"
 );
 
 registerRoute(
   ({ url, request }) =>
     url.pathname.includes("/api/study/progress") && request.method === "POST",
-  new NetworkOnly({
-    plugins: [studyProgressSyncPlugin],
-  }),
+  new NetworkOnly({ plugins: [studyProgressSyncPlugin] }),
   "POST"
 );
 
@@ -147,37 +76,150 @@ registerRoute(
   ({ url, request }) =>
     url.pathname.includes("/api/notes") &&
     (request.method === "POST" || request.method === "PUT"),
-  new NetworkOnly({
-    plugins: [notesSyncPlugin],
-  }),
+  new NetworkOnly({ plugins: [notesSyncPlugin] }),
   "POST"
 );
 
-// 5. Navigation Fallback (Offline Page)
-// Use a NavigationRoute to handle all navigation requests
-const handler = createHandlerBoundToURL("/offline");
-const navigationRoute = new NavigationRoute(handler, {
-  denylist: [/^\/_next\//, /^\/api\//, /^\/static\//],
-});
-registerRoute(navigationRoute);
+// ---------------------------------------------------------------------------
+// 3. CACHING STRATEGIES
+// ---------------------------------------------------------------------------
 
-// Fallback for other routes if they fail
-setCatchHandler(({ event }) => {
+if (isDev) {
+  // =========================================================================
+  // DEVELOPMENT MODE
+  // =========================================================================
+  // Strategy: NetworkFirst for everything.
+  // This ensures we always get the latest version (forcing refresh) but have
+  // offline capabilities if the network fails and the resource is in cache.
+
+  console.log("🔧 Dev Mode: Using NetworkFirst strategy for all assets.");
+
+  registerRoute(
+    ({ request }) => request.method === "GET",
+    new NetworkFirst({
+      cacheName: "dev-runtime-cache",
+      plugins: [
+        new CacheableResponsePlugin({ statuses: [0, 200] }),
+        new ExpirationPlugin({ maxEntries: 200, maxAgeSeconds: 24 * 60 * 60 }),
+      ],
+    })
+  );
+} else {
+  // =========================================================================
+  // PRODUCTION MODE
+  // =========================================================================
+
+  // 1. Precache & Cleanup
+  cleanupOutdatedCaches();
+  // Precache assets generated by the build
+  precacheAndRoute(self.__WB_MANIFEST);
+
+  // 2. Runtime Caching
+
+  // API GET Requests (StaleWhileRevalidate)
+  registerRoute(
+    ({ url }) => url.pathname.startsWith("/api/"),
+    new StaleWhileRevalidate({
+      cacheName: "api-cache",
+      plugins: [
+        new CacheableResponsePlugin({ statuses: [0, 200] }),
+        new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 }),
+      ],
+    })
+  );
+
+  // Questions JSON (CacheFirst)
+  registerRoute(
+    ({ url }) => url.pathname.includes("/questions"),
+    new CacheFirst({
+      cacheName: "questions-cache",
+      plugins: [
+        new CacheableResponsePlugin({ statuses: [0, 200] }),
+        new ExpirationPlugin({
+          maxEntries: 100,
+          maxAgeSeconds: 7 * 24 * 60 * 60,
+        }),
+      ],
+    })
+  );
+
+  // Images (CacheFirst)
+  registerRoute(
+    ({ request }) => request.destination === "image",
+    new CacheFirst({
+      cacheName: "images-cache",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 60,
+          maxAgeSeconds: 30 * 24 * 60 * 60,
+        }),
+      ],
+    })
+  );
+
+  // Fonts (CacheFirst)
+  registerRoute(
+    ({ url }) =>
+      url.origin === "https://fonts.googleapis.com" ||
+      url.origin === "https://fonts.gstatic.com",
+    new CacheFirst({
+      cacheName: "google-fonts",
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 30,
+          maxAgeSeconds: 365 * 24 * 60 * 60,
+        }),
+      ],
+    })
+  );
+
+  // Scripts and Styles (StaleWhileRevalidate)
+  registerRoute(
+    ({ request }) =>
+      request.destination === "script" || request.destination === "style",
+    new StaleWhileRevalidate({
+      cacheName: "static-resources",
+    })
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 4. OFFLINE FALLBACK (Common)
+// ---------------------------------------------------------------------------
+
+// In Prod, we use NavigationRoute to serve the offline page for navigation requests.
+// In Dev, we rely on the NetworkFirst catch-all, but we add a catch handler
+// to serve /offline if the network fails and the page isn't in cache.
+
+if (!isDev) {
+  // Production Navigation Fallback
+  const handler = createHandlerBoundToURL("/offline");
+  const navigationRoute = new NavigationRoute(handler, {
+    denylist: [/^\/_next\//, /^\/api\//, /^\/static\//],
+  });
+  registerRoute(navigationRoute);
+}
+
+// Universal Fallback (for both Dev and Prod)
+setCatchHandler(async ({ event }) => {
   if (event.request.destination === "document") {
     return caches.match("/offline");
   }
   return Response.error();
 });
 
-// 6. Lifecycle Events
+// ---------------------------------------------------------------------------
+// 5. LIFECYCLE EVENTS
+// ---------------------------------------------------------------------------
+
 self.addEventListener("install", (event) => {
   console.log("Service Worker: Installed");
-  self.skipWaiting();
+  // skipWaiting is called at the top
 });
 
 self.addEventListener("activate", (event) => {
   console.log("Service Worker: Activated");
-  event.waitUntil(clientsClaim());
+  // clientsClaim is called at the top
 });
 
 self.addEventListener("message", (event) => {
