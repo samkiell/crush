@@ -54,6 +54,14 @@ const CbtSessionSchema = new mongoose.Schema(
       percentage: Number,
       score: Number,
     },
+    integrityCount: {
+      type: Number,
+      default: 0,
+    },
+    lockReason: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
