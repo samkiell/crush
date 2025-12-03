@@ -375,7 +375,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                     ) : (
                         <button
                             onClick={() => router.push('/cbt')}
-                            className="btn btn-primary rounded-xl gap-2 !flex !flex-row !items-center shadow-lg shadow-primary/20"
+                            className="btn btn-outline border-base-300 rounded-xl gap-2 !flex !flex-row !items-center shadow-lg shadow-primary/20"
                         >
                             <span>Finish Review</span>
                             <CheckCircle className="w-5 h-5" />
