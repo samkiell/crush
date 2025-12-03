@@ -9,10 +9,9 @@ export default function FlagReportModal({ question, isOpen, onClose }) {
   const [submitting, setSubmitting] = useState(false);
   
   const handleSubmit = async () => {
-    if (!question?._id) {
-        toast.error("Cannot report: Question ID missing");
-        return;
-    }
+    // If question ID is missing (fallback data), use a dummy valid ObjectId
+    // This allows the report to be saved, but we rely on 'qid' for identification
+    const targetId = question?._id || "000000000000000000000000";
 
     setSubmitting(true);
     try {
@@ -21,11 +20,12 @@ export default function FlagReportModal({ question, isOpen, onClose }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           targetType: 'Question',
-          targetId: question._id,
+          targetId: targetId,
           reason,
           description,
           subject: question.subject,
-          year: question.year
+          year: question.year,
+          qid: question.qid || question.id || 'unknown'
         })
       });
 

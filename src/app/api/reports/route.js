@@ -10,7 +10,8 @@ export async function POST(req) {
     await dbConnect();
 
     const body = await req.json();
-    const { targetType, targetId, reason, description, subject, year } = body;
+    const { targetType, targetId, reason, description, subject, year, qid } =
+      body;
 
     // Validate required fields
     if (!targetType || !targetId || !reason) {
@@ -29,6 +30,7 @@ export async function POST(req) {
       description,
       subject,
       year,
+      qid,
       status: "pending",
     });
 

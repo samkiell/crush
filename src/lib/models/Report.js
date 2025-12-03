@@ -19,6 +19,7 @@ const ReportSchema = new mongoose.Schema({
   // For Question reports
   subject: { type: String },
   year: { type: String },
+  qid: { type: String },
 
   reason: {
     type: String,
