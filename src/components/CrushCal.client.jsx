@@ -44,9 +44,9 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
   };
 
   const btnClass = "btn btn-sm h-12 text-lg font-bold rounded-lg shadow-sm border-b-4 active:border-b-0 active:translate-y-1 transition-all";
-  const numClass = `${btnClass} btn-neutral bg-base-100 border-base-300 hover:bg-base-200 text-base-content`;
-  const opClass = `${btnClass} btn-ghost bg-base-200 border-base-300 hover:bg-base-300 text-primary`;
-  const actionClass = `${btnClass} btn-error btn-outline border-error/20`;
+  const numClass = `${btnClass} btn-neutral bg-base-100 border-base-300 hover:bg-base-200 text-base-content hover:border-base-300`;
+  const opClass = `${btnClass} btn-ghost bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary`;
+  const actionClass = `${btnClass} btn-error btn-outline bg-error/5 border-error/20 hover:bg-error/10 text-error`;
 
   if (!expanded && isDocked) {
     return (

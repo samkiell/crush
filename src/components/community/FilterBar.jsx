@@ -22,7 +22,7 @@ const FilterBar = () => {
     };
 
     return (
-        <div className="flex items-center gap-2 bg-base-200/50 p-1.5 rounded-2xl overflow-x-auto custom-scrollbar">
+        <div className="flex items-center gap-2 bg-base-200/50 border border-base-200 p-1.5 rounded-2xl overflow-x-auto custom-scrollbar">
             {filters.map((filter) => {
                 const isActive = currentSort === filter.id;
                 return (
@@ -32,8 +32,8 @@ const FilterBar = () => {
                         className={`
               px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap
               ${isActive
-                                ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md shadow-primary/20'
-                                : 'text-base-content/60 hover:text-base-content hover:bg-base-200'
+                                ? 'bg-primary text-primary-content shadow-md shadow-primary/20'
+                                : 'text-base-content/70 hover:text-base-content hover:bg-base-200'
                             }
             `}
                     >

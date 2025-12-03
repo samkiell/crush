@@ -167,14 +167,14 @@ const RichEditor = () => {
                 </div>
 
                 {/* Main Form Card */}
-                <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl shadow-black/5 border border-base-content/5 overflow-hidden mb-6">
+                <div className="bg-base-100 rounded-3xl shadow-xl shadow-base-content/5 border border-base-200 overflow-hidden mb-6">
                     <form id="create-post-form" onSubmit={handleSubmit} className="p-8 space-y-8">
 
                         {/* Content Textarea with Integrated Media */}
                         <div className="space-y-6">
                             <div className="relative">
                                 <textarea
-                                    className="textarea w-full bg-transparent border-none focus:outline-none text-xl leading-relaxed resize-none min-h-[200px] !p-6 placeholder:text-base-content/30"
+                                    className="textarea w-full bg-transparent border-none focus:outline-none text-xl leading-relaxed resize-none min-h-[200px] !p-6 placeholder:text-base-content/30 text-base-content"
                                     placeholder={placeholder}
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
@@ -237,7 +237,7 @@ const RichEditor = () => {
                                     Category
                                 </label>
                                 <select
-                                    className="select select-bordered w-full h-12 bg-base-200/50 rounded-xl focus:border-primary focus:outline-none px-4"
+                                    className="select select-bordered w-full h-12 bg-base-200 rounded-xl focus:border-primary focus:outline-none px-4"
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                 >
@@ -257,7 +257,7 @@ const RichEditor = () => {
                                     <input
                                         type="text"
                                         placeholder="jamb, maths (comma separated)"
-                                        className="input input-bordered w-full h-12 bg-base-200/50 pl-12 rounded-xl focus:border-primary focus:outline-none"
+                                        className="input input-bordered w-full h-12 bg-base-200 pl-12 rounded-xl focus:border-primary focus:outline-none"
                                         value={tags}
                                         onChange={(e) => setTags(e.target.value)}
                                     />

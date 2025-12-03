@@ -55,9 +55,9 @@ const Feed = () => {
             ))}
 
             {posts.length === 0 && !loading && (
-                <div className="text-center py-16 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm shadow-black/5">
+                <div className="text-center py-16 bg-base-100 rounded-2xl shadow-sm shadow-base-content/5 border border-base-200">
                     <div className="max-w-md mx-auto px-6">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-neutral-800 rounded-2xl flex items-center justify-center">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-base-200 rounded-2xl flex items-center justify-center">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="32"
@@ -68,7 +68,7 @@ const Feed = () => {
                                 strokeWidth="2"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                className="text-gray-400"
+                                className="text-base-content/40"
                             >
                                 <path d="M12 2h9" />
                                 <path d="M6 8h8" />
@@ -78,7 +78,7 @@ const Feed = () => {
                             </svg>
                         </div>
                         <h3 className="text-lg font-semibold text-base-content mb-2">No discussions yet</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-base-content/60">
                             Be the first to start a conversation in the community!
                         </p>
                     </div>

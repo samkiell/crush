@@ -480,7 +480,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                 <button
                     onClick={handlePrevQuestion}
                     disabled={currentQuestionIndex === 0}
-                    className="btn btn-outline rounded-xl gap-2 !flex !flex-row !items-center"
+                    className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content rounded-xl gap-2 !flex !flex-row !items-center disabled:bg-transparent disabled:border-base-200"
                 >
                     <ChevronLeft className="w-5 h-5" />
                     <span>Previous</span>
@@ -490,7 +490,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                     examStatus === 'active' ? (
                         <button
                             onClick={handleSubmitExam}
-                            className="btn btn-primary rounded-xl gap-2 px-8 !flex !flex-row !items-center"
+                            className="btn btn-primary rounded-xl gap-2 px-8 !flex !flex-row !items-center shadow-lg shadow-primary/20"
                         >
                             <span>Submit Exam</span>
                             <Flag className="w-5 h-5" />
@@ -498,7 +498,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                     ) : (
                         <button
                             onClick={() => router.push('/cbt')}
-                            className="btn btn-primary rounded-xl gap-2 !flex !flex-row !items-center"
+                            className="btn btn-primary rounded-xl gap-2 !flex !flex-row !items-center shadow-lg shadow-primary/20"
                         >
                             <span>Finish Review</span>
                             <CheckCircle className="w-5 h-5" />
@@ -507,7 +507,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                 ) : (
                     <button
                         onClick={handleNextQuestion}
-                        className="btn btn-outline rounded-xl gap-2 !flex !flex-row !items-center"
+                        className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content rounded-xl gap-2 !flex !flex-row !items-center"
                     >
                         <span>Next</span>
                         <ChevronRight className="w-5 h-5" />
