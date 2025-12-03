@@ -12,7 +12,7 @@ const SUBJECTS = [
     { id: 'math', name: 'Mathematics', icon: '📐' },
     { id: 'eng', name: 'English Language', icon: '📚' },
     { id: 'phy', name: 'Physics', icon: '⚡' },
-    { id: 'chem', name: 'Chemistry', icon: '🧪' },
+    { idd: 'chem', name: 'Chemistry', icon: '🧪' },
     { id: 'bio', name: 'Biology', icon: '🧬' },
     { id: 'govt', name: 'Government', icon: '🏛️' },
     { id: 'econ', name: 'Economics', icon: '📈' },

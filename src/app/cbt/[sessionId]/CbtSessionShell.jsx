@@ -228,14 +228,14 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
         {showNav && (
           <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNav(false)}>
             <div 
-              className="absolute right-0 top-16 bottom-0 w-72 bg-neutral text-neutral-content backdrop-blur-md border-l border-white/10 p-4 shadow-2xl overflow-y-auto flex flex-col" 
+              className="absolute right-0 top-16 bottom-0 w-72 bg-base-100/80 backdrop-blur-md border-l border-base-content/10 p-4 shadow-2xl overflow-y-auto flex flex-col" 
               onClick={e => e.stopPropagation()}
             >
               <div className="flex justify-between items-center mb-6">
-                <h3 className="font-bold text-lg flex items-center gap-2 text-neutral-content">
+                <h3 className="font-bold text-lg flex items-center gap-2 text-base-content">
                   <Grid size={20} /> Navigator
                 </h3>
-                <button onClick={() => setShowNav(false)} className="btn btn-sm btn-circle btn-ghost text-neutral-content hover:bg-white/10">
+                <button onClick={() => setShowNav(false)} className="btn btn-sm btn-circle btn-ghost text-base-content hover:bg-base-content/10">
                   <X size={20} />
                 </button>
               </div>

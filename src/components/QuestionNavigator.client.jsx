@@ -11,9 +11,10 @@ export default function QuestionNavigator({ total, current, answers, bookmarks =
         const isBookmarked = bookmarks.has ? bookmarks.has(`q-${i}`) || bookmarks.has(i) : false; // Handle different ID formats if needed, but assuming index or ID mapping
 
         // Determine base style
-        let style = "bg-base-100 text-base-content/70 hover:bg-base-200 border border-base-200 shadow-sm hover:shadow-md hover:border-primary/30"; // Unanswered
+        // Determine base style - Enforcing Dark Theme Look for All Modes
+        let style = "bg-neutral text-neutral-content/70 hover:bg-neutral-focus border border-neutral-content/20 shadow-sm hover:shadow-md hover:border-primary/30"; // Unanswered
         if (isAnswered) style = "bg-success text-white border-success shadow-md shadow-success/20"; // Answered
-        if (isCurrent) style = "bg-primary text-white ring-2 ring-primary ring-offset-2 ring-offset-base-100 border-primary shadow-lg shadow-primary/30 scale-110 z-10"; // Current
+        if (isCurrent) style = "bg-primary text-white ring-2 ring-primary ring-offset-2 ring-offset-neutral border-primary shadow-lg shadow-primary/30 scale-110 z-10"; // Current
         
         // Bookmark override or overlay? User said "Bookmarked = gold star". 
         // Usually bookmark is an icon ON the button, not replacing the color entirely if it's also answered.

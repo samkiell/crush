@@ -142,7 +142,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
 
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
-                if (prev <= 1) {
+                if (in  <= 1) {
                     clearInterval(timer);
                     handleSubmitExam();
                     return 0;
