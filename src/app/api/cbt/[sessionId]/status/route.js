@@ -15,6 +15,7 @@ export async function GET(req, { params }) {
 
     return NextResponse.json({
       status: session.status,
+      startTime: session.startTime,
       endTime: session.endTime,
     });
   } catch (error) {

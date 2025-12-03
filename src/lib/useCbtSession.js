@@ -7,17 +7,48 @@ import {
   getSyncQueue,
   clearSyncQueueItem,
 } from "./idbClient";
-import { calculateTimeLeft } from "./timerSync";
+import { timerSync } from "./timerSync";
 
 export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({}); // { questionId: option }
   const [timeLeft, setTimeLeft] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(2 * 60 * 60 * 1000); // Default 2 hours
   const [status, setStatus] = useState("loading");
   const [isOnline, setIsOnline] = useState(
     typeof navigator !== "undefined" ? navigator.onLine : true
   );
+  const router = useRouter();
+
+  // Define submit function early so it can be used in callbacks
+  const submit = useCallback(async () => {
+    try {
+      setStatus("submitting");
+
+      // 1. Sync any remaining local answers first (optional but good practice)
+      // For now, we rely on the background sync or just send what we have if we want to be robust.
+
+      // 2. Call Submit API
+      const res = await fetch(`/api/cbt/${sessionId}/submit`, {
+        method: "POST",
+      });
+
+      if (!res.ok) throw new Error("Submission failed");
+
+      const data = await res.json();
+      setStatus("submitted");
+
+      // 3. Redirect to summary
+      router.push(`/cbt/${sessionId}/summary`);
+
+      return data; // Returns summary
+    } catch (e) {
+      console.error("Submit error:", e);
+      setStatus("error");
+      throw e;
+    }
+  }, [sessionId, router]);
 
   // Load questions
   useEffect(() => {
@@ -32,6 +63,11 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
               const statusData = await statusRes.json();
               if (statusData.endTime) {
                 sessionEndTime = new Date(statusData.endTime).getTime();
+              }
+              if (statusData.startTime && statusData.endTime) {
+                const start = new Date(statusData.startTime).getTime();
+                const end = new Date(statusData.endTime).getTime();
+                setTotalDuration(end - start);
               }
             }
           } catch (err) {
@@ -122,46 +158,32 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
         }).catch((err) => console.error("Failed to init session backend", err));
 
         // Start Timer Logic with fetched endTime
-        const interval = setInterval(() => {
-          const left = calculateTimeLeft(sessionEndTime);
-          setTimeLeft(left);
-          if (left <= 0) {
-            setStatus("submitted");
-            clearInterval(interval);
+        // Use timerSync instead of local interval
+        timerSync.startWithEndTime(
+          sessionEndTime,
+          (time, expired) => {
+            setTimeLeft(time);
+            if (expired) {
+              // Auto-submit
+              submit();
+            }
+          },
+          () => {
+            // On Expire Callback (redundant with onTick expired flag but good for safety)
+            console.log("Timer expired!");
           }
-        }, 1000);
-
-        // Cleanup interval on unmount is tricky inside useEffect,
-        // so we might need to move this to a ref or separate effect.
-        // For now, let's update the state endTime so the other effect picks it up.
-        // But wait, the other effect depends on `endTime` prop.
-        // Let's use a local state for sessionEndTime.
-        setInternalEndTime(sessionEndTime);
+        );
       } catch (e) {
         console.error("Failed to load questions", e);
         setStatus("error");
       }
     };
     load();
-  }, [initialQuestions]);
 
-  const [internalEndTime, setInternalEndTime] = useState(endTime);
-
-  // Timer
-  useEffect(() => {
-    const targetTime = internalEndTime || endTime;
-    if (!targetTime) return;
-
-    const interval = setInterval(() => {
-      const left = calculateTimeLeft(targetTime);
-      setTimeLeft(left);
-      if (left <= 0) {
-        setStatus("submitted");
-        clearInterval(interval);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [endTime, internalEndTime]);
+    return () => {
+      timerSync.stop();
+    };
+  }, [initialQuestions, sessionId, submit, endTime]); // Added submit to deps
 
   // Integrity Listeners
   useEffect(() => {
@@ -268,41 +290,12 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   );
   const jumpTo = useCallback((i) => setCurrentIndex(i), []);
 
-  const router = useRouter();
-
-  const submit = async () => {
-    try {
-      setStatus("submitting");
-
-      // 1. Sync any remaining local answers first (optional but good practice)
-      // For now, we rely on the background sync or just send what we have if we want to be robust.
-
-      // 2. Call Submit API
-      const res = await fetch(`/api/cbt/${sessionId}/submit`, {
-        method: "POST",
-      });
-
-      if (!res.ok) throw new Error("Submission failed");
-
-      const data = await res.json();
-      setStatus("submitted");
-
-      // 3. Redirect to summary
-      router.push(`/cbt/${sessionId}/summary`);
-
-      return data; // Returns summary
-    } catch (e) {
-      console.error("Submit error:", e);
-      setStatus("error");
-      throw e;
-    }
-  };
-
   return {
     questions,
     currentIndex,
     answers,
     timeLeft,
+    totalDuration,
     status,
     isOnline,
     markAnswer,
