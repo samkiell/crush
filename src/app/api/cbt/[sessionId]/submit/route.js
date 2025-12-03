@@ -3,8 +3,11 @@ import dbConnect from "@/lib/db";
 import CbtSession from "@/lib/models/CbtSession";
 import CbtAnswer from "@/lib/models/CbtAnswer";
 
+import { protect } from "@/lib/auth";
+
 export async function POST(request, { params }) {
   try {
+    const user = await protect(request);
     await dbConnect();
     const { sessionId } = params;
 
@@ -12,6 +15,11 @@ export async function POST(request, { params }) {
     const session = await CbtSession.findOne({ sessionId });
     if (!session) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    }
+
+    // Check ownership
+    if (session.userId.toString() !== user._id.toString()) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
     }
 
     // 2. Check status

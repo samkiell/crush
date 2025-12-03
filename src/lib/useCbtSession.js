@@ -109,6 +109,18 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
         setQuestions(qs);
         setStatus("active");
 
+        // Init session in backend
+        fetch(`/api/cbt/${sessionId}/init`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            questions: qs.map((q, i) => ({ qid: q.qid, index: i })),
+            subject: sessionId.split("-")[0],
+            year: sessionId.split("-")[1],
+            totalQuestions: qs.length,
+          }),
+        }).catch((err) => console.error("Failed to init session backend", err));
+
         // Start Timer Logic with fetched endTime
         const interval = setInterval(() => {
           const left = calculateTimeLeft(sessionEndTime);
