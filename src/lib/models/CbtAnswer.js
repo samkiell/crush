@@ -7,21 +7,38 @@ if (process.env.NODE_ENV === "development") {
 
 const CbtAnswerSchema = new mongoose.Schema(
   {
-    sessionId: { type: String, required: true },
-    questionId: {
+    sessionId: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Question",
+      ref: "User",
       required: true,
     },
-    selectedOption: { type: String },
-    isCorrect: { type: Boolean },
-    timeSpent: { type: Number },
-    syncedAt: { type: Date, default: Date.now },
+    qIndex: {
+      type: Number,
+      required: true,
+    },
+    answer: {
+      type: String, // 'A', 'B', 'C', 'D'
+      required: true,
+    },
+    correct: {
+      type: Boolean,
+      required: true,
+    },
+    tutorExplanation: String,
+    aiExplanation: String,
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-CbtAnswerSchema.index({ sessionId: 1, questionId: 1 }, { unique: true });
+// Compound index for unique answer per question per session
+CbtAnswerSchema.index({ sessionId: 1, qIndex: 1 }, { unique: true });
 
 export default mongoose.models.CbtAnswer ||
   mongoose.model("CbtAnswer", CbtAnswerSchema);
