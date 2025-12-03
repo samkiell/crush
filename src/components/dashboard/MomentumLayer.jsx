@@ -196,10 +196,46 @@ export default function MomentumLayer({ user, stats }) {
                 {/* 4. Streak & Resume (Hidden for Admin) */}
                 {user?.role !== 'admin' && (
                     <div className="md:col-span-4 flex flex-col gap-4">
+                        {/* Resume Session Card */}
+                        {activeSession && (
+                            <Link href={activeSession.href} className="block group">
+                                <motion.div
+                                    variants={variants.scale}
+                                    className="bg-base-100 border border-base-200 rounded-3xl p-5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all relative overflow-hidden group-hover:bg-base-50"
+                                >
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                                                <RotateCcw className="w-4 h-4" />
+                                            </div>
+                                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Resume</span>
+                                        </div>
+                                        <ArrowRight className="w-4 h-4 text-base-content/40 group-hover:text-primary transition-colors" />
+                                    </div>
+                                    
+                                    <h3 className="font-bold text-base-content line-clamp-1 mb-1 group-hover:text-primary transition-colors">
+                                        {activeSession.title}
+                                    </h3>
+                                    <p className="text-xs text-base-content/60 mb-3">{activeSession.type}</p>
+                                    
+                                    <div className="w-full bg-base-200 h-1.5 rounded-full overflow-hidden">
+                                        <div 
+                                            className="bg-primary h-full rounded-full" 
+                                            style={{ width: `${activeSession.progress}%` }}
+                                        />
+                                    </div>
+                                    <div className="flex justify-between mt-1">
+                                        <span className="text-[10px] text-base-content/40">Progress</span>
+                                        <span className="text-[10px] font-bold text-base-content/60">{activeSession.progress}%</span>
+                                    </div>
+                                </motion.div>
+                            </Link>
+                        )}
+
                         {/* Streak Card */}
                         <motion.div
                             variants={variants.scale}
-                            className="flex-1 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-6 flex flex-col justify-center shadow-sm relative overflow-hidden"
+                            className="flex-1 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-6 flex flex-col justify-center shadow-sm relative overflow-hidden min-h-[140px]"
                         >
                             <div className="flex items-center justify-between relative z-10">
                                 <div>

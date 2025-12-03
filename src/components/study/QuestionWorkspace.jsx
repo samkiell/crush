@@ -275,7 +275,6 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     if (!currentQuestion) return null;
 
     return (
-    return (
         <div className="max-w-5xl mx-auto w-full relative pb-20 md:grid md:grid-cols-[1fr_300px] gap-6" {...swipeHandlers}>
             {/* Premium Lock Overlay */}
             <AnimatePresence>
@@ -635,7 +634,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                 Continue Studying
                             </button>
                             <button 
-                                onClick={() => window.location.href = '/study'} 
+                                onClick={() => window.location.href = '/dashboard'} 
                                 className="btn btn-ghost w-full"
                             >
                                 Exit Session
