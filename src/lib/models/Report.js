@@ -1,25 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const ReportSchema = new mongoose.Schema({
   reporter: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   targetType: {
     type: String,
-    enum: ['CommunityPost', 'Comment'],
+    enum: ["CommunityPost", "Comment", "Question"],
     required: true,
   },
   targetId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    refPath: 'targetType',
+    refPath: "targetType",
   },
+  // For Question reports
+  subject: { type: String },
+  year: { type: String },
+
   reason: {
     type: String,
     required: true,
-    enum: ['Spam', 'Harassment', 'Inappropriate Content', 'Misinformation', 'Other'],
+    enum: [
+      "Spam",
+      "Harassment",
+      "Inappropriate Content",
+      "Misinformation",
+      "Wrong Answer",
+      "Typo",
+      "Other",
+    ],
   },
   description: {
     type: String,
@@ -27,8 +39,8 @@ const ReportSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'resolved', 'dismissed'],
-    default: 'pending',
+    enum: ["pending", "resolved", "dismissed"],
+    default: "pending",
   },
   createdAt: {
     type: Date,
@@ -36,4 +48,4 @@ const ReportSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.models.Report || mongoose.model('Report', ReportSchema);
+export default mongoose.models.Report || mongoose.model("Report", ReportSchema);

@@ -1,62 +1,36 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import Report from '@/lib/models/Report';
-import User from '@/lib/models/User';
-import jwt from 'jsonwebtoken';
-
-const getAdminUser = async (req) => {
-  let token;
-
-  // Check Authorization header
-  const authHeader = req.headers.get('authorization');
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    token = authHeader.split(' ')[1];
-  }
-
-  // Check cookies if no header token
-  if (!token) {
-    token = req.cookies.get('auth_token')?.value || req.cookies.get('token')?.value;
-  }
-
-  if (!token) return null;
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (user && user.role === 'admin') {
-        return user;
-    }
-    return null;
-  } catch (error) {
-    return null;
-  }
-};
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import Report from "@/lib/models/Report";
+import { protect } from "@/lib/auth";
 
 export async function PATCH(req, { params }) {
-  await dbConnect();
-  const admin = await getAdminUser(req);
-  const { id } = await params;
-
-  if (!admin) {
-    return NextResponse.json({ success: false, error: 'Not authorized as admin' }, { status: 403 });
-  }
-
   try {
-    const body = await req.json();
-    const { status } = body;
+    const user = await protect(req);
+    await dbConnect();
 
-    if (!['pending', 'resolved', 'dismissed'].includes(status)) {
-        return NextResponse.json({ success: false, error: 'Invalid status' }, { status: 400 });
+    if (user.role !== "admin") {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
     }
 
-    const report = await Report.findByIdAndUpdate(id, { status }, { new: true });
+    const { id } = await params;
+    const { status } = await req.json();
+
+    const report = await Report.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
 
     if (!report) {
-        return NextResponse.json({ success: false, error: 'Report not found' }, { status: 404 });
+      return NextResponse.json({ error: "Report not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, data: report });
+    return NextResponse.json({ success: true, report });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error("Update Report Error:", error);
+    return NextResponse.json(
+      { error: "Failed to update report" },
+      { status: 500 }
+    );
   }
 }

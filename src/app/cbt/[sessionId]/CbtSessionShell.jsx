@@ -208,8 +208,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       )}
       {showFlag && (
         <FlagReportModal 
-          sessionId={sessionId} 
-          questionId={currentQuestion?.qid} 
+          question={currentQuestion}
           isOpen={showFlag} 
           onClose={() => setShowFlag(false)} 
         />
