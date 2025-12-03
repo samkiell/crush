@@ -155,7 +155,7 @@ const Header = () => {
           {/* Left Side: Logo & Name */}
           <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-3 group">
             <div className="relative w-11 h-11 transition-transform group-hover:scale-105 duration-200">
-              <Image src={mounted && theme === 'dark' ? "/logo-dark.png" : "/logo.png"} fill alt="D2C Logo" className="object-contain" />
+              <Image src={mounted && theme === 'dark' ? "/logo_dark.png" : "/logo.png"} fill alt="D2C Logo" className="object-contain" />
             </div>
             <span className="text-2xl font-bold text-base-content tracking-tight group-hover:text-primary transition-colors">D2C</span>
           </Link>
@@ -333,7 +333,7 @@ const Header = () => {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                       <div className="relative w-10 h-10">
-                        <Image src="/logo-dark.png" fill alt="D2C Logo" className="object-contain" />
+                        <Image src="/logo_dark.png" fill alt="D2C Logo" className="object-contain" />
                       </div>
                       <span className="text-xl font-bold text-white">D2C</span>
                     </div>
