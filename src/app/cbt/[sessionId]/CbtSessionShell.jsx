@@ -60,7 +60,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
   const isLowTime = percentageLeft < 20;
 
   return (
-  return (
     <CBTIntegrityGuard sessionId={sessionId}>
       <div className="min-h-screen bg-base-200 flex flex-col">
         {/* Header */}
