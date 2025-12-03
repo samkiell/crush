@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Home, BookOpen, MessageSquare, Users, Monitor, Upload, UserCog, Map, Bookmark, Flag } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, Users, Monitor, Upload, UserCog, Map, Flag } from 'lucide-react';
 
 export default function BottomNav() {
     const pathname = usePathname();
@@ -23,11 +23,6 @@ export default function BottomNav() {
             label: 'Study',
             href: '/study',
             icon: BookOpen,
-        },
-        {
-            label: 'Bookmarks',
-            href: '/bookmarks',
-            icon: Bookmark,
         },
         {
             label: 'Chat',
