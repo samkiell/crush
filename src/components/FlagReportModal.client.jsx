@@ -23,9 +23,9 @@ export default function FlagReportModal({ question, isOpen, onClose }) {
           targetId: targetId,
           reason,
           description,
-          subject: question.subject,
-          year: question.year,
-          qid: question.qid || question.id || 'unknown'
+          subject: question?.subject,
+          year: question?.year,
+          qid: question?.qid || question?.id || 'unknown'
         })
       });
 
