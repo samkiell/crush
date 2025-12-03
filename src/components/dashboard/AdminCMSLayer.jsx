@@ -38,7 +38,7 @@ export default function AdminCMSLayer() {
             title: 'Upload Questions',
             description: 'Bulk upload exam questions via JSON',
             icon: Upload,
-            href: '/admin/questions/manage',
+            href: '/admin/questions/upload',
             color: 'text-primary',
             bg: 'bg-primary/10',
             border: 'border-primary/20',

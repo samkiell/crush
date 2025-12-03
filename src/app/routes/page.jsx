@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
+import {
     LayoutDashboard,
     Users,
     BookOpen,
@@ -12,7 +13,17 @@ import {
     LogIn,
     Home,
     Monitor,
-    Map
+    Map,
+    Bookmark,
+    Phone,
+    HelpCircle,
+    FileQuestion,
+    ShieldAlert,
+    Database,
+    BarChart3,
+    Flag,
+    Upload,
+    Activity
 } from 'lucide-react';
 
 const ROUTE_GROUPS = [
@@ -30,6 +41,7 @@ const ROUTE_GROUPS = [
             { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
             { name: 'Study Mode', path: '/study', icon: BookOpen },
             { name: 'CBT Exam', path: '/cbt', icon: Monitor },
+            { name: 'Bookmarks', path: '/bookmarks', icon: Bookmark },
             { name: 'Community', path: '/community', icon: Users },
             { name: 'Chat', path: '/chat', icon: MessageSquare },
             { name: 'Profile', path: '/profile', icon: Users },
@@ -37,9 +49,33 @@ const ROUTE_GROUPS = [
         ]
     },
     {
+        title: 'Admin Portal',
+        routes: [
+            { name: 'User Management', path: '/admin/users', icon: Users },
+            { name: 'Manage Questions', path: '/admin/questions/manage', icon: Database },
+            { name: 'Upload Questions', path: '/admin/questions/upload', icon: Upload },
+            { name: 'Content', path: '/admin/content', icon: FileText },
+            { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
+            { name: 'Reports', path: '/admin/reports', icon: Flag },
+            { name: 'Security', path: '/admin/security', icon: ShieldAlert },
+            { name: 'Admin Settings', path: '/admin/settings', icon: Settings },
+        ]
+    },
+    {
+        title: 'Support & Legal',
+        routes: [
+            { name: 'Help Center', path: '/help-center', icon: HelpCircle },
+            { name: 'Contact Us', path: '/contact', icon: Phone },
+            { name: 'FAQ', path: '/faq', icon: FileQuestion },
+            { name: 'Terms of Service', path: '/terms', icon: FileText },
+            { name: 'Privacy Policy', path: '/privacy', icon: ShieldAlert },
+        ]
+    },
+    {
         title: 'Utilities',
         routes: [
             { name: 'Site Map', path: '/routes', icon: Map },
+            { name: 'Offline Fallback', path: '/offline', icon: Activity },
         ]
     }
 ];
