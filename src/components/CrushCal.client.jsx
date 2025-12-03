@@ -43,10 +43,10 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
     }
   };
 
-  const btnClass = "btn btn-sm h-12 text-lg font-bold rounded-lg shadow-sm border-b-4 active:border-b-0 active:translate-y-1 transition-all";
-  const numClass = `${btnClass} btn-neutral bg-base-100 border-base-300 hover:bg-base-200 text-base-content hover:border-base-300`;
-  const opClass = `${btnClass} btn-ghost bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary`;
-  const actionClass = `${btnClass} btn-error btn-outline bg-error/5 border-error/20 hover:bg-error/10 text-error`;
+  const btnClass = "btn btn-sm h-12 text-lg font-bold rounded-xl shadow-sm border-b-4 active:border-b-0 active:translate-y-1 transition-all duration-200";
+  const numClass = `${btnClass} btn-neutral bg-base-100 border-base-200 hover:bg-base-200 text-base-content hover:border-base-300 hover:shadow-md`;
+  const opClass = `${btnClass} btn-ghost bg-primary/5 border-primary/10 hover:bg-primary/10 text-primary hover:shadow-md hover:shadow-primary/10`;
+  const actionClass = `${btnClass} btn-error btn-outline bg-error/5 border-error/10 hover:bg-error/10 text-error hover:shadow-md hover:shadow-error/10`;
 
   if (!expanded && isDocked) {
     return (
@@ -75,7 +75,7 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
       <div className={`
         ${isDocked ? 'absolute top-16 right-4 w-80 shadow-2xl z-50' : 'fixed inset-0 z-50 flex items-center justify-center pointer-events-none'}
       `}>
-        <div className={`bg-base-100/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-base-content/10 flex flex-col gap-3 pointer-events-auto ${!isDocked && 'w-full max-w-sm mx-4'}`}>
+        <div className={`bg-base-100/95 backdrop-blur-xl p-5 rounded-3xl shadow-2xl shadow-primary/10 border border-base-content/5 flex flex-col gap-4 pointer-events-auto ${!isDocked && 'w-full max-w-sm mx-4'}`}>
         
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -95,9 +95,9 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
         </div>
 
         {/* Display */}
-        <div className="bg-base-200/50 p-4 rounded-xl text-right font-mono text-3xl font-bold tracking-wider text-base-content shadow-inner border border-base-200 overflow-hidden break-all">
+        <div className="bg-base-100 p-5 rounded-2xl text-right font-mono text-4xl font-bold tracking-wider text-base-content shadow-inner border border-base-200/50 overflow-hidden break-all relative">
           {display}
-          {memory !== 0 && <div className="text-xs text-primary mt-1">M</div>}
+          {memory !== 0 && <div className="absolute top-2 left-3 text-xs font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">M</div>}
         </div>
 
         {/* Keypad */}

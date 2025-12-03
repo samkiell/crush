@@ -435,7 +435,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     
                     {/* Mobile Bottom Buttons (Inside Card) */}
                     <div className="md:hidden flex justify-between items-center mt-8 pt-6 border-t border-base-200">
-                        <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-circle btn-ghost text-base-content">
+                        <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-circle btn-ghost text-base-content border border-base-300 bg-base-100 shadow-sm disabled:bg-transparent disabled:border-base-200">
                             <ChevronLeft size={28} />
                         </button>
                         <button onClick={() => setShowFlag(true)} className="btn btn-ghost btn-sm gap-2 text-error">
@@ -448,13 +448,13 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
 
                     {/* Desktop Prev/Next Buttons inside card */}
                     <div className="hidden md:flex justify-between items-center mt-8 pt-6 border-t border-base-200">
-                        <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2 flex items-center">
+                        <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content gap-2 flex items-center disabled:bg-transparent disabled:border-base-200">
                             <ChevronLeft size={20} /> Prev
                         </button>
                         <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider flex items-center">
                             <Flag size={16} /> Report
                         </button>
-                        <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center">
+                        <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center shadow-lg shadow-primary/20">
                             Next <ChevronRight size={20} />
                         </button>
                     </div>
