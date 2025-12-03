@@ -255,6 +255,30 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
   );
   const jumpTo = useCallback((i) => setCurrentIndex(i), []);
 
+  const submitSession = async () => {
+    try {
+      setStatus("submitting");
+
+      // 1. Sync any remaining local answers first (optional but good practice)
+      // For now, we rely on the background sync or just send what we have if we want to be robust.
+
+      // 2. Call Submit API
+      const res = await fetch(`/api/cbt/${sessionId}/submit`, {
+        method: "POST",
+      });
+
+      if (!res.ok) throw new Error("Submission failed");
+
+      const data = await res.json();
+      setStatus("submitted");
+      return data; // Returns summary
+    } catch (e) {
+      console.error("Submit error:", e);
+      setStatus("error");
+      throw e;
+    }
+  };
+
   return {
     questions,
     currentIndex,
@@ -266,5 +290,6 @@ export const useCbtSession = ({ sessionId, endTime, initialQuestions }) => {
     next,
     prev,
     jumpTo,
+    submitSession,
   };
 };

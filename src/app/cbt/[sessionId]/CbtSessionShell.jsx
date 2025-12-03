@@ -6,8 +6,9 @@ import QuestionNavigator from '@/components/QuestionNavigator.client';
 import CrushCal from '@/components/CrushCal.client';
 import OfflineSyncStatus from '@/components/OfflineSyncStatus.client';
 import FlagReportModal from '@/components/FlagReportModal.client';
-import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
+import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CbtSessionShell({ sessionId, subject, year }) {
   const {
@@ -20,12 +21,16 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     markAnswer,
     next,
     prev,
-    jumpTo
+    jumpTo,
+    submitSession
   } = useCbtSession({ sessionId, endTime: null, initialQuestions: null }); // Pass actual props if available
 
   const [showCal, setShowCal] = useState(false);
   const [showNav, setShowNav] = useState(false);
   const [showFlag, setShowFlag] = useState(false);
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   // Format time
   const formatTime = (ms) => {
@@ -33,6 +38,19 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     const m = Math.floor((ms / 1000 / 60) % 60);
     const h = Math.floor((ms / 1000 / 60 / 60));
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      await submitSession();
+      router.push(`/cbt/${sessionId}/summary`);
+    } catch (error) {
+      console.error("Submission failed", error);
+      setIsSubmitting(false);
+      setShowSubmitConfirm(false);
+      // Optionally show error toast
+    }
   };
 
   const currentQuestion = questions[currentIndex];
@@ -62,7 +80,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                <span>{formatTime(timeLeft)}</span>
              </div>
              
-
 
              {/* Mobile Top Controls */}
              <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle md:hidden">
@@ -109,22 +126,30 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
 
         {/* Sidebar (Desktop) */}
         <div className="hidden md:flex flex-col gap-4">
-          <div className="bg-base-100 rounded-2xl shadow-sm p-4 flex-1">
+          <div className="bg-base-100 rounded-2xl shadow-sm p-4 flex-1 flex flex-col">
             <h3 className="font-bold mb-4 flex items-center gap-2">
               <Grid size={18} /> Navigator
             </h3>
-            <QuestionNavigator
-              total={questions.length}
-              current={currentIndex}
-              answers={Object.keys(answers).reduce((acc, k) => {
-                 // Map questionId back to index if needed, or just pass simple array if logic allows
-                 // For now, let's assume answers is keyed by index or we map it
-                 const idx = questions.findIndex(q => q.qid === k);
-                 if (idx >= 0) acc[idx] = true;
-                 return acc;
-              }, {})}
-              onJump={jumpTo}
-            />
+            <div className="flex-1 overflow-y-auto max-h-[400px]">
+                <QuestionNavigator
+                total={questions.length}
+                current={currentIndex}
+                answers={Object.keys(answers).reduce((acc, k) => {
+                    const idx = questions.findIndex(q => q.qid === k);
+                    if (idx >= 0) acc[idx] = true;
+                    return acc;
+                }, {})}
+                onJump={jumpTo}
+                />
+            </div>
+            <div className="pt-4 mt-4 border-t border-base-200">
+                <button 
+                    onClick={() => setShowSubmitConfirm(true)} 
+                    className="btn btn-primary w-full text-white shadow-lg shadow-primary/20"
+                >
+                    Submit Session
+                </button>
+            </div>
           </div>
           
           <div className="grid grid-cols-2 gap-2">
@@ -173,7 +198,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       {showNav && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNav(false)}>
           <div 
-            className="absolute right-0 top-16 bottom-0 w-72 bg-base-100/95 backdrop-blur-md border-l border-base-content/10 p-4 shadow-2xl overflow-y-auto" 
+            className="absolute right-0 top-16 bottom-0 w-72 bg-base-100/95 backdrop-blur-md border-l border-base-content/10 p-4 shadow-2xl overflow-y-auto flex flex-col" 
             onClick={e => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
@@ -185,13 +210,55 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
               </button>
             </div>
             
-            <QuestionNavigator
-              total={questions.length}
-              current={currentIndex}
-              answers={answers} 
-              onJump={(i) => { jumpTo(i); setShowNav(false); }}
-            />
+            <div className="flex-1 overflow-y-auto">
+                <QuestionNavigator
+                total={questions.length}
+                current={currentIndex}
+                answers={answers} 
+                onJump={(i) => { jumpTo(i); setShowNav(false); }}
+                />
+            </div>
+
+            <div className="pt-4 mt-4 border-t border-base-content/10">
+                <button 
+                    onClick={() => { setShowNav(false); setShowSubmitConfirm(true); }} 
+                    className="btn btn-primary w-full text-white shadow-lg shadow-primary/20"
+                >
+                    Submit Session
+                </button>
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* Submit Confirmation Modal */}
+      {showSubmitConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-base-100 rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100">
+                <div className="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <AlertTriangle size={32} className="text-warning" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Submit Session?</h3>
+                <p className="text-base-content/70 mb-6">
+                    Are you sure you want to submit? You cannot modify your answers after submission.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                    <button 
+                        onClick={() => setShowSubmitConfirm(false)} 
+                        className="btn btn-ghost"
+                        disabled={isSubmitting}
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={handleSubmit} 
+                        className="btn btn-primary text-white"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? <span className="loading loading-spinner"></span> : 'Yes, Submit'}
+                    </button>
+                </div>
+            </div>
         </div>
       )}
 
