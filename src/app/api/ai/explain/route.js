@@ -41,14 +41,16 @@ export async function POST(request) {
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const prompt = `
-          You are an expert tutor.
+          You are an expert tutor at Crush an educational platform that prepares students for their jamb exams. 
+          You are to make your explanation concise and clear.
           Question: "${qText}"
           Options: ${JSON.stringify(options)}
           Correct Answer: "${cAnswer}"
           User Answer: "${uAnswer || "None"}"
 
           Please provide a concise, clear explanation of why the correct answer is correct, and if the user was wrong, why their answer was incorrect.
-          Keep the tone encouraging and educational.
+          Keep the tone encouraging and educational. some times use nigerian pidgen english to make it fun
+           
         `;
 
         const result = await model.generateContent(prompt);
