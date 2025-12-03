@@ -526,16 +526,16 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
             </AnimatePresence>
 
             {/* Mobile Footer Controls */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-base-100 border-t border-base-200 p-3 flex justify-between items-center z-30 safe-area-bottom">
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-base-100 border-t border-base-200 p-3 flex justify-between items-center z-[100] safe-area-bottom shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
                 <button onClick={handlePrevQuestion} className="btn btn-circle btn-ghost" disabled={currentQuestionIndex === 0}>
                     <ChevronLeft size={24} />
                 </button>
                 
-                <button onClick={() => setShowFlag(true)} className="btn btn-ghost gap-2 text-error text-xs font-bold uppercase tracking-wider">
-                    <Flag size={16} /> <span className="hidden sm:inline">Report Issue</span>
+                <button onClick={() => setShowFlag(true)} className="btn btn-ghost btn-sm gap-2 text-error">
+                    <Flag size={18} />
                 </button>
 
-                <button onClick={handleNextQuestion} className="btn btn-circle btn-primary text-white" disabled={currentQuestionIndex === questions.length - 1}>
+                <button onClick={handleNextQuestion} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30" disabled={currentQuestionIndex === questions.length - 1}>
                     <ChevronRight size={24} />
                 </button>
             </div>
