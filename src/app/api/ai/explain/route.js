@@ -1,49 +1,73 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import dbConnect from "@/lib/db";
+import CbtAnswer from "@/lib/models/CbtAnswer";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "mock-key");
-
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const { question, options, correctAnswer, selectedAnswer } =
-      await req.json();
+    const body = await request.json();
+    const {
+      questionText,
+      options,
+      correctAnswer,
+      sessionId,
+      qIndex,
+      userAnswer,
+    } = body;
 
-    if (!process.env.GEMINI_API_KEY) {
-      // Mock response if no key
-      return NextResponse.json({
-        explanation:
-          "This is a simulated AI explanation. Please configure GEMINI_API_KEY to get real insights. The correct answer is " +
-          correctAnswer +
-          " because...",
-      });
+    if (!questionText || !options || !correctAnswer) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    // Initialize AI
+    const apiKey = process.env.GEMINI_API_KEY;
+    let explanation = "AI explanation unavailable.";
 
-    const prompt = `
-      You are an expert tutor helping a student understand a multiple-choice question.
-      
-      Question: "${question}"
-      Options: ${JSON.stringify(options)}
-      Correct Answer: ${correctAnswer}
-      Student's Answer: ${selectedAnswer || "No answer"}
+    if (apiKey) {
+      try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-      Please provide a concise, encouraging, and clear explanation of why the correct answer is correct and why the others might be wrong. 
-      Keep it under 150 words. Address the student directly.
-    `;
+        const prompt = `
+          You are an expert tutor.
+          Question: "${questionText}"
+          Options: ${JSON.stringify(options)}
+          Correct Answer: "${correctAnswer}"
+          User Answer: "${userAnswer || "None"}"
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+          Please provide a concise, clear explanation of why the correct answer is correct, and if the user was wrong, why their answer was incorrect.
+          Keep the tone encouraging and educational.
+        `;
 
-    return NextResponse.json({ explanation: text });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        explanation = response.text();
+      } catch (aiError) {
+        console.error("AI Generation Error:", aiError);
+        explanation = "Could not generate AI explanation at this time.";
+      }
+    } else {
+      console.warn("GEMINI_API_KEY not found.");
+    }
+
+    // Save to DB if sessionId and qIndex are present
+    if (sessionId && qIndex !== undefined) {
+      await dbConnect();
+      await CbtAnswer.findOneAndUpdate(
+        { sessionId, qIndex },
+        { aiExplanation: explanation },
+        { new: true }
+      );
+    }
+
+    return NextResponse.json({ explanation });
   } catch (error) {
-    console.error("AI Explain error:", error);
+    console.error("AI Explain Error:", error);
     return NextResponse.json(
-      {
-        explanation:
-          "Sorry, I couldn't generate an explanation right now. Please try again later.",
-      },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

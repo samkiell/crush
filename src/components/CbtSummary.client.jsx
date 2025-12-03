@@ -1,148 +1,122 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { CheckCircle, XCircle, AlertCircle, Clock, ArrowRight, RotateCcw, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { CheckCircle2, XCircle, HelpCircle, Clock, ArrowRight, RotateCcw } from 'lucide-react';
 
-export default function CbtSummary({ sessionId }) {
-    const [summary, setSummary] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+export default function CbtSummary({ summary, session }) {
+  const router = useRouter();
 
-    useEffect(() => {
-        const fetchSummary = async () => {
-            try {
-                // We can fetch the summary from the submit endpoint again or a dedicated summary endpoint.
-                // For now, let's assume we can hit the submit endpoint to get the result if it's already submitted,
-                // OR we create a GET /api/cbt/:sessionId/submit (which acts as get result).
-                // But typically we might pass data via state or fetch fresh.
-                // Let's try fetching session status which might have summary data, or just re-calculate.
-                // Actually, the prompt says "Redirect to /cbt/[sessionId]/summary".
-                // We need to fetch the data here.
-                
-                // Let's use the submit endpoint again? No, that's POST.
-                // Let's assume we can get the result from a GET endpoint.
-                // I'll implement a GET handler in the submit route or a new summary route.
-                // For simplicity, let's use the POST submit route which returns the summary if already submitted.
-                
-                const res = await fetch(`/api/cbt/${sessionId}/submit`, { method: 'POST' });
-                if (res.ok) {
-                    const data = await res.json();
-                    setSummary(data.summary);
-                } else {
-                    // If it fails (maybe not submitted?), redirect to session
-                    // router.push(`/cbt/${sessionId}`);
-                }
-            } catch (error) {
-                console.error("Failed to load summary", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchSummary();
-    }, [sessionId, router]);
+  if (!summary || !session) return null;
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-base-200">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
-            </div>
-        );
-    }
+  const { totalQuestions, correct, wrong, unanswered, percentage, score } = summary;
+  const { subject, year, startTime, endTime, sessionId } = session;
 
-    if (!summary) return null;
+  // Calculate duration
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  const durationMs = end - start;
+  const minutes = Math.floor(durationMs / 60000);
+  const seconds = Math.floor((durationMs % 60000) / 1000);
 
-    const { score, totalQuestions, correct, wrong, unanswered, percentage } = summary;
-    
-    // Determine grade color
-    let gradeColor = 'text-error';
-    if (percentage >= 70) gradeColor = 'text-success';
-    else if (percentage >= 50) gradeColor = 'text-warning';
+  const getGradeColor = (p) => {
+    if (p >= 70) return 'text-success';
+    if (p >= 50) return 'text-warning';
+    return 'text-error';
+  };
 
-    return (
-        <div className="min-h-screen bg-base-200 p-4 md:p-8 flex items-center justify-center">
-            <div className="max-w-2xl w-full bg-base-100 rounded-3xl shadow-xl overflow-hidden">
-                {/* Header */}
-                <div className="bg-primary/10 p-8 text-center border-b border-base-200">
-                    <h1 className="text-2xl font-bold mb-2">Session Complete!</h1>
-                    <p className="text-base-content/60">Here is how you performed</p>
-                </div>
-
-                <div className="p-8">
-                    {/* Score Card */}
-                    <div className="flex flex-col items-center justify-center mb-10">
-                        <div className="relative w-40 h-40 flex items-center justify-center">
-                            {/* Circular Progress (Simplified SVG) */}
-                            <svg className="w-full h-full transform -rotate-90">
-                                <circle
-                                    cx="80"
-                                    cy="80"
-                                    r="70"
-                                    stroke="currentColor"
-                                    strokeWidth="12"
-                                    fill="transparent"
-                                    className="text-base-200"
-                                />
-                                <circle
-                                    cx="80"
-                                    cy="80"
-                                    r="70"
-                                    stroke="currentColor"
-                                    strokeWidth="12"
-                                    fill="transparent"
-                                    strokeDasharray={440}
-                                    strokeDashoffset={440 - (440 * percentage) / 100}
-                                    className={`${gradeColor} transition-all duration-1000 ease-out`}
-                                    strokeLinecap="round"
-                                />
-                            </svg>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className={`text-4xl font-bold ${gradeColor}`}>{Math.round(percentage)}%</span>
-                                <span className="text-xs text-base-content/50 uppercase font-bold tracking-wider">Score</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-3 gap-4 mb-10">
-                        <div className="bg-success/10 p-4 rounded-2xl text-center">
-                            <CheckCircle className="w-6 h-6 text-success mx-auto mb-2" />
-                            <div className="text-2xl font-bold text-success">{correct}</div>
-                            <div className="text-xs text-base-content/60 font-medium">Correct</div>
-                        </div>
-                        <div className="bg-error/10 p-4 rounded-2xl text-center">
-                            <XCircle className="w-6 h-6 text-error mx-auto mb-2" />
-                            <div className="text-2xl font-bold text-error">{wrong}</div>
-                            <div className="text-xs text-base-content/60 font-medium">Wrong</div>
-                        </div>
-                        <div className="bg-base-200 p-4 rounded-2xl text-center">
-                            <AlertCircle className="w-6 h-6 text-base-content/40 mx-auto mb-2" />
-                            <div className="text-2xl font-bold text-base-content/70">{unanswered}</div>
-                            <div className="text-xs text-base-content/60 font-medium">Skipped</div>
-                        </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex flex-col gap-3">
-                        <Link 
-                            href={`/cbt/${sessionId}/review`}
-                            className="btn btn-primary btn-lg w-full text-white shadow-lg shadow-primary/20"
-                        >
-                            <RotateCcw className="w-5 h-5" /> Review Questions
-                        </Link>
-                        <div className="grid grid-cols-2 gap-3">
-                            <Link href="/cbt" className="btn btn-outline w-full">
-                                <ArrowRight className="w-5 h-5" /> New Session
-                            </Link>
-                            <Link href="/dashboard" className="btn btn-ghost w-full">
-                                <Home className="w-5 h-5" /> Dashboard
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-base-100 p-4 md:p-8 pb-24">
+      <div className="max-w-2xl mx-auto space-y-6">
+        
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-base-content">Session Complete!</h1>
+          <p className="text-base-content/60 capitalize">{subject} • {year}</p>
         </div>
-    );
+
+        {/* Score Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-base-200/50 rounded-3xl p-8 text-center border border-base-content/5 relative overflow-hidden"
+        >
+          <div className="relative z-10">
+            <div className="text-sm font-medium text-base-content/60 mb-2">Total Score</div>
+            <div className={`text-6xl font-black mb-2 ${getGradeColor(percentage)}`}>
+              {percentage}%
+            </div>
+            <div className="text-base-content/80 font-medium">
+              {score} / {totalQuestions} points
+            </div>
+          </div>
+          
+          {/* Background decoration */}
+          <div className={`absolute inset-0 opacity-10 blur-3xl ${getGradeColor(percentage).replace('text-', 'bg-')}`} />
+        </motion.div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-base-100 border border-base-content/10 p-4 rounded-2xl flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-success/10 text-success flex items-center justify-center">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-xl font-bold">{correct}</div>
+              <div className="text-xs text-base-content/60">Correct</div>
+            </div>
+          </div>
+
+          <div className="bg-base-100 border border-base-content/10 p-4 rounded-2xl flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center">
+              <XCircle className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-xl font-bold">{wrong}</div>
+              <div className="text-xs text-base-content/60">Wrong</div>
+            </div>
+          </div>
+
+          <div className="bg-base-100 border border-base-content/10 p-4 rounded-2xl flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-base-content/10 text-base-content/60 flex items-center justify-center">
+              <HelpCircle className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-xl font-bold">{unanswered}</div>
+              <div className="text-xs text-base-content/60">Unanswered</div>
+            </div>
+          </div>
+
+          <div className="bg-base-100 border border-base-content/10 p-4 rounded-2xl flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-xl font-bold">{minutes}m {seconds}s</div>
+              <div className="text-xs text-base-content/60">Time Spent</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="space-y-3 pt-4">
+          <button 
+            onClick={() => router.push(`/cbt/${sessionId}/review`)}
+            className="btn btn-primary w-full btn-lg rounded-xl shadow-lg shadow-primary/20"
+          >
+            Review Questions
+            <ArrowRight className="w-5 h-5" />
+          </button>
+          
+          <button 
+            onClick={() => router.push('/dashboard')}
+            className="btn btn-ghost w-full rounded-xl"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
 }
