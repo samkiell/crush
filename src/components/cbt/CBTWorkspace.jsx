@@ -11,10 +11,7 @@ import {
     Timer,
     Flag,
     RotateCcw,
-    BookOpen,
-    Bot,
-    Sparkles,
-    Lock
+    BookOpen
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -46,9 +43,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [score, setScore] = useState(0);
 
-    const [explanationTab, setExplanationTab] = useState('default'); // 'default' | 'ai'
-    const [aiExplanation, setAiExplanation] = useState(null);
-    const [loadingAi, setLoadingAi] = useState(false);
+
     const [isPremium, setIsPremium] = useState(false);
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -59,29 +54,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
         }
     }, [user]);
 
-    const fetchAiExplanation = async () => {
-        setLoadingAi(true);
-        try {
-            const response = await fetch('/api/ai/explain', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    question: currentQuestion.text,
-                    options: currentQuestion.options,
-                    selectedAnswer: answers[currentQuestion.id],
-                    correctOption: currentQuestion.correctOption,
-                    questionIndex: currentQuestionIndex
-                })
-            });
-            const data = await response.json();
-            setAiExplanation(data.explanation);
-        } catch (error) {
-            console.error('Failed to fetch AI explanation', error);
-            setAiExplanation("Sorry, I couldn't generate an explanation at this moment. Please try again.");
-        } finally {
-            setLoadingAi(false);
-        }
-    };
+
 
     // Fetch Questions
     useEffect(() => {
@@ -142,7 +115,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
 
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
-                if (in  <= 1) {
+                if (prev <= 1) {
                     clearInterval(timer);
                     handleSubmitExam();
                     return 0;
@@ -377,110 +350,14 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                 </div>
             </div>
 
-            {/* Explanation (Only in Review Mode) */}
-            {/* Explanation Section (Only in Review Mode) */}
-            <AnimatePresence>
-                {examStatus === 'review' && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-base-100 border border-base-200 rounded-3xl overflow-hidden shadow-sm mb-6"
-                    >
-                        {/* Tabs */}
-                        <div className="flex border-b border-base-200">
-                            <button
-                                onClick={() => setExplanationTab('default')}
-                                className={`flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${explanationTab === 'default'
-                                    ? 'bg-base-100 text-primary border-b-2 border-primary'
-                                    : 'bg-base-200/50 text-base-content/60 hover:bg-base-200'
-                                    }`}
-                            >
-                                <BookOpen className="w-4 h-4" />
-                                Explanation
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setExplanationTab('ai');
-                                    if (!aiExplanation && !loadingAi) fetchAiExplanation();
-                                }}
-                                className={`flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${explanationTab === 'ai'
-                                    ? 'bg-base-100 text-secondary border-b-2 border-secondary'
-                                    : 'bg-base-200/50 text-base-content/60 hover:bg-base-200'
-                                    }`}
-                            >
-                                <Bot className="w-4 h-4" />
-                                Crush AI
-                                {!isPremium && <Lock className="w-3 h-3 opacity-50" />}
-                            </button>
-                        </div>
 
-                        {/* Content */}
-                        <div className="p-6 bg-base-100 min-h-[150px]">
-                            {explanationTab === 'default' ? (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="prose prose-sm max-w-none"
-                                >
-                                    <h4 className="text-base font-semibold mb-2 flex items-center gap-2">
-                                        <CheckCircle className="w-4 h-4 text-success" />
-                                        Correct Answer: Option {currentQuestion.correctOption}
-                                    </h4>
-                                    <p className="text-base-content/80 leading-relaxed">
-                                        {currentQuestion.explanation || "No explanation provided."}
-                                    </p>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="relative"
-                                >
-                                    {!isPremium ? (
-                                        <div className="text-center py-4">
-                                            <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                                                <Lock className="w-6 h-6 text-secondary" />
-                                            </div>
-                                            <h4 className="font-bold mb-1">Premium Feature</h4>
-                                            <p className="text-sm text-base-content/60 mb-4">
-                                                Unlock AI-powered explanations tailored to your learning style.
-                                            </p>
-                                            <button className="btn btn-sm btn-secondary">Upgrade to Premium</button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            {loadingAi ? (
-                                                <div className="flex flex-col items-center justify-center py-8 gap-3">
-                                                    <span className="loading loading-dots loading-md text-secondary"></span>
-                                                    <span className="text-xs text-base-content/50 animate-pulse">Consulting Crush AI...</span>
-                                                </div>
-                                            ) : (
-                                                <div className="prose prose-sm max-w-none">
-                                                    <div className="flex items-start gap-3 mb-4">
-                                                        <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 mt-1">
-                                                            <Bot className="w-4 h-4 text-secondary" />
-                                                        </div>
-                                                        <div className="bg-base-200/50 rounded-2xl rounded-tl-none p-4 text-base-content/80">
-                                                            {aiExplanation}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </>
-                                    )}
-                                </motion.div>
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
             {/* Navigation */}
             <div className="flex items-center justify-between mt-8">
                 <button
                     onClick={handlePrevQuestion}
                     disabled={currentQuestionIndex === 0}
-                    className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content rounded-xl gap-2 !flex !flex-row !items-center disabled:bg-transparent disabled:border-base-200"
+                    className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content rounded-xl gap-2 !flex !flex-row !items-center disabled:bg-transparent disabled:border-base-200 disabled:text-base-content/30"
                 >
                     <ChevronLeft className="w-5 h-5" />
                     <span>Previous</span>
@@ -507,7 +384,7 @@ export default function CBTWorkspace({ sessionId, subjectName }) {
                 ) : (
                     <button
                         onClick={handleNextQuestion}
-                        className="btn btn-outline border-base-300 hover:bg-base-200 hover:border-base-300 text-base-content rounded-xl gap-2 !flex !flex-row !items-center"
+                        className="btn btn-primary text-white rounded-xl gap-2 !flex !flex-row !items-center shadow-lg shadow-primary/20"
                     >
                         <span>Next</span>
                         <ChevronRight className="w-5 h-5" />
