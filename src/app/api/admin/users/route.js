@@ -58,10 +58,12 @@ export async function GET(req) {
 
     // Create a map of userId -> session data
     const sessionMap = activeSessions.reduce((acc, session) => {
-      acc[session.userId.toString()] = {
-        sessionId: session.sessionId,
-        mode: session.mode,
-      };
+      if (session.userId) {
+        acc[session.userId.toString()] = {
+          sessionId: session.sessionId,
+          mode: session.mode || "cbt", // Default to cbt if mode is missing
+        };
+      }
       return acc;
     }, {});
 
