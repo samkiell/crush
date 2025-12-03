@@ -7,7 +7,7 @@ export async function POST(request, { params }) {
   try {
     const user = await protect(request);
     await dbConnect();
-    const { sessionId } = params;
+    const { sessionId } = await params;
     const body = await request.json();
     const { questions, subject, year, totalQuestions } = body;
 
