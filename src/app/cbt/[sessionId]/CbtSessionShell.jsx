@@ -131,31 +131,27 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
           </div>
 
           {/* Mobile Bottom Buttons (Inside Card) */}
-          <div className="md:hidden grid grid-cols-4 gap-2 items-center px-4 py-4 border-t border-base-200 bg-base-50/50">
-             <button onClick={prev} disabled={currentIndex === 0} className="btn btn-circle btn-ghost text-base-content justify-self-start">
-                 <ChevronLeft size={28} />
-             </button>
-             
-             <button onClick={() => setShowFlag(true)} className="btn btn-square btn-ghost btn-sm bg-error/10 text-error justify-self-center">
-                 <Flag size={20} />
-             </button>
-
-             <button onClick={() => setShowSubmitConfirm(true)} className="btn btn-square btn-ghost btn-sm bg-success/10 text-success justify-self-center">
-                 <CheckCircle size={20} />
-             </button>
-
-             {currentIndex === questions.length - 1 ? (
-                 <button 
-                    onClick={() => setShowSubmitConfirm(true)} 
-                    className="btn btn-circle btn-success text-white shadow-lg shadow-success/30 justify-self-end"
-                 >
-                     <CheckCircle size={28} />
+          <div className="md:hidden flex flex-col gap-6 mt-8 pt-6 border-t border-base-200">
+             <div className="flex justify-between items-center w-full">
+                 <button onClick={prev} disabled={currentIndex === 0} className="btn btn-circle btn-ghost text-base-content bg-base-200/50">
+                     <ChevronLeft size={28} />
                  </button>
-             ) : (
-                 <button onClick={next} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30 justify-self-end">
+                 
+                 <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error/80 hover:text-error hover:bg-error/10">
+                     <Flag size={24} />
+                 </button>
+
+                 <button onClick={next} disabled={currentIndex === questions.length - 1} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30">
                      <ChevronRight size={28} />
                  </button>
-             )}
+             </div>
+
+             <button 
+                onClick={() => setShowSubmitConfirm(true)} 
+                className="btn btn-primary btn-outline w-full gap-2 font-bold border-2"
+             >
+                Submit
+             </button>
           </div>
 
           {/* Desktop Bottom Buttons (Inside Card) */}

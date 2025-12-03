@@ -199,22 +199,21 @@ export default function MomentumLayer({ user, stats }) {
                         {/* Resume Session Card */}
                         {activeSession && (
                             <Link href={activeSession.href} className="block group">
-                                <motion.div
-                                    variants={variants.scale}
-                                    className="bg-base-100 border-2 border-primary/20 rounded-3xl p-5 shadow-xl hover:border-primary transition-all relative overflow-hidden"
+                                <div
+                                    className="bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 rounded-3xl p-5 shadow-lg relative overflow-hidden group-hover:border-primary/50 transition-all"
                                 >
-                                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                                        <RotateCcw className="w-24 h-24 rotate-12" />
+                                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                                        <RotateCcw className="w-24 h-24 rotate-12 text-primary" />
                                     </div>
 
                                     <div className="flex items-center justify-between mb-3 relative z-10">
                                         <div className="flex items-center gap-2">
-                                            <div className="p-2 bg-primary/10 rounded-lg text-primary shadow-sm">
+                                            <div className="p-2 bg-base-100 rounded-lg text-primary shadow-sm">
                                                 <RotateCcw className="w-4 h-4" />
                                             </div>
                                             <span className="text-xs font-bold text-primary uppercase tracking-wider">Resume Session</span>
                                         </div>
-                                        <div className="bg-base-200 rounded-full p-1 shadow-sm group-hover:scale-110 transition-transform">
+                                        <div className="bg-base-100 rounded-full p-1 shadow-sm group-hover:scale-110 transition-transform">
                                             <ArrowRight className="w-4 h-4 text-primary" />
                                         </div>
                                     </div>
@@ -225,14 +224,14 @@ export default function MomentumLayer({ user, stats }) {
                                         </h3>
                                         <p className="text-xs text-base-content/60 mb-4 font-medium">{activeSession.type}</p>
                                         
-                                        <div className="w-full bg-base-200 h-2 rounded-full overflow-hidden border border-base-300">
+                                        <div className="w-full bg-base-100/50 h-2 rounded-full overflow-hidden border border-base-200/20">
                                             <div 
                                                 className="bg-primary h-full rounded-full shadow-sm" 
                                                 style={{ width: `${activeSession.progress}%` }}
                                             />
                                         </div>
                                         <div className="flex justify-between mt-2">
-                                            <span className="text-[10px] font-semibold text-base-content/50 uppercase tracking-wide">Progress</span>
+                                            <span className="text-[10px] font-semibold text-base-content/60 uppercase tracking-wide">Progress</span>
                                             <span className="text-[10px] font-bold text-primary">{activeSession.progress}% Completed</span>
                                         </div>
                                     </div>
