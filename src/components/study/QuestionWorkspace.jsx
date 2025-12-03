@@ -323,26 +323,10 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
 
                 <div className="hidden md:flex gap-2">
                     <button onClick={() => setShowCal(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
-                        <Calculator size={16} /> Cal
+                        <Calculator size={16} /> Calculator
                     </button>
                     <button onClick={() => setShowNav(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
                         <Grid size={16} /> Nav
-                    </button>
-                    <button
-                        onClick={handlePrevQuestion}
-                        disabled={currentQuestionIndex === 0}
-                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3 !flex !flex-row !items-center"
-                    >
-                        <ChevronLeft className="w-6 h-6 sm:w-5 sm:h-5" />
-                        <span className="hidden sm:inline">Previous</span>
-                    </button>
-                    <button
-                        onClick={handleNextQuestion}
-                        disabled={currentQuestionIndex === questions.length - 1}
-                        className="btn btn-sm btn-ghost gap-2 px-2 sm:px-3 !flex !flex-row !items-center"
-                    >
-                        <span className="hidden sm:inline">Next</span>
-                        <ChevronRight className="w-6 h-6 sm:w-5 sm:h-5" />
                     </button>
                 </div>
             </div>
@@ -401,14 +385,14 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                 </div>
                 
                 {/* Desktop Prev/Next Buttons inside card */}
-                <div className="hidden md:flex justify-between mt-8 pt-6 border-t border-base-200">
-                     <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2">
+                <div className="hidden md:flex justify-between items-center mt-8 pt-6 border-t border-base-200">
+                     <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2 flex items-center">
                          <ChevronLeft size={20} /> Prev
                      </button>
-                     <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider">
+                     <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider flex items-center">
                          <Flag size={16} /> Report
                      </button>
-                     <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2">
+                     <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center">
                          Next <ChevronRight size={20} />
                      </button>
                 </div>
@@ -519,7 +503,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                 </button>
                 
                 <button onClick={() => setShowFlag(true)} className="btn btn-ghost gap-2 text-error text-xs font-bold uppercase tracking-wider">
-                    <Flag size={16} /> Report Issue
+                    <Flag size={16} /> <span className="hidden sm:inline">Report Issue</span>
                 </button>
 
                 <button onClick={handleNextQuestion} className="btn btn-circle btn-primary text-white" disabled={currentQuestionIndex === questions.length - 1}>

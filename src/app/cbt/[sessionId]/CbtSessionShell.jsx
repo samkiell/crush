@@ -88,6 +88,16 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
              <button onClick={() => setShowNav(!showNav)} className="btn btn-ghost btn-sm btn-circle md:hidden">
                <Grid size={20} />
              </button>
+
+             {/* Desktop Top Controls */}
+             <div className="hidden md:flex gap-2 ml-2">
+                <button onClick={() => setShowCal(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
+                    <Calculator size={16} /> Calculator
+                </button>
+                <button onClick={() => setShowNav(true)} className="btn btn-sm btn-neutral flex items-center gap-2">
+                    <Grid size={16} /> Nav
+                </button>
+             </div>
            </div>
         </div>
 
@@ -103,9 +113,9 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 grid md:grid-cols-[1fr_300px] gap-6 pb-20 md:pb-6">
+      <main className="flex-1 max-w-3xl mx-auto w-full p-4 md:p-6 pb-20 md:pb-6">
         {/* Question Area */}
-        <div className="bg-base-100 rounded-2xl shadow-sm relative overflow-hidden min-h-[60vh] flex flex-col">
+        <div className="bg-base-100 rounded-2xl shadow-sm relative overflow-hidden min-h-[60vh] flex flex-col mb-6">
           <div className="p-6 flex-1">
             {status === 'loading' ? (
                <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -122,43 +132,18 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
               />
             )}
           </div>
-        </div>
 
-        {/* Sidebar (Desktop) */}
-        <div className="hidden md:flex flex-col gap-4">
-          <div className="bg-base-100 rounded-2xl shadow-sm p-4 flex-1 flex flex-col">
-            <h3 className="font-bold mb-4 flex items-center gap-2">
-              <Grid size={18} /> Navigator
-            </h3>
-            <div className="flex-1 overflow-y-auto max-h-[400px]">
-                <QuestionNavigator
-                total={questions.length}
-                current={currentIndex}
-                answers={Object.keys(answers).reduce((acc, k) => {
-                    const idx = questions.findIndex(q => q.qid === k);
-                    if (idx >= 0) acc[idx] = true;
-                    return acc;
-                }, {})}
-                onJump={jumpTo}
-                />
-            </div>
-            <div className="pt-4 mt-4 border-t border-base-200">
-                <button 
-                    onClick={() => setShowSubmitConfirm(true)} 
-                    className="btn btn-primary w-full text-white shadow-lg shadow-primary/20"
-                >
-                    Submit Session
-                </button>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => setShowCal(true)} className="btn btn-neutral flex items-center gap-2">
-              <Calculator size={18} /> Calculator
-            </button>
-            <button onClick={() => setShowFlag(true)} className="btn btn-error btn-outline flex items-center gap-2">
-              <Flag size={18} /> Report
-            </button>
+          {/* Desktop Bottom Buttons (Inside Card) */}
+          <div className="hidden md:flex justify-between items-center px-6 py-4 border-t border-base-200 bg-base-50/50">
+             <button onClick={prev} disabled={currentIndex === 0} className="btn btn-ghost gap-2 flex items-center">
+                 <ChevronLeft size={20} /> Prev
+             </button>
+             <button onClick={() => setShowFlag(true)} className="btn btn-ghost text-error gap-2 text-xs font-bold uppercase tracking-wider flex items-center">
+                 <Flag size={16} /> Report
+             </button>
+             <button onClick={next} disabled={currentIndex === questions.length - 1} className="btn btn-primary text-white gap-2 flex items-center">
+                 Next <ChevronRight size={20} />
+             </button>
           </div>
         </div>
       </main>
@@ -170,7 +155,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
         </button>
         
         <button onClick={() => setShowFlag(true)} className="btn btn-ghost gap-2 text-error text-xs font-bold uppercase tracking-wider">
-          <Flag size={16} /> Report Issue
+          <Flag size={16} /> <span className="hidden sm:inline">Report Issue</span>
         </button>
 
         <button onClick={next} className="btn btn-circle btn-primary text-white" disabled={currentIndex === questions.length - 1}>
@@ -182,7 +167,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       {showCal && (
         <CrushCal 
           onClose={() => setShowCal(false)} 
-          // isDocked removed to default to modal
         />
       )}
       {showFlag && (
@@ -194,7 +178,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
         />
       )}
       
-      {/* Mobile Nav Drawer */}
+      {/* Nav Drawer (Mobile & Desktop) */}
       {showNav && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNav(false)}>
           <div 
