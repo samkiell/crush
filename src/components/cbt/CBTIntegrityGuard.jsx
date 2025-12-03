@@ -13,19 +13,34 @@ export default function CBTIntegrityGuard({ sessionId, children }) {
   const [showOverlay, setShowOverlay] = useState(false);
 
   // --- Socket Connection ---
+  // --- Socket Connection ---
   useEffect(() => {
-    const socket = io({ path: '/api/socket' }); // Adjust path if needed
-    
-    socket.on('connect', () => {
-        socket.emit('join-session', sessionId);
-    });
+    const initSocket = async () => {
+      await fetch('/api/socket/io'); // Ensure server is running
+      
+      const socket = io({ 
+        path: '/api/socket/io',
+        addTrailingSlash: false,
+      });
+      
+      socket.on('connect', () => {
+          socket.emit('join-session', sessionId);
+      });
 
-    socket.on('sessionLocked', (data) => {
-      setIsLocked(true);
-      setLockReason(data.reason);
-    });
+      socket.on('sessionLocked', (data) => {
+        setIsLocked(true);
+        setLockReason(data.reason);
+      });
 
-    return () => socket.disconnect();
+      return socket;
+    };
+
+    let socketInstance;
+    initSocket().then(s => { socketInstance = s; });
+
+    return () => {
+      if (socketInstance) socketInstance.disconnect();
+    };
   }, [sessionId]);
 
   // --- Integrity Logger ---

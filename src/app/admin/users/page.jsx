@@ -29,6 +29,28 @@ export default function UserManagementPage() {
         }
     };
 
+    const handleKillSession = async (sessionId, userName) => {
+        if (!confirm(`Are you sure you want to KILL the active session for ${userName}? This will lock them out immediately.`)) return;
+
+        try {
+            const res = await fetch('/api/admin/cbt/kill', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId, reason: 'Terminated by Admin' }),
+            });
+            
+            if (res.ok) {
+                toast.success(`Session for ${userName} terminated.`);
+                fetchUsers(); // Refresh list
+            } else {
+                toast.error('Failed to kill session');
+            }
+        } catch (error) {
+            console.error('Kill session error', error);
+            toast.error('Error killing session');
+        }
+    };
+
     const filteredUsers = users.filter(user =>
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,6 +88,7 @@ export default function UserManagementPage() {
                                 <th>User</th>
                                 <th>Role</th>
                                 <th>Plan</th>
+                                <th>Status</th>
                                 <th>Joined</th>
                                 <th>Actions</th>
                             </tr>
@@ -74,14 +97,14 @@ export default function UserManagementPage() {
                             {loading ? (
                                 [...Array(5)].map((_, i) => (
                                     <tr key={i}>
-                                        <td colSpan="5" className="text-center py-4">
+                                        <td colSpan="6" className="text-center py-4">
                                             <div className="h-8 bg-base-200 rounded animate-pulse w-full"></div>
                                         </td>
                                     </tr>
                                 ))
                             ) : filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="text-center py-8 text-base-content/60">
+                                    <td colSpan="6" className="text-center py-8 text-base-content/60">
                                         No users found.
                                     </td>
                                 </tr>
@@ -111,13 +134,34 @@ export default function UserManagementPage() {
                                                 {user.plan || 'Free'}
                                             </span>
                                         </td>
+                                        <td>
+                                            {user.activeSessionId ? (
+                                                <span className="badge badge-error badge-sm animate-pulse gap-1">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                                    In Exam
+                                                </span>
+                                            ) : (
+                                                <span className="badge badge-ghost badge-sm opacity-50">Idle</span>
+                                            )}
+                                        </td>
                                         <td className="text-sm font-mono opacity-70">
                                             {new Date(user.createdAt).toLocaleDateString()}
                                         </td>
                                         <td>
-                                            <button className="btn btn-ghost btn-xs">
-                                                <MoreVertical className="w-4 h-4" />
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                {user.activeSessionId && (
+                                                    <button 
+                                                        onClick={() => handleKillSession(user.activeSessionId, user.name)}
+                                                        className="btn btn-error btn-xs text-white"
+                                                        title="Kill Active Session"
+                                                    >
+                                                        <Shield className="w-3 h-3" /> Kill
+                                                    </button>
+                                                )}
+                                                <button className="btn btn-ghost btn-xs">
+                                                    <MoreVertical className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
