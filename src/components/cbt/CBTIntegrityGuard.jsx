@@ -138,7 +138,7 @@ export default function CBTIntegrityGuard({ sessionId, children }) {
       {/* Watermark */}
       <div className="pointer-events-none fixed inset-0 z-[9999] opacity-[0.03] flex items-center justify-center overflow-hidden select-none">
          <div className="transform -rotate-45 text-4xl font-black whitespace-nowrap">
-            {Array(20).fill(`SESSION-${sessionId} `).join(' ')}
+            {Array(20).fill(`Crush EduPlace Intl `).join(' ')}
          </div>
       </div>
 
