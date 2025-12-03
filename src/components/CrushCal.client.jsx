@@ -126,6 +126,7 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
           <button onClick={() => handlePress('=')} className={`${btnClass} btn-primary text-white border-primary-focus shadow-primary/20`}>=</button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

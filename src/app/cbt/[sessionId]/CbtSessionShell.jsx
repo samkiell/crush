@@ -62,17 +62,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                <span>{formatTime(timeLeft)}</span>
              </div>
              
-             {/* Theme Toggle */}
-             <div className="dropdown dropdown-end">
-               <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-circle">
-                 <Menu size={20} />
-               </div>
-               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 border border-base-200 mt-4">
-                 <li><button onClick={() => document.documentElement.setAttribute('data-theme', 'light')}>Light Theme</button></li>
-                 <li><button onClick={() => document.documentElement.setAttribute('data-theme', 'dark')}>Dark Theme</button></li>
-                 <li><button onClick={() => document.documentElement.setAttribute('data-theme', 'eye-care')}>Eye Care Theme</button></li>
-               </ul>
-             </div>
+
 
              {/* Mobile Top Controls */}
              <button onClick={() => setShowCal(!showCal)} className="btn btn-ghost btn-sm btn-circle md:hidden">
@@ -98,21 +88,30 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       {/* Main Content */}
       <main className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 grid md:grid-cols-[1fr_300px] gap-6 pb-20 md:pb-6">
         {/* Question Area */}
-        <div className="bg-base-100 rounded-2xl shadow-sm p-6 relative overflow-hidden min-h-[60vh]">
-          {status === 'loading' ? (
-             <div className="flex flex-col items-center justify-center h-full gap-4">
-               <span className="loading loading-spinner loading-lg text-primary"></span>
-               <p className="text-base-content/60 animate-pulse font-medium">Loading your session...</p>
-             </div>
-          ) : (
-            <QuestionView
-              question={currentQuestion}
-              selectedOption={answers[currentQuestion?.qid]} // Assuming qid is key, or use index
-              onSelect={(opt) => markAnswer(currentQuestion?.qid, opt)}
-              onNext={next}
-              onPrev={prev}
+        <div className="bg-base-100 rounded-2xl shadow-sm relative overflow-hidden min-h-[60vh] flex flex-col">
+          {showCal && (
+            <CrushCal 
+              onClose={() => setShowCal(false)} 
+              isDocked={true} 
             />
           )}
+          
+          <div className="p-6 flex-1">
+            {status === 'loading' ? (
+               <div className="flex flex-col items-center justify-center h-full gap-4">
+                 <span className="loading loading-spinner loading-lg text-primary"></span>
+                 <p className="text-base-content/60 animate-pulse font-medium">Loading your session...</p>
+               </div>
+            ) : (
+              <QuestionView
+                question={currentQuestion}
+                selectedOption={answers[currentQuestion?.qid]} // Assuming qid is key, or use index
+                onSelect={(opt) => markAnswer(currentQuestion?.qid, opt)}
+                onNext={next}
+                onPrev={prev}
+              />
+            )}
+          </div>
         </div>
 
         {/* Sidebar (Desktop) */}
@@ -162,12 +161,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       </div>
 
       {/* Modals/Overlays */}
-      {showCal && (
-        <CrushCal 
-          onClose={() => setShowCal(false)} 
-          isDocked={true} // Always docked/inline for better UX as requested
-        />
-      )}
       {showFlag && (
         <FlagReportModal 
           sessionId={sessionId} 
