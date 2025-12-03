@@ -3,7 +3,7 @@ import AudioReader from '@/components/AudioReader.client';
 import { useSwipe } from '@/lib/swipeHandler';
 import { Star } from 'lucide-react';
 
-export default function QuestionView({ question, selectedOption, onSelect, onNext, onPrev, isBookmarked, onToggleBookmark }) {
+export default function QuestionView({ question, selectedOption, onSelect, onNext, onPrev, isBookmarked, onToggleBookmark, showExplanation = false }) {
   const { onTouchStart, onTouchEnd } = useSwipe(onNext, onPrev);
 
   if (!question) return <div className="p-8 text-center">Loading question...</div>;
@@ -33,7 +33,6 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
           <AudioReader 
             text={question.question} 
             options={question.options}
-            explanation={question.explanation}
           />
         </div>
       </div>
@@ -60,6 +59,19 @@ export default function QuestionView({ question, selectedOption, onSelect, onNex
           )
         ))}
       </div>
+
+      {/* Explanation Section */}
+      {showExplanation && question.explanation && (
+        <div className="mt-6 p-4 bg-base-200/50 rounded-xl border border-base-content/5">
+          <div className="flex items-center justify-between mb-2">
+             <h4 className="font-bold text-sm uppercase tracking-wider opacity-70">Explanation</h4>
+             <AudioReader text={question.explanation} />
+          </div>
+          <p className="text-base-content/80 text-sm leading-relaxed">
+            {question.explanation}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

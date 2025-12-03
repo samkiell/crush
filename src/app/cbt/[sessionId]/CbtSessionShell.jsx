@@ -134,6 +134,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                   onPrev={prev}
                   isBookmarked={bookmarks.has(currentQuestion?.qid)}
                   onToggleBookmark={() => toggleBookmark(currentQuestion?.qid)}
+                  showExplanation={examStatus !== 'active'}
                 />
               )}
             </div>
