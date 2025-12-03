@@ -383,6 +383,19 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                         })}
                     </div>
                     
+                    {/* Mobile Bottom Buttons (Inside Card) */}
+                    <div className="md:hidden flex justify-between items-center mt-8 pt-6 border-t border-base-200">
+                        <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-circle btn-ghost text-base-content">
+                            <ChevronLeft size={28} />
+                        </button>
+                        <button onClick={() => setShowFlag(true)} className="btn btn-ghost btn-sm gap-2 text-error">
+                            <Flag size={20} />
+                        </button>
+                        <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30">
+                            <ChevronRight size={28} />
+                        </button>
+                    </div>
+
                     {/* Desktop Prev/Next Buttons inside card */}
                     <div className="hidden md:flex justify-between items-center mt-8 pt-6 border-t border-base-200">
                         <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="btn btn-ghost gap-2 flex items-center">
@@ -524,21 +537,6 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            {/* Mobile Footer Controls */}
-            <div className="fixed bottom-0 left-0 right-0 bg-base-100 border-t border-base-200 p-3 flex justify-between items-center z-[100] safe-area-bottom shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-                <button onClick={handlePrevQuestion} className="btn btn-circle btn-ghost text-base-content" disabled={currentQuestionIndex === 0}>
-                    <ChevronLeft size={28} />
-                </button>
-                
-                <button onClick={() => setShowFlag(true)} className="btn btn-ghost btn-sm gap-2 text-error">
-                    <Flag size={20} />
-                </button>
-
-                <button onClick={handleNextQuestion} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30" disabled={currentQuestionIndex === questions.length - 1}>
-                    <ChevronRight size={28} />
-                </button>
-            </div>
 
             {/* Modals */}
             {showCal && (
