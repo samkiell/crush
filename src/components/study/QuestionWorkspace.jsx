@@ -162,34 +162,58 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
         }
     }, [currentQuestionIndex, isPremium]);
 
+    const [answers, setAnswers] = useState({}); // { questionId: optionId }
+    const [showSummary, setShowSummary] = useState(false);
+
     const handleOptionSelect = (optionId) => {
         if (isAnswered) return;
         setSelectedOption(optionId);
         setIsAnswered(true);
         setShowExplanation(true);
+        
+        // Track answer
+        setAnswers(prev => ({
+            ...prev,
+            [currentQuestion.id]: optionId
+        }));
     };
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(prev => prev + 1);
-            resetState();
         }
     };
 
     const handlePrevQuestion = () => {
         if (currentQuestionIndex > 0) {
             setCurrentQuestionIndex(prev => prev - 1);
-            resetState();
         }
     };
 
     const resetState = () => {
-        setSelectedOption(null);
-        setIsAnswered(false);
-        setShowExplanation(false);
-        setExplanationTab('default');
-        setAiExplanation(null);
+        const nextQ = questions[currentQuestionIndex]; // Note: currentQuestionIndex is already updated by set state, but here we might be in a closure.
+        // Actually, resetState is called AFTER setCurrentQuestionIndex, but due to closure, currentQuestionIndex might be old if not careful.
+        // Better to use useEffect on currentQuestionIndex to reset/restore state.
     };
+
+    // Restore state when question changes
+    useEffect(() => {
+        const q = questions[currentQuestionIndex];
+        if (!q) return;
+
+        const savedAnswer = answers[q.id];
+        if (savedAnswer) {
+            setSelectedOption(savedAnswer);
+            setIsAnswered(true);
+            setShowExplanation(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+            setShowExplanation(false);
+            setExplanationTab('default');
+            setAiExplanation(null);
+        }
+    }, [currentQuestionIndex, questions, answers]);
 
     const fetchAiExplanation = async () => {
         setLoadingAi(true);
@@ -535,9 +559,74 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                         <QuestionNavigator
                             total={questions.length}
                             current={currentQuestionIndex}
-                            answers={{}} // Study mode doesn't track answers in the same way, or we can add it
+                            answers={Object.keys(answers).reduce((acc, k) => {
+                                const idx = questions.findIndex(q => q.id === k);
+                                if (idx >= 0) acc[idx] = true;
+                                return acc;
+                            }, {})}
                             onJump={(i) => { setCurrentQuestionIndex(i); setShowNav(false); resetState(); }}
                         />
+                        
+                        <div className="pt-4 mt-4 border-t border-base-content/10">
+                            <button 
+                                onClick={() => { setShowNav(false); setShowSummary(true); }} 
+                                className="btn btn-primary w-full text-white shadow-lg shadow-primary/20"
+                            >
+                                Finish Session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Summary Modal */}
+            {showSummary && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-base-100 rounded-3xl shadow-2xl max-w-md w-full p-6 text-center transform transition-all scale-100">
+                        <h3 className="text-2xl font-bold mb-2">Session Summary</h3>
+                        <p className="text-base-content/60 mb-6">Great job studying! Here is your progress.</p>
+                        
+                        <div className="grid grid-cols-3 gap-4 mb-8">
+                            <div className="bg-success/10 p-4 rounded-2xl">
+                                <div className="text-2xl font-bold text-success">
+                                    {Object.keys(answers).filter(qid => {
+                                        const q = questions.find(q => q.id === qid);
+                                        return q && answers[qid] === q.correctOption;
+                                    }).length}
+                                </div>
+                                <div className="text-xs text-base-content/60 font-medium">Correct</div>
+                            </div>
+                            <div className="bg-error/10 p-4 rounded-2xl">
+                                <div className="text-2xl font-bold text-error">
+                                    {Object.keys(answers).filter(qid => {
+                                        const q = questions.find(q => q.id === qid);
+                                        return q && answers[qid] !== q.correctOption;
+                                    }).length}
+                                </div>
+                                <div className="text-xs text-base-content/60 font-medium">Wrong</div>
+                            </div>
+                            <div className="bg-base-200 p-4 rounded-2xl">
+                                <div className="text-2xl font-bold text-base-content/70">
+                                    {questions.length - Object.keys(answers).length}
+                                </div>
+                                <div className="text-xs text-base-content/60 font-medium">Remaining</div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                            <button 
+                                onClick={() => setShowSummary(false)} 
+                                className="btn btn-primary w-full"
+                            >
+                                Continue Studying
+                            </button>
+                            <button 
+                                onClick={() => window.location.href = '/study'} 
+                                className="btn btn-ghost w-full"
+                            >
+                                Exit Session
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
