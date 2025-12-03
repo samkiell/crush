@@ -6,7 +6,7 @@ import QuestionNavigator from '@/components/QuestionNavigator.client';
 import CrushCal from '@/components/CrushCal.client';
 import OfflineSyncStatus from '@/components/OfflineSyncStatus.client';
 import FlagReportModal from '@/components/FlagReportModal.client';
-import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CbtSessionShell({ sessionId, subject, year }) {
