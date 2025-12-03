@@ -201,32 +201,40 @@ export default function MomentumLayer({ user, stats }) {
                             <Link href={activeSession.href} className="block group">
                                 <motion.div
                                     variants={variants.scale}
-                                    className="bg-base-100 border border-base-200 rounded-3xl p-5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all relative overflow-hidden group-hover:bg-base-50"
+                                    className="bg-base-100 border-2 border-primary/20 rounded-3xl p-5 shadow-xl hover:border-primary transition-all relative overflow-hidden"
                                 >
-                                    <div className="flex items-center justify-between mb-3">
+                                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                                        <RotateCcw className="w-24 h-24 rotate-12" />
+                                    </div>
+
+                                    <div className="flex items-center justify-between mb-3 relative z-10">
                                         <div className="flex items-center gap-2">
-                                            <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                                            <div className="p-2 bg-primary/10 rounded-lg text-primary shadow-sm">
                                                 <RotateCcw className="w-4 h-4" />
                                             </div>
-                                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Resume</span>
+                                            <span className="text-xs font-bold text-primary uppercase tracking-wider">Resume Session</span>
                                         </div>
-                                        <ArrowRight className="w-4 h-4 text-base-content/40 group-hover:text-primary transition-colors" />
+                                        <div className="bg-base-200 rounded-full p-1 shadow-sm group-hover:scale-110 transition-transform">
+                                            <ArrowRight className="w-4 h-4 text-primary" />
+                                        </div>
                                     </div>
                                     
-                                    <h3 className="font-bold text-base-content line-clamp-1 mb-1 group-hover:text-primary transition-colors">
-                                        {activeSession.title}
-                                    </h3>
-                                    <p className="text-xs text-base-content/60 mb-3">{activeSession.type}</p>
-                                    
-                                    <div className="w-full bg-base-200 h-1.5 rounded-full overflow-hidden">
-                                        <div 
-                                            className="bg-primary h-full rounded-full" 
-                                            style={{ width: `${activeSession.progress}%` }}
-                                        />
-                                    </div>
-                                    <div className="flex justify-between mt-1">
-                                        <span className="text-[10px] text-base-content/40">Progress</span>
-                                        <span className="text-[10px] font-bold text-base-content/60">{activeSession.progress}%</span>
+                                    <div className="relative z-10">
+                                        <h3 className="font-bold text-lg text-base-content line-clamp-1 mb-1 group-hover:text-primary transition-colors">
+                                            {activeSession.title}
+                                        </h3>
+                                        <p className="text-xs text-base-content/60 mb-4 font-medium">{activeSession.type}</p>
+                                        
+                                        <div className="w-full bg-base-200 h-2 rounded-full overflow-hidden border border-base-300">
+                                            <div 
+                                                className="bg-primary h-full rounded-full shadow-sm" 
+                                                style={{ width: `${activeSession.progress}%` }}
+                                            />
+                                        </div>
+                                        <div className="flex justify-between mt-2">
+                                            <span className="text-[10px] font-semibold text-base-content/50 uppercase tracking-wide">Progress</span>
+                                            <span className="text-[10px] font-bold text-primary">{activeSession.progress}% Completed</span>
+                                        </div>
                                     </div>
                                 </motion.div>
                             </Link>

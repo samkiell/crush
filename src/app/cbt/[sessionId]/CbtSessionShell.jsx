@@ -6,7 +6,7 @@ import QuestionNavigator from '@/components/QuestionNavigator.client';
 import CrushCal from '@/components/CrushCal.client';
 import OfflineSyncStatus from '@/components/OfflineSyncStatus.client';
 import FlagReportModal from '@/components/FlagReportModal.client';
-import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X, AlertTriangle } from 'lucide-react';
+import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X, AlertTriangle, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -131,16 +131,31 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
           </div>
 
           {/* Mobile Bottom Buttons (Inside Card) */}
-          <div className="md:hidden flex justify-between items-center px-4 py-4 border-t border-base-200 bg-base-50/50">
-             <button onClick={prev} disabled={currentIndex === 0} className="btn btn-circle btn-ghost text-base-content">
+          <div className="md:hidden grid grid-cols-4 gap-2 items-center px-4 py-4 border-t border-base-200 bg-base-50/50">
+             <button onClick={prev} disabled={currentIndex === 0} className="btn btn-circle btn-ghost text-base-content justify-self-start">
                  <ChevronLeft size={28} />
              </button>
-             <button onClick={() => setShowFlag(true)} className="btn btn-ghost btn-sm gap-2 text-error">
+             
+             <button onClick={() => setShowFlag(true)} className="btn btn-square btn-ghost btn-sm bg-error/10 text-error justify-self-center">
                  <Flag size={20} />
              </button>
-             <button onClick={next} disabled={currentIndex === questions.length - 1} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30">
-                 <ChevronRight size={28} />
+
+             <button onClick={() => setShowSubmitConfirm(true)} className="btn btn-square btn-ghost btn-sm bg-success/10 text-success justify-self-center">
+                 <CheckCircle size={20} />
              </button>
+
+             {currentIndex === questions.length - 1 ? (
+                 <button 
+                    onClick={() => setShowSubmitConfirm(true)} 
+                    className="btn btn-circle btn-success text-white shadow-lg shadow-success/30 justify-self-end"
+                 >
+                     <CheckCircle size={28} />
+                 </button>
+             ) : (
+                 <button onClick={next} className="btn btn-circle btn-primary text-white shadow-lg shadow-primary/30 justify-self-end">
+                     <ChevronRight size={28} />
+                 </button>
+             )}
           </div>
 
           {/* Desktop Bottom Buttons (Inside Card) */}
