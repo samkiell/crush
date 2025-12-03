@@ -75,7 +75,7 @@ export default function CrushCal({ onClose, isDocked = false, onToggleDock }) {
       <div className={`
         ${isDocked ? 'absolute top-16 right-4 w-80 shadow-2xl z-50' : 'fixed inset-0 z-50 flex items-center justify-center pointer-events-none'}
       `}>
-        <div className={`bg-base-100 p-4 rounded-2xl shadow-2xl border border-base-300 flex flex-col gap-3 pointer-events-auto ${!isDocked && 'w-full max-w-sm mx-4'}`}>
+        <div className={`bg-base-100/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-base-content/10 flex flex-col gap-3 pointer-events-auto ${!isDocked && 'w-full max-w-sm mx-4'}`}>
         
         {/* Header */}
         <div className="flex justify-between items-center">

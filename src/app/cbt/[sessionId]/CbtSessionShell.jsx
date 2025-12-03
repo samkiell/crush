@@ -89,13 +89,6 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       <main className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 grid md:grid-cols-[1fr_300px] gap-6 pb-20 md:pb-6">
         {/* Question Area */}
         <div className="bg-base-100 rounded-2xl shadow-sm relative overflow-hidden min-h-[60vh] flex flex-col">
-          {showCal && (
-            <CrushCal 
-              onClose={() => setShowCal(false)} 
-              isDocked={true} 
-            />
-          )}
-          
           <div className="p-6 flex-1">
             {status === 'loading' ? (
                <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -161,6 +154,12 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       </div>
 
       {/* Modals/Overlays */}
+      {showCal && (
+        <CrushCal 
+          onClose={() => setShowCal(false)} 
+          // isDocked removed to default to modal
+        />
+      )}
       {showFlag && (
         <FlagReportModal 
           sessionId={sessionId} 
@@ -174,7 +173,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
       {showNav && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNav(false)}>
           <div 
-            className="absolute right-0 top-16 bottom-0 w-72 bg-base-100 border-l border-base-200 p-4 shadow-2xl overflow-y-auto" 
+            className="absolute right-0 top-16 bottom-0 w-72 bg-base-100/95 backdrop-blur-md border-l border-base-content/10 p-4 shadow-2xl overflow-y-auto" 
             onClick={e => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
