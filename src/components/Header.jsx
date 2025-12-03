@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload, Sparkles } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
@@ -226,8 +226,17 @@ const Header = () => {
                           transition={{ duration: 0.2 }}
                           className="absolute right-0 mt-3 z-[1] p-2 shadow-2xl bg-base-100 rounded-box w-52 gap-1 border border-base-content/5 origin-top-right"
                         >
-                          <li className="menu-title px-4 py-2">
+                          <li className="menu-title px-4 py-2 flex flex-row justify-between items-center">
                             <span className="text-xs font-semibold uppercase tracking-wider opacity-50">Account</span>
+                            {(user?.plan === 'premium' || user?.role === 'admin') ? (
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold">
+                                Premium
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-base-200 text-base-content/60 text-[10px] font-medium">
+                                Free
+                              </span>
+                            )}
                           </li>
                           <li>
                             <Link
@@ -345,6 +354,17 @@ const Header = () => {
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-white truncate">{user?.name || 'User'}</p>
                         <p className="text-xs text-white/60 truncate">{user?.email || 'student@example.com'}</p>
+                        <div className="mt-2">
+                          {(user?.plan === 'premium' || user?.role === 'admin') ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold shadow-sm">
+                              <Sparkles className="w-3 h-3" /> Premium
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-base-100/20 text-white/60 text-[10px] font-medium border border-white/10">
+                              Free Account
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (
