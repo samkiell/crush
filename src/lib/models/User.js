@@ -40,6 +40,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["free", "premium"],
     default: "free",
   },
+  isSuspended: {
+    type: Boolean,
+    default: false,
+  },
   phone: {
     type: String,
     trim: true,

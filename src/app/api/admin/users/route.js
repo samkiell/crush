@@ -53,19 +53,22 @@ export async function GET(req) {
 
     // Fetch all active sessions
     const activeSessions = await CbtSession.find({ status: "active" })
-      .select("userId sessionId")
+      .select("userId sessionId mode")
       .lean();
 
-    // Create a map of userId -> sessionId
+    // Create a map of userId -> session data
     const sessionMap = activeSessions.reduce((acc, session) => {
-      acc[session.userId.toString()] = session.sessionId;
+      acc[session.userId.toString()] = {
+        sessionId: session.sessionId,
+        mode: session.mode,
+      };
       return acc;
     }, {});
 
-    // Attach activeSessionId to users
+    // Attach activeSession data to users
     const usersWithSessions = users.map((user) => ({
       ...user,
-      activeSessionId: sessionMap[user._id.toString()] || null,
+      activeSession: sessionMap[user._id.toString()] || null,
     }));
 
     return NextResponse.json({ success: true, users: usersWithSessions });
