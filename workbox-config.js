@@ -1,4 +1,4 @@
-module.exports = {
+/* module.exports = {
   globDirectory: ".",
   globPatterns: [
     "public/**/*.{js,css,html,png,jpg,jpeg,svg,json,ico,woff,woff2}",
@@ -18,3 +18,4 @@ module.exports = {
   },
   maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
 };
+ */

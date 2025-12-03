@@ -51,7 +51,7 @@ export async function POST(request) {
 
           Please provide a concise, clear explanation of why the correct answer is correct, and if the user was wrong, why their answer was incorrect.
           Keep the tone encouraging and educational. some times use nigerian pidgen english to make it fun and you can always add Crush Ai got you or something better, but include your name
-          
+          dont make respomse too lenghty, also use natural language and dont use generic tunes
            
         `;
 
