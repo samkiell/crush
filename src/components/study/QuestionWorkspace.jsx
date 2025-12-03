@@ -576,7 +576,10 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                                         <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 mt-1">
                                                             <Bot className="w-4 h-4 text-secondary" />
                                                         </div>
-                                                        <div className="bg-base-200/50 rounded-2xl rounded-tl-none p-4 text-base-content/80">
+                                                        <div className="flex-1 bg-base-200/50 rounded-2xl rounded-tl-none p-4 text-base-content/80">
+                                                            <div className="flex justify-end mb-2">
+                                                                <AudioReader text={aiExplanation} />
+                                                            </div>
                                                             <ReactMarkdown>{aiExplanation}</ReactMarkdown>
                                                         </div>
                                                     </div>

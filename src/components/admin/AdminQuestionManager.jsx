@@ -44,7 +44,7 @@ export default function AdminQuestionManager() {
         search,
         ...filters
       });
-      const res = await fetch(`/api/admin/questions?${params}`);
+      const res = await fetch(`/api/admin/questions/manage?${params}`);
       const data = await res.json();
       setQuestions(data.questions);
       setPagination(data.pagination);
@@ -74,7 +74,7 @@ export default function AdminQuestionManager() {
     if (!confirm(`Delete ${selectedIds.size} questions?`)) return;
     
     try {
-      const res = await fetch('/api/admin/questions', {
+      const res = await fetch('/api/admin/questions/manage', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: Array.from(selectedIds) })
@@ -91,7 +91,7 @@ export default function AdminQuestionManager() {
   const handleSave = async (data) => {
     try {
       const method = data._id ? 'PUT' : 'POST';
-      const url = data._id ? `/api/admin/questions/${data._id}` : '/api/admin/questions';
+      const url = data._id ? `/api/admin/questions/manage/${data._id}` : '/api/admin/questions/manage';
       
       // If POST (create), we might need a different endpoint or handle it in the main route
       // For now let's assume PUT for edit. For create we can use the import route or add POST to main route.
@@ -117,7 +117,7 @@ export default function AdminQuestionManager() {
 
   const handleDeleteSingle = async (id) => {
       try {
-          const res = await fetch(`/api/admin/questions/${id}`, { method: 'DELETE' });
+          const res = await fetch(`/api/admin/questions/manage/${id}`, { method: 'DELETE' });
           if (!res.ok) throw new Error('Failed');
           toast.success('Deleted');
           setIsDrawerOpen(false);
@@ -138,7 +138,7 @@ export default function AdminQuestionManager() {
               // Check if it's array or object wrapper
               const questions = Array.isArray(json) ? json : json.questions;
               
-              const res = await fetch('/api/admin/questions/import', {
+              const res = await fetch('/api/admin/questions/manage/import', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ questions, replace: false })

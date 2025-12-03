@@ -73,7 +73,7 @@ export default function ManageQuestionsPage() {
         }
 
         try {
-            const res = await fetch(`/api/admin/questions/${id}`, {
+            const res = await fetch(`/api/admin/questions/manage/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${adminKey}` }
             });
@@ -110,7 +110,7 @@ export default function ManageQuestionsPage() {
         }
 
         try {
-            const res = await fetch(`/api/admin/questions/${editingId}`, {
+            const res = await fetch(`/api/admin/questions/manage/${editingId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

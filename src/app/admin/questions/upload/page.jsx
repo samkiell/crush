@@ -57,7 +57,7 @@ export default function AdminUploadPage() {
                 questions: questionsArray,
             };
 
-            const response = await fetch('/api/admin/questions/upload', {
+            const response = await fetch('/api/admin/questions/manage/upload', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -59,7 +59,7 @@ export default function BottomNav() {
         },
         {
             label: 'Upload',
-            href: '/admin/questions',
+            href: '/admin/questions/manage',
             icon: Upload,
         },
         {
