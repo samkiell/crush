@@ -57,26 +57,26 @@ export default function AdminReportsPage() {
   return (
     <AdminLayout>
       <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Flag className="text-error" /> Reports & Issues
           </h1>
           
-          <div className="join">
+          <div className="join w-full md:w-auto">
             <button 
-              className={`join-item btn btn-sm ${filter === 'all' ? 'btn-active' : ''}`}
+              className={`join-item btn btn-sm flex-1 md:flex-none ${filter === 'all' ? 'btn-active' : ''}`}
               onClick={() => setFilter('all')}
             >
               All
             </button>
             <button 
-              className={`join-item btn btn-sm ${filter === 'pending' ? 'btn-active' : ''}`}
+              className={`join-item btn btn-sm flex-1 md:flex-none ${filter === 'pending' ? 'btn-active' : ''}`}
               onClick={() => setFilter('pending')}
             >
               Pending
             </button>
             <button 
-              className={`join-item btn btn-sm ${filter === 'resolved' ? 'btn-active' : ''}`}
+              className={`join-item btn btn-sm flex-1 md:flex-none ${filter === 'resolved' ? 'btn-active' : ''}`}
               onClick={() => setFilter('resolved')}
             >
               Resolved
