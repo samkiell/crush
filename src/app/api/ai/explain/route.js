@@ -7,15 +7,24 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const {
+      question,
       questionText,
       options,
       correctAnswer,
+      correctOption,
       sessionId,
       qIndex,
+      questionIndex,
       userAnswer,
+      selectedAnswer,
     } = body;
 
-    if (!questionText || !options || !correctAnswer) {
+    // Normalize inputs
+    const qText = questionText || question;
+    const cAnswer = correctAnswer || correctOption;
+    const uAnswer = userAnswer || selectedAnswer;
+
+    if (!qText || !options || !cAnswer) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -29,14 +38,14 @@ export async function POST(request) {
     if (apiKey) {
       try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const prompt = `
           You are an expert tutor.
-          Question: "${questionText}"
+          Question: "${qText}"
           Options: ${JSON.stringify(options)}
-          Correct Answer: "${correctAnswer}"
-          User Answer: "${userAnswer || "None"}"
+          Correct Answer: "${cAnswer}"
+          User Answer: "${uAnswer || "None"}"
 
           Please provide a concise, clear explanation of why the correct answer is correct, and if the user was wrong, why their answer was incorrect.
           Keep the tone encouraging and educational.
