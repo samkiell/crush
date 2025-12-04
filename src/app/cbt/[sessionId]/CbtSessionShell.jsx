@@ -273,7 +273,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                   <div className="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-warning/10">
                       <AlertTriangle size={32} className="text-warning" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-base-content">Submit Session?</h3>
+                  <h3 className="text-xl text-white font-bold mb-2 text-base-content">Submit Session?</h3>
                   <p className="text-base-content/70 mb-8 leading-relaxed">
                       Are you sure you want to submit? You cannot modify your answers after submission.
                   </p>
