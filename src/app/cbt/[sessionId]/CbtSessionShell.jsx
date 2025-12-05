@@ -26,11 +26,11 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
     next,
     prev,
     toggleBookmark,
-    jumpTo,
+    jumpTo: jumpToQuestion,
     bookmarks
   } = useCbtSession({ sessionId, endTime: null, initialQuestions: null }); // Pass actual props if available
 
-  console.log('CbtSessionShell hook values:', { jumpTo: !!jumpTo, status });
+  console.log('CbtSessionShell hook values:', { jumpTo: !!jumpToQuestion, status });
 
 
   const [showCal, setShowCal] = useState(false);
@@ -254,7 +254,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                       return acc;
                   }, {})} 
                   bookmarks={new Set(questions.map((q, i) => bookmarks.has(q.qid) ? i : -1).filter(i => i !== -1))}
-                  onJump={(i) => { jumpTo(i); setShowNav(false); }}
+                  onJump={(i) => { jumpToQuestion(i); setShowNav(false); }}
                   />
               </div>
 
