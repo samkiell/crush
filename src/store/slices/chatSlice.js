@@ -101,26 +101,17 @@ export const sendMessage = createAsyncThunk(
   async (messageData, { rejectWithValue }) => {
     try {
       console.log("[Frontend] Sending message:", messageData);
-      const response = await fetch("/api/chat/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(messageData),
-        credentials: "include",
-      });
+      const response = await api.post("/chat/messages", messageData);
 
-      const data = await response.json();
-      console.log("[Frontend] Send message response:", data);
-
-      if (!response.ok) {
-        throw new Error(data.message || data.error || "Failed to send message");
-      }
-
-      return data.data;
+      console.log("[Frontend] Send message response:", response.data);
+      return response.data.data;
     } catch (error) {
       console.error("[Frontend] Send message error:", error);
-      return rejectWithValue(error.message || "Failed to send message");
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to send message"
+      );
     }
   }
 );

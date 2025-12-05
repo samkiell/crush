@@ -7,12 +7,23 @@ import jwt from "jsonwebtoken";
 
 // Helper to verify JWT
 const verifyToken = (request) => {
+  let token;
+
+  // Check Authorization header
   const authHeader = request.headers.get("authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return null;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
+  }
+  // Check cookies
+  else {
+    const cookie = request.cookies.get("auth_token");
+    if (cookie) {
+      token = cookie.value;
+    }
   }
 
-  const token = authHeader.split(" ")[1];
+  if (!token) return null;
+
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
