@@ -1,81 +1,87 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '@/services/api';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "@/services/api";
 
 // Async thunks
 export const fetchChatRooms = createAsyncThunk(
-  'chat/fetchRooms',
+  "chat/fetchRooms",
   async ({ type, subject, userId } = {}, { rejectWithValue }) => {
     try {
       const params = new URLSearchParams();
-      if (type) params.append('type', type);
-      if (subject) params.append('subject', subject);
-      if (userId) params.append('userId', userId);
-      
+      if (type) params.append("type", type);
+      if (subject) params.append("subject", subject);
+      if (userId) params.append("userId", userId);
+
       const response = await api.get(`/chat/rooms?${params}`);
       return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to fetch rooms');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to fetch rooms"
+      );
     }
   }
 );
 
 export const createChatRoom = createAsyncThunk(
-  'chat/createRoom',
+  "chat/createRoom",
   async (roomData, { rejectWithValue }) => {
     try {
-      const response = await api.post('/chat/rooms', roomData);
+      const response = await api.post("/chat/rooms", roomData);
       return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to create room');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to create room"
+      );
     }
   }
 );
 
 export const joinChatRoom = createAsyncThunk(
-  'chat/joinRoom',
+  "chat/joinRoom",
   async (roomId, { rejectWithValue }) => {
     try {
       // Using fetch with credentials: 'include' as requested to ensure cookies are sent
       const response = await fetch(`/api/chat/rooms/${roomId}/join`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || 'Failed to join room');
+        throw new Error(data.message || data.error || "Failed to join room");
       }
 
       return data.data;
     } catch (error) {
-      return rejectWithValue(error.message || 'Failed to join room');
+      return rejectWithValue(error.message || "Failed to join room");
     }
   }
 );
 
 export const leaveChatRoom = createAsyncThunk(
-  'chat/leaveRoom',
+  "chat/leaveRoom",
   async (roomId, { rejectWithValue }) => {
     try {
       const response = await api.post(`/chat/rooms/${roomId}/leave`);
       return { roomId, message: response.data.message };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to leave room');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to leave room"
+      );
     }
   }
 );
 
 export const fetchMessages = createAsyncThunk(
-  'chat/fetchMessages',
+  "chat/fetchMessages",
   async ({ roomId, before, limit = 50 }, { rejectWithValue }) => {
     try {
       const params = new URLSearchParams({ roomId, limit: limit.toString() });
-      if (before) params.append('before', before);
-      
+      if (before) params.append("before", before);
+
       const response = await api.get(`/chat/messages?${params}`);
       return {
         roomId,
@@ -83,76 +89,88 @@ export const fetchMessages = createAsyncThunk(
         hasMore: response.data.hasMore,
       };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to fetch messages');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to fetch messages"
+      );
     }
   }
 );
 
 export const sendMessage = createAsyncThunk(
-  'chat/sendMessage',
+  "chat/sendMessage",
   async (messageData, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/chat/messages', {
-        method: 'POST',
+      const response = await fetch("/api/chat/messages", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(messageData),
-        credentials: 'include',
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || 'Failed to send message');
+        throw new Error(data.message || data.error || "Failed to send message");
       }
 
       return data.data;
     } catch (error) {
-      return rejectWithValue(error.message || 'Failed to send message');
+      return rejectWithValue(error.message || "Failed to send message");
     }
   }
 );
 
 export const editMessage = createAsyncThunk(
-  'chat/editMessage',
+  "chat/editMessage",
   async ({ messageId, content }, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`/chat/messages/${messageId}`, { content });
+      const response = await api.patch(`/chat/messages/${messageId}`, {
+        content,
+      });
       return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to edit message');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to edit message"
+      );
     }
   }
 );
 
 export const deleteMessage = createAsyncThunk(
-  'chat/deleteMessage',
+  "chat/deleteMessage",
   async (messageId, { rejectWithValue }) => {
     try {
       await api.delete(`/chat/messages/${messageId}`);
       return messageId;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to delete message');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to delete message"
+      );
     }
   }
 );
 
 export const reactToMessage = createAsyncThunk(
-  'chat/reactToMessage',
+  "chat/reactToMessage",
   async ({ messageId, emoji }, { rejectWithValue }) => {
     try {
-      const response = await api.post(`/chat/messages/${messageId}/react`, { emoji });
+      const response = await api.post(`/chat/messages/${messageId}/react`, {
+        emoji,
+      });
       return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to add reaction');
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to add reaction"
+      );
     }
   }
 );
 
 // Slice
 const chatSlice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState: {
     rooms: [],
     activeRoom: null,
@@ -180,19 +198,19 @@ const chatSlice = createSlice({
     receiveMessage: (state, action) => {
       const message = action.payload;
       const roomId = message.room;
-      
+
       if (!state.messages[roomId]) {
         state.messages[roomId] = [];
       }
-      
+
       // Avoid duplicates
-      const exists = state.messages[roomId].some(m => m._id === message._id);
+      const exists = state.messages[roomId].some((m) => m._id === message._id);
       if (!exists) {
         state.messages[roomId].push(message);
       }
-      
+
       // Update room's last message
-      const room = state.rooms.find(r => r._id === roomId);
+      const room = state.rooms.find((r) => r._id === roomId);
       if (room) {
         room.lastMessage = {
           content: message.content,
@@ -204,9 +222,11 @@ const chatSlice = createSlice({
     updateMessageInState: (state, action) => {
       const updatedMessage = action.payload;
       const roomId = updatedMessage.room;
-      
+
       if (state.messages[roomId]) {
-        const index = state.messages[roomId].findIndex(m => m._id === updatedMessage._id);
+        const index = state.messages[roomId].findIndex(
+          (m) => m._id === updatedMessage._id
+        );
         if (index !== -1) {
           state.messages[roomId][index] = updatedMessage;
         }
@@ -217,18 +237,22 @@ const chatSlice = createSlice({
     },
     setTypingUser: (state, action) => {
       const { roomId, userId, username, isTyping } = action.payload;
-      
+
       if (!state.typingUsers[roomId]) {
         state.typingUsers[roomId] = [];
       }
-      
+
       if (isTyping) {
-        const exists = state.typingUsers[roomId].some(u => u.userId === userId);
+        const exists = state.typingUsers[roomId].some(
+          (u) => u.userId === userId
+        );
         if (!exists) {
           state.typingUsers[roomId].push({ userId, username });
         }
       } else {
-        state.typingUsers[roomId] = state.typingUsers[roomId].filter(u => u.userId !== userId);
+        state.typingUsers[roomId] = state.typingUsers[roomId].filter(
+          (u) => u.userId !== userId
+        );
       }
     },
     clearMessages: (state, action) => {
@@ -255,7 +279,7 @@ const chatSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Create room
       .addCase(createChatRoom.pending, (state) => {
         state.loading = true;
@@ -269,23 +293,27 @@ const chatSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Join room
       .addCase(joinChatRoom.fulfilled, (state, action) => {
-        const index = state.rooms.findIndex(r => r._id === action.payload._id);
+        const index = state.rooms.findIndex(
+          (r) => r._id === action.payload._id
+        );
         if (index !== -1) {
           state.rooms[index] = action.payload;
         }
       })
-      
+
       // Leave room
       .addCase(leaveChatRoom.fulfilled, (state, action) => {
-        state.rooms = state.rooms.filter(r => r._id !== action.payload.roomId);
+        state.rooms = state.rooms.filter(
+          (r) => r._id !== action.payload.roomId
+        );
         if (state.activeRoom?._id === action.payload.roomId) {
           state.activeRoom = null;
         }
       })
-      
+
       // Fetch messages
       .addCase(fetchMessages.pending, (state) => {
         state.loading = true;
@@ -294,71 +322,88 @@ const chatSlice = createSlice({
       .addCase(fetchMessages.fulfilled, (state, action) => {
         state.loading = false;
         const { roomId, messages, hasMore } = action.payload;
-        
+
         if (state.messages[roomId]) {
           // Prepend older messages (pagination)
           state.messages[roomId] = [...messages, ...state.messages[roomId]];
         } else {
           state.messages[roomId] = messages;
         }
-        
+
         state.hasMore[roomId] = hasMore;
       })
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      
+
+      // Send message
       // Send message
       .addCase(sendMessage.fulfilled, (state, action) => {
         const message = action.payload;
         const roomId = message.room;
-        
+        const tempId = action.meta.arg.tempId;
+
         if (!state.messages[roomId]) {
           state.messages[roomId] = [];
         }
-        
+
+        // Remove optimistic message if it exists
+        if (tempId) {
+          state.messages[roomId] = state.messages[roomId].filter(
+            (m) => m._id !== tempId
+          );
+        }
+
         // Check if message already exists (from socket)
-        const exists = state.messages[roomId].some(m => m._id === message._id);
+        const exists = state.messages[roomId].some(
+          (m) => m._id === message._id
+        );
         if (!exists) {
           state.messages[roomId].push(message);
         }
       })
-      
+
       // Edit message
       .addCase(editMessage.fulfilled, (state, action) => {
         const updatedMessage = action.payload;
         const roomId = updatedMessage.room;
-        
+
         if (state.messages[roomId]) {
-          const index = state.messages[roomId].findIndex(m => m._id === updatedMessage._id);
+          const index = state.messages[roomId].findIndex(
+            (m) => m._id === updatedMessage._id
+          );
           if (index !== -1) {
             state.messages[roomId][index] = updatedMessage;
           }
         }
       })
-      
+
       // Delete message
       .addCase(deleteMessage.fulfilled, (state, action) => {
         const messageId = action.payload;
-        
+
         // Find and update the deleted message in all rooms
-        Object.keys(state.messages).forEach(roomId => {
-          const index = state.messages[roomId].findIndex(m => m._id === messageId);
+        Object.keys(state.messages).forEach((roomId) => {
+          const index = state.messages[roomId].findIndex(
+            (m) => m._id === messageId
+          );
           if (index !== -1) {
             state.messages[roomId][index].isDeleted = true;
-            state.messages[roomId][index].content = '[Message deleted]';
+            state.messages[roomId][index].content = "[Message deleted]";
           }
         });
       })
-      
+
       // React to message
       .addCase(reactToMessage.fulfilled, (state, action) => {
         const updatedMessage = action.payload;
         const roomId = updatedMessage.room;
-        
+
         if (state.messages[roomId]) {
-          const index = state.messages[roomId].findIndex(m => m._id === updatedMessage._id);
+          const index = state.messages[roomId].findIndex(
+            (m) => m._id === updatedMessage._id
+          );
           if (index !== -1) {
             state.messages[roomId][index] = updatedMessage;
           }

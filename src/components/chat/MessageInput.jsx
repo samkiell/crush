@@ -6,11 +6,11 @@ import { Send, Image as ImageIcon, Paperclip, X, Smile } from 'lucide-react';
 import { sendMessage, setTypingUser } from '@/store/slices/chatSlice';
 import { useSocket } from '@/hooks/useSocket';
 
-export default function MessageInput({ roomId, onSendMessage }) {
+export default function MessageInput({ roomId, onSendMessage, socket }) {
     const [content, setContent] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const typingTimeoutRef = useRef(null);
-    const socket = useSocket();
+    // const socket = useSocket(); // Removed to avoid duplicate connection
     const { user } = useSelector((state) => state.auth);
     const textareaRef = useRef(null);
 
@@ -19,7 +19,7 @@ export default function MessageInput({ roomId, onSendMessage }) {
 
         if (!isTyping) {
             setIsTyping(true);
-            socket.emit('typing_start', { roomId, name: user.name });
+            socket.emit('typing:start', { roomId, user: { name: user.name, userId: user.id || user._id } });
         }
 
         if (typingTimeoutRef.current) {
@@ -28,7 +28,7 @@ export default function MessageInput({ roomId, onSendMessage }) {
 
         typingTimeoutRef.current = setTimeout(() => {
             setIsTyping(false);
-            socket.emit('typing_stop', { roomId, name: user.name });
+            socket.emit('typing:end', { roomId, user: { name: user.name, userId: user.id || user._id } });
         }, 2000);
     };
 
@@ -51,7 +51,7 @@ export default function MessageInput({ roomId, onSendMessage }) {
         // Stop typing indicator immediately
         if (isTyping) {
             setIsTyping(false);
-            socket?.emit('typing_stop', { roomId, name: user.name });
+            socket?.emit('typing:end', { roomId, user: { name: user.name, userId: user.id || user._id } });
             if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         }
     };

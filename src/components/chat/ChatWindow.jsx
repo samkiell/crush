@@ -25,7 +25,7 @@ export default function ChatWindow({ room, onBack }) {
     const dropdownRef = useRef(null);
 
     // Initialize socket connection
-    useSocket();
+    const socket = useSocket();
 
     const roomMessages = messages[room._id] || [];
     const roomTypingUsers = typingUsers[room._id] || [];
@@ -39,6 +39,17 @@ export default function ChatWindow({ room, onBack }) {
             dispatch(fetchMessages({ roomId: room._id }));
         }
     }, [room._id, isMember, dispatch]);
+
+    // Handle room join/leave events
+    useEffect(() => {
+        if (socket && room._id && user) {
+            socket.emit('room:join', { roomId: room._id, userId: user.id || user._id });
+            
+            return () => {
+                socket.emit('room:leave', { roomId: room._id });
+            };
+        }
+    }, [socket, room._id, user]);
 
     // Handle outside click for dropdown
     useEffect(() => {
@@ -55,14 +66,28 @@ export default function ChatWindow({ room, onBack }) {
     }, []);
 
     const handleSendMessage = async (content) => {
+        const tempId = Date.now().toString();
+        const optimisticMessage = {
+            _id: tempId,
+            content,
+            sender: user,
+            room: room._id,
+            createdAt: new Date().toISOString(),
+            isOptimistic: true,
+        };
+
         try {
+            dispatch(addMessageOptimistic({ roomId: room._id, message: optimisticMessage }));
+            
             await dispatch(sendMessage({
                 roomId: room._id,
                 content,
                 type: 'text',
+                tempId, // Pass tempId for reconciliation
             })).unwrap();
         } catch (error) {
             toast.error('Failed to send message');
+            // Optionally remove optimistic message on error
         }
     };
 
@@ -177,6 +202,8 @@ export default function ChatWindow({ room, onBack }) {
             <MessageInput
                 roomId={room._id}
                 onSendMessage={handleSendMessage}
+                socket={socket}
+                user={user}
             />
         </div>
     );

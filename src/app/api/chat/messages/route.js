@@ -1,17 +1,18 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import ChatMessage from '@/models/ChatMessage';
-import ChatRoom from '@/models/ChatRoom';
-import jwt from 'jsonwebtoken';
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import ChatMessage from "@/models/ChatMessage";
+import ChatRoom from "@/models/ChatRoom";
+import User from "@/models/User"; // Import User model
+import jwt from "jsonwebtoken";
 
 // Helper to verify JWT
 const verifyToken = (request) => {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return null;
   }
-  
-  const token = authHeader.split(' ')[1];
+
+  const token = authHeader.split(" ")[1];
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
@@ -23,114 +24,117 @@ const verifyToken = (request) => {
 export async function GET(request) {
   try {
     await dbConnect();
-    
+
     const { searchParams } = new URL(request.url);
-    const roomId = searchParams.get('roomId');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const before = searchParams.get('before'); // For pagination
-    
+    const roomId = searchParams.get("roomId");
+    const limit = parseInt(searchParams.get("limit") || "50");
+    const before = searchParams.get("before"); // For pagination
+
     if (!roomId) {
       return NextResponse.json(
-        { success: false, error: 'Room ID is required' },
+        { success: false, error: "Room ID is required" },
         { status: 400 }
       );
     }
-    
+
     let query = {
       room: roomId,
       isDeleted: false,
     };
-    
+
     if (before) {
       query.createdAt = { $lt: new Date(before) };
     }
-    
+
     const messages = await ChatMessage.find(query)
-      .populate('sender', 'name avatar')
-      .populate('replyTo', 'content sender')
+      .populate("sender", "name avatar")
+      .populate("replyTo", "content sender")
       .sort({ createdAt: -1 })
       .limit(limit)
       .lean();
-    
+
     // Reverse to show oldest first
     messages.reverse();
-    
+
     return NextResponse.json({
       success: true,
       data: messages,
       hasMore: messages.length === limit,
     });
   } catch (error) {
-    console.error('Error fetching messages:', error);
+    console.error("Error fetching messages:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch messages' },
+      { success: false, error: "Failed to fetch messages" },
       { status: 500 }
     );
   }
 }
 
 // POST - Send a new message
-// POST - Send a new message
-// POST - Send a new message
 export async function POST(request) {
   try {
     await dbConnect();
-    
+
     // Verify authentication
-    let user;
-    try {
-      user = await protect(request);
-    } catch (authError) {
-      console.error('[MESSAGE_SEND] Auth failed:', authError.message);
-      return Response.json(
-        { success: false, message: 'Unauthorized: ' + authError.message },
+    const decoded = verifyToken(request);
+    if (!decoded) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
         { status: 401 }
       );
     }
-    
-    const body = await request.json();
-    const { roomId, content, type, mediaUrl, replyTo } = body;
-    
-    // Validate required fields
-    if (!roomId || !content) {
-      return Response.json(
-        { success: false, message: 'Room ID and content are required' },
-        { status: 400 }
-      );
-    }
-    
-    // Check if user is a member of the room
-    const room = await ChatRoom.findById(roomId);
-    
-    if (!room) {
-      return Response.json(
-        { success: false, message: 'Chat room not found' },
+
+    const user = await User.findById(decoded.id).select("name avatar");
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User not found" },
         { status: 404 }
       );
     }
-    
+
+    const body = await request.json();
+    const { roomId, content, type, mediaUrl, replyTo } = body;
+
+    // Validate required fields
+    if (!roomId || !content) {
+      return NextResponse.json(
+        { success: false, message: "Room ID and content are required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if user is a member of the room
+    const room = await ChatRoom.findById(roomId);
+
+    if (!room) {
+      return NextResponse.json(
+        { success: false, message: "Chat room not found" },
+        { status: 404 }
+      );
+    }
+
     // Defensive check for members
     const isMember = room.members
-      .filter(m => m)
-      .some(memberId => memberId.toString() === user._id.toString());
-    
+      .filter((m) => m)
+      .some((memberId) => memberId.toString() === user._id.toString());
+
     if (!isMember) {
-      return Response.json(
-        { success: false, message: 'You must be a member to send messages' },
+      return NextResponse.json(
+        { success: false, message: "You must be a member to send messages" },
         { status: 403 }
       );
     }
-    
+
     // Create message
     const newMessage = await ChatMessage.create({
       room: roomId,
       sender: user._id,
       content,
-      type: type || 'text',
+      type: type || "text",
       mediaUrl,
       replyTo,
     });
-    
+
     // Update room's last message
     room.lastMessage = {
       content,
@@ -138,27 +142,30 @@ export async function POST(request) {
       timestamp: new Date(),
     };
     await room.save();
-    
+
     const populatedMessage = await ChatMessage.findById(newMessage._id)
-      .populate('sender', 'name avatar')
-      .populate('replyTo', 'content sender')
+      .populate("sender", "name avatar")
+      .populate("replyTo", "content sender")
       .lean();
-      
+
     // Emit socket event
     if (global.io) {
-      global.io.to(roomId).emit('message:new', populatedMessage);
+      global.io.to(roomId).emit("message:new", populatedMessage);
     } else {
-      console.warn('Socket.io not initialized, message not emitted via socket');
+      console.warn("Socket.io not initialized, message not emitted via socket");
     }
-    
-    return Response.json({
-      success: true,
-      data: populatedMessage,
-    }, { status: 201 });
+
+    return NextResponse.json(
+      {
+        success: true,
+        data: populatedMessage,
+      },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error('Error sending message:', error);
-    return Response.json(
-      { success: false, message: 'Failed to send message' },
+    console.error("Error sending message:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to send message" },
       { status: 500 }
     );
   }
