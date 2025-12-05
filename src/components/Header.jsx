@@ -81,6 +81,7 @@ const Header = () => {
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
     { name: 'CBT', href: '/cbt', icon: Monitor },
+    { name: 'Help', href: '/help', icon: HelpCircle },
   ];
 
   const adminLinks = [
@@ -91,7 +92,18 @@ const Header = () => {
     { name: 'Routes', href: '/routes', icon: Map },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
+    { name: 'Help', href: '/help', icon: HelpCircle },
   ];
+
+  const guestLinks = [
+    { name: 'Community', href: '/community', icon: Users },
+    { name: 'Contact Us', href: '/contact', icon: Phone },
+    { name: 'Help Center', href: '/help', icon: HelpCircle },
+  ];
+
+  const NavItem = ({ link, mobile = false }) => {
+    const Icon = link.icon;
+    const isActive = pathname.startsWith(link.href);
 
     if (mobile) {
       return (
