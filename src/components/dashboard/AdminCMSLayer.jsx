@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database, Activity, TrendingUp, Flag } from 'lucide-react';
+import { Upload, Users, BarChart3, Settings, FileText, ShieldAlert, Database, Activity, TrendingUp, Flag, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 import { stagger, variants } from '@/lib/motionConfig';
 import api from '@/services/api';
@@ -34,6 +34,15 @@ export default function AdminCMSLayer() {
     ];
 
     const adminActions = [
+        {
+            title: 'Announcements',
+            description: 'Broadcast messages to all users',
+            icon: Megaphone,
+            href: '/admin/announcements',
+            color: 'text-indigo-600',
+            bg: 'bg-indigo-50',
+            border: 'border-indigo-100',
+        },
         {
             title: 'Upload Questions',
             description: 'Bulk upload exam questions via JSON',
