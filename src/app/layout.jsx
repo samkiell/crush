@@ -5,6 +5,7 @@ import ThemeWrapper from "./theme-wrapper"; // NEW client wrapper
 import ToastProvider from "../components/ToastProvider";
 import PWAInstallPrompt from "../components/PWAInstallPrompt";
 import OfflineIndicator from "../components/OfflineIndicator";
+import HelpShakeListener from "../components/HelpShakeListener.client";
 import Header from "../components/Header";
 import AuthInitializer from "../components/AuthInitializer";
 import FooterWrapper from "../components/layout/FooterWrapper";
@@ -73,6 +74,7 @@ export default function RootLayout({ children }) {
             </main>
             <FooterWrapper />
             <BottomNav />
+            <HelpShakeListener />
             <ToastProvider />
             <PWAInstallPrompt />
             <RegisterSW />
