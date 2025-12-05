@@ -3,15 +3,19 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle2, XCircle, Bot, BookOpen, Volume2, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, XCircle, Bot, BookOpen, Volume2, ArrowLeft, StickyNote } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
+import NotesSidebar from '@/components/notes/NotesSidebar';
 
 export default function CbtReview({ sessionId }) {
   const router = useRouter();
   const { user } = useSelector((state) => state.auth);
   // Admin or Premium gets access
   const isPremium = user?.isPremium || user?.plan === 'premium' || user?.role === 'admin';
+
+
+  const [showNotes, setShowNotes] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -86,9 +90,18 @@ export default function CbtReview({ sessionId }) {
           <div className="font-medium">
             Review {currentIndex + 1} / {questions.length}
           </div>
-          <button className="btn btn-ghost btn-circle btn-sm">
-            <Volume2 className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+                onClick={() => setShowNotes(!showNotes)}
+                className={`btn btn-ghost btn-circle btn-sm ${showNotes ? 'text-primary bg-primary/10' : ''}`}
+                title="Notes"
+            >
+                <StickyNote className="w-5 h-5" />
+            </button>
+            <button className="btn btn-ghost btn-circle btn-sm">
+                <Volume2 className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -231,6 +244,22 @@ export default function CbtReview({ sessionId }) {
           </button>
         </div>
       </footer>
+
+      {/* Notes Sidebar Drawer */}
+      {showNotes && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setShowNotes(false)}>
+            <div 
+            className="absolute right-0 top-0 bottom-0 w-80 shadow-2xl z-50"
+            onClick={e => e.stopPropagation()}
+            >
+            <NotesSidebar 
+                questionId={currentQuestion?.qid || currentQuestion?._id} // Assuming qid or _id is available
+                subject={currentQuestion?.subject || "General"} // Assuming subject is available
+                onClose={() => setShowNotes(false)} 
+            />
+            </div>
+        </div>
+      )}
     </div>
   );
 }

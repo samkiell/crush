@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, FileQuestion, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload, Sparkles, Flag, Bookmark, Map } from 'lucide-react';
 import { useTheme } from '../utils/theme';
+import "@/lib/syncEngine"; // Initialize sync engine
 import { useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
 import { useState, useEffect, useRef } from 'react';

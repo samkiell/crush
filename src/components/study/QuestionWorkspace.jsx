@@ -25,8 +25,9 @@ import FlagReportModal from '@/components/FlagReportModal.client';
 import { useSwipe } from '@/lib/swipeHandler';
 import ReactMarkdown from 'react-markdown';
 import AudioReader from '@/components/AudioReader.client';
-import { Star } from 'lucide-react';
+import { Star, StickyNote } from 'lucide-react';
 import { saveBookmarkLocal, removeBookmarkLocal, getBookmarks } from '@/lib/idbClient';
+import NotesSidebar from '@/components/notes/NotesSidebar';
 
 const FREE_LIMIT = 3;
 
@@ -63,6 +64,7 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
     // Modals State
     const [showCal, setShowCal] = useState(false);
     const [showNav, setShowNav] = useState(false);
+    const [showNotes, setShowNotes] = useState(false);
     const [showFlag, setShowFlag] = useState(false);
     const [bookmarks, setBookmarks] = useState(new Set());
 
@@ -376,8 +378,16 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                             <button 
                                 onClick={() => toggleBookmark(currentQuestion.id)}
                                 className={`btn btn-circle btn-sm ${bookmarks.has(currentQuestion.id) ? 'btn-warning text-white' : 'btn-ghost text-base-content/30'}`}
+                                title="Bookmark"
                             >
                                 <Star size={18} className={bookmarks.has(currentQuestion.id) ? 'fill-current' : ''} />
+                            </button>
+                            <button 
+                                onClick={() => setShowNotes(!showNotes)}
+                                className="btn btn-circle btn-sm btn-ghost text-base-content/30 hover:text-primary"
+                                title="Notes"
+                            >
+                                <StickyNote size={18} />
                             </button>
                             <AudioReader 
                                 text={currentQuestion.text} 
@@ -697,6 +707,22 @@ export default function QuestionWorkspace({ sessionId, subjectName }) {
                                 Exit Session
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Notes Sidebar Drawer */}
+            {showNotes && (
+                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setShowNotes(false)}>
+                    <div 
+                        className="absolute right-0 top-0 bottom-0 w-80 shadow-2xl z-50"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <NotesSidebar 
+                            questionId={currentQuestion?.id} 
+                            subject={subjectName || sessionId.split('-')[0]} 
+                            onClose={() => setShowNotes(false)} 
+                        />
                     </div>
                 </div>
             )}

@@ -10,6 +10,8 @@ import { Calculator, Grid, Flag, Clock, ChevronLeft, ChevronRight, Menu, X, Aler
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import CBTIntegrityGuard from '@/components/cbt/CBTIntegrityGuard';
+import NotesSidebar from '@/components/notes/NotesSidebar';
+import { StickyNote } from 'lucide-react';
 
 export default function CbtSessionShell({ sessionId, subject, year }) {
   const {
@@ -33,6 +35,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
 
   const [showCal, setShowCal] = useState(false);
   const [showNav, setShowNav] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
   const [showFlag, setShowFlag] = useState(false);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -137,6 +140,7 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
                   isBookmarked={bookmarks.has(currentQuestion?.qid)}
                   onToggleBookmark={() => toggleBookmark(currentQuestion?.qid)}
                   showExplanation={status !== 'active'}
+                  onToggleNotes={() => setShowNotes(!showNotes)}
                 />
               )}
             </div>
@@ -298,6 +302,22 @@ export default function CbtSessionShell({ sessionId, subject, year }) {
         )}
 
         <OfflineSyncStatus isOnline={isOnline} />
+        
+        {/* Notes Sidebar Drawer */}
+        {showNotes && (
+          <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setShowNotes(false)}>
+             <div 
+                className="absolute right-0 top-0 bottom-0 w-80 shadow-2xl z-50"
+                onClick={e => e.stopPropagation()}
+             >
+                <NotesSidebar 
+                    questionId={currentQuestion?.qid} 
+                    subject={subject} 
+                    onClose={() => setShowNotes(false)} 
+                />
+             </div>
+          </div>
+        )}
       </div>
     </CBTIntegrityGuard>
   );
