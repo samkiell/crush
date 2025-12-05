@@ -51,7 +51,7 @@ export default function ChatPage() {
     };
 
     return (
-        <div className="fixed inset-0 top-[64px] bg-base-100 flex">
+        <div className="fixed top-[64px] left-0 right-0 h-[calc(100dvh-64px)] bg-base-100 flex">
             {/* Sidebar / List View */}
             <div
                 className={`
