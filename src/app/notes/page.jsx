@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getNotesLocal } from "@/lib/offlineCache";
 import { syncNotes } from "@/lib/syncEngine";
-import Header from "@/components/Header";
+
 import { StickyNote, Search, Filter, Trash2, Edit2, Plus } from "lucide-react";
 import NotesEditor from "@/components/notes/NotesEditor";
 import { saveNoteLocal, deleteNoteLocal, queueNoteSync } from "@/lib/offlineCache";
@@ -78,7 +78,7 @@ const NotesPage = () => {
 
   return (
     <div className="min-h-screen bg-base-100">
-      <Header />
+
       
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
@@ -128,8 +128,8 @@ const NotesPage = () => {
 
         {/* Editor Modal/Overlay */}
         {(isCreating || editingNote) && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-2xl h-[600px] bg-base-100 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+          <div className="fixed inset-0 z-50 flex items-center justify-center dark:bg-black/60 backdrop-blur-sm p-4">
+            <div className="w-full max-w-2xl h-[600px] bg-base-100 rounded-2xl shadow-2xl overflow-hidden flex flex-col" data-theme="light">
                <div className="p-4 border-b border-base-content/10 flex justify-between items-center">
                  <h3 className="font-bold text-lg">{editingNote ? "Edit Note" : "New Note"}</h3>
                  <div className="flex gap-2">
