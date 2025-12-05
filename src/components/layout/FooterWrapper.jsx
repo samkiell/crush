@@ -7,7 +7,7 @@ export default function FooterWrapper() {
     const pathname = usePathname();
 
     // Hide footer on chat pages to allow full-height layout
-    if (pathname?.startsWith('/chat')) {
+    if (pathname?.startsWith('/chat') || pathname === '/') {
         return null;
     }
 
