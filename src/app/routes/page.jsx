@@ -64,7 +64,7 @@ const ROUTE_GROUPS = [
     {
         title: 'Support & Legal',
         routes: [
-            { name: 'Help Center', path: '/help-center', icon: HelpCircle },
+            { name: 'Help Center', path: '/help', icon: HelpCircle },
             { name: 'Contact Us', path: '/contact', icon: Phone },
             { name: 'FAQ', path: '/faq', icon: FileQuestion },
             { name: 'Terms of Service', path: '/terms', icon: FileText },

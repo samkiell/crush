@@ -93,18 +93,6 @@ const Header = () => {
     { name: 'Community', href: '/community', icon: Users },
   ];
 
-  const navLinks = user?.role === 'admin' ? adminLinks : baseLinks;
-
-  const guestLinks = [
-    { name: 'Community', href: '/community', icon: Users },
-    { name: 'Contact Us', href: '/contact', icon: Phone },
-    { name: 'Help Center', href: '/help-center', icon: HelpCircle },
-  ];
-
-  const NavItem = ({ link, mobile = false }) => {
-    const Icon = link.icon;
-    const isActive = pathname.startsWith(link.href);
-
     if (mobile) {
       return (
         <Link
