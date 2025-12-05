@@ -143,6 +143,13 @@ export const getNoteByQuestionLocal = async (questionId) => {
   return index.getAll(questionId);
 };
 
+export const getNotesBySubjectLocal = async (subject) => {
+  const db = await initDB();
+  const tx = db.transaction(STORES.NOTES, "readonly");
+  const index = tx.store.index("subject");
+  return index.getAll(subject);
+};
+
 export const deleteNoteLocal = async (noteId) => {
   const db = await initDB();
   await db.delete(STORES.NOTES, noteId);
