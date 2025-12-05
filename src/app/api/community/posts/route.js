@@ -1,19 +1,19 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import CommunityPost from '@/lib/models/CommunityPost';
-import User from '@/lib/models/User';
-import jwt from 'jsonwebtoken';
-import { filterProfanity } from '@/utils/moderation';
-import { apiHandler } from '@/lib/apiHandler';
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import CommunityPost from "@/lib/models/CommunityPost";
+import User from "@/lib/models/User";
+import jwt from "jsonwebtoken";
+import { filterProfanity } from "@/utils/moderation";
+import { apiHandler } from "@/lib/apiHandler";
 
 // Helper to get user from token
 const getUserFromRequest = async (req) => {
-  let token = req.cookies.get('token')?.value;
+  let token = req.cookies.get("token")?.value;
 
   if (!token) {
-    const authHeader = req.headers.get('authorization');
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
+    const authHeader = req.headers.get("authorization");
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
     }
   }
 
@@ -28,12 +28,12 @@ const getUserFromRequest = async (req) => {
 
 export const GET = apiHandler(async (req) => {
   const { searchParams } = new URL(req.url);
-  const page = parseInt(searchParams.get('page')) || 1;
-  const limit = parseInt(searchParams.get('limit')) || 10;
-  const sort = searchParams.get('sort') || 'latest'; // latest, popular, unsolved
-  const category = searchParams.get('category');
-  const search = searchParams.get('search');
-  const tag = searchParams.get('tag'); // New: filter by tag
+  const page = parseInt(searchParams.get("page")) || 1;
+  const limit = parseInt(searchParams.get("limit")) || 10;
+  const sort = searchParams.get("sort") || "latest"; // latest, popular, unsolved
+  const category = searchParams.get("category");
+  const search = searchParams.get("search");
+  const tag = searchParams.get("tag"); // New: filter by tag
 
   const query = {};
   if (category) query.category = category;
@@ -43,8 +43,8 @@ export const GET = apiHandler(async (req) => {
   if (tag) {
     query.tags = tag; // Filter posts that include this tag
   }
-  
-  const user = searchParams.get('user');
+
+  const user = searchParams.get("user");
   if (user) {
     // Find user by username first to get ID
     const author = await User.findOne({ username: user });
@@ -61,8 +61,8 @@ export const GET = apiHandler(async (req) => {
   }
 
   let sortOption = { createdAt: -1 };
-  if (sort === 'popular') sortOption = { likes: -1 };
-  if (sort === 'unsolved') {
+  if (sort === "popular") sortOption = { likes: -1 };
+  if (sort === "unsolved") {
     query.isQuestion = true;
     query.isSolved = false;
   }
@@ -72,7 +72,7 @@ export const GET = apiHandler(async (req) => {
     .sort(sortOption)
     .skip((page - 1) * limit)
     .limit(limit)
-    .populate('author', 'name username avatar badges reputation');
+    .populate("author", "name username avatar badges reputation");
 
   const total = await CommunityPost.countDocuments(query);
 
@@ -93,7 +93,7 @@ export const POST = apiHandler(async (req) => {
   const user = await getUserFromRequest(req);
 
   if (!user) {
-    const error = new Error('Not authorized');
+    const error = new Error("Not authorized");
     error.statusCode = 401;
     throw error;
   }
@@ -102,7 +102,7 @@ export const POST = apiHandler(async (req) => {
   const { title, content, category, tags, isQuestion } = body;
 
   if (!title || !content || !category) {
-    const error = new Error('Please provide all required fields');
+    const error = new Error("Please provide all required fields");
     error.statusCode = 400;
     throw error;
   }
@@ -119,6 +119,33 @@ export const POST = apiHandler(async (req) => {
     isQuestion: isQuestion || false,
     author: user._id,
   });
+
+  // Create Global Notification for the new post
+  try {
+    const Notification = (await import("@/lib/models/Notification")).default;
+
+    const notification = await Notification.create({
+      recipient: null, // Global
+      type: "community_post",
+      title: `New Post in ${category}`,
+      message: `${user.username} posted: ${cleanTitle}`,
+      link: `/community/post/${post._id}`,
+      data: {
+        postId: post._id,
+        senderId: user._id,
+        senderName: user.username,
+        senderAvatar: user.avatar,
+      },
+    });
+
+    // Broadcast via Socket.io
+    if (global.io) {
+      global.io.emit("notification:new", notification);
+    }
+  } catch (notifError) {
+    console.error("Failed to create post notification:", notifError);
+    // Don't fail the request if notification fails
+  }
 
   return NextResponse.json({ success: true, data: post }, { status: 201 });
 });

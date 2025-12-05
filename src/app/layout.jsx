@@ -12,7 +12,7 @@ import FooterWrapper from "../components/layout/FooterWrapper";
 import BottomNav from "../components/layout/BottomNav";
 import RegisterSW from "./register-sw";
 import Loading from "./loading";
-import AnnouncementBar from "../components/AnnouncementBar";
+import NotificationToast from "../components/NotificationToast";
 import { Suspense } from "react";
 
 const inter = Inter({
@@ -67,7 +67,6 @@ export default function RootLayout({ children }) {
         <ThemeWrapper>
           <ReduxProvider>
             <AuthInitializer />
-            <AnnouncementBar />
             <Header />
             <main className="flex-1">
               <Suspense fallback={<Loading />}>
@@ -77,6 +76,7 @@ export default function RootLayout({ children }) {
             <FooterWrapper />
             <BottomNav />
             <HelpShakeListener />
+            <NotificationToast />
             <ToastProvider />
             <PWAInstallPrompt />
             <RegisterSW />

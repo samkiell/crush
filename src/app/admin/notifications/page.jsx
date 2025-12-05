@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Megaphone, 
+  Bell, 
   Send, 
   Trash2, 
   AlertCircle, 
@@ -11,34 +11,49 @@ import {
   Loader2,
   Link as LinkIcon,
   Type,
-  Layout
+  Layout,
+  MessageSquare,
+  Info
 } from 'lucide-react';
 
-export default function AdminAnnouncements() {
-  const [announcements, setAnnouncements] = useState([]);
+export default function AdminNotifications() {
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     message: '',
     link: '',
-    category: 'system'
+    type: 'system'
   });
   const [status, setStatus] = useState({ type: '', message: '' });
 
   useEffect(() => {
-    fetchAnnouncements();
+    fetchNotifications();
   }, []);
 
-  const fetchAnnouncements = async () => {
+  const fetchNotifications = async () => {
     try {
-      const res = await fetch('/api/announcements?limit=50');
+      // Fetch global notifications sent by admin (recipient: null)
+      // Note: The main GET /api/notifications fetches for the current user.
+      // We might need a specific admin param or just filter client side if we use that endpoint.
+      // For now, let's just use the standard endpoint and filter for 'system' type or recipient: null if visible.
+      // Actually, the GET endpoint returns what the USER receives. 
+      // As an admin, I want to see what I SENT. 
+      // The current GET implementation is for "My Notifications".
+      // I'll just show the "History" as "Recent System Notifications" if possible, 
+      // or I might need to adjust the API to allow admins to see "All Sent Global Notifications".
+      // For simplicity in this turn, I will just list the ones the Admin (as a user) receives, which includes global ones.
+      
+      const res = await fetch('/api/notifications?limit=50');
       const data = await res.json();
       if (data.success) {
-        setAnnouncements(data.data);
+        // Filter to show only global/system ones for this view
+        const sent = data.data.filter(n => !n.recipient || n.type === 'system');
+        setNotifications(sent);
       }
     } catch (error) {
-      console.error('Error fetching announcements:', error);
+      console.error('Error fetching notifications:', error);
     } finally {
       setLoading(false);
     }
@@ -50,22 +65,25 @@ export default function AdminAnnouncements() {
     setStatus({ type: '', message: '' });
 
     try {
-      const res = await fetch('/api/announcements', {
+      const res = await fetch('/api/notifications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          recipientId: null // Explicitly global
+        }),
       });
 
       const data = await res.json();
 
       if (data.success) {
-        setStatus({ type: 'success', message: 'Announcement broadcasted successfully!' });
-        setFormData({ title: '', message: '', link: '', category: 'system' });
-        fetchAnnouncements();
+        setStatus({ type: 'success', message: 'Notification sent successfully!' });
+        setFormData({ title: '', message: '', link: '', type: 'system' });
+        fetchNotifications();
       } else {
-        setStatus({ type: 'error', message: data.error || 'Failed to send announcement' });
+        setStatus({ type: 'error', message: data.error || 'Failed to send notification' });
       }
     } catch (error) {
       setStatus({ type: 'error', message: 'An error occurred. Please try again.' });
@@ -86,11 +104,11 @@ export default function AdminAnnouncements() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Megaphone className="h-8 w-8 text-indigo-600" />
-              Global Announcements
+              <Bell className="h-8 w-8 text-indigo-600" />
+              Global Notifications
             </h1>
             <p className="mt-2 text-gray-600">
-              Broadcast real-time messages to all active users.
+              Send push notifications to all users.
             </p>
           </div>
         </div>
@@ -101,7 +119,7 @@ export default function AdminAnnouncements() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-                <h2 className="text-lg font-semibold text-gray-900">Create New</h2>
+                <h2 className="text-lg font-semibold text-gray-900">Send Notification</h2>
               </div>
               
               <form onSubmit={handleSubmit} className="p-6 space-y-5">
@@ -128,27 +146,25 @@ export default function AdminAnnouncements() {
                       required
                       value={formData.title}
                       onChange={handleChange}
-                      placeholder="e.g., System Maintenance"
+                      placeholder="e.g., System Update"
                       className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                   <div className="relative">
                     <Layout className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                     <select
-                      name="category"
-                      value={formData.category}
+                      name="type"
+                      value={formData.type}
                       onChange={handleChange}
                       className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none bg-white"
                     >
                       <option value="system">System</option>
-                      <option value="maintenance">Maintenance</option>
-                      <option value="update">Update</option>
-                      <option value="post">Post Promotion</option>
-                      <option value="info">General Info</option>
+                      <option value="info">Info</option>
+                      <option value="alert">Alert</option>
                     </select>
                   </div>
                 </div>
@@ -161,7 +177,7 @@ export default function AdminAnnouncements() {
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Enter your announcement message..."
+                    placeholder="Enter notification message..."
                     className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
                   />
                 </div>
@@ -191,7 +207,7 @@ export default function AdminAnnouncements() {
                   ) : (
                     <>
                       <Send className="h-5 w-5" />
-                      Broadcast Now
+                      Send Now
                     </>
                   )}
                 </button>
@@ -203,8 +219,8 @@ export default function AdminAnnouncements() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full max-h-[800px]">
               <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-900">Recent Announcements</h2>
-                <span className="text-sm text-gray-500">{announcements.length} total</span>
+                <h2 className="text-lg font-semibold text-gray-900">Recent Global Notifications</h2>
+                <span className="text-sm text-gray-500">{notifications.length} visible</span>
               </div>
 
               <div className="overflow-y-auto flex-1 p-6">
@@ -212,13 +228,13 @@ export default function AdminAnnouncements() {
                   <div className="flex justify-center py-12">
                     <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
                   </div>
-                ) : announcements.length === 0 ? (
+                ) : notifications.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
-                    No announcements sent yet.
+                    No notifications found.
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {announcements.map((item) => (
+                    {notifications.map((item) => (
                       <motion.div
                         key={item._id}
                         initial={{ opacity: 0, y: 10 }}
@@ -226,11 +242,14 @@ export default function AdminAnnouncements() {
                         className="group flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/30 transition-all"
                       >
                         <div className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                          item.category === 'maintenance' ? 'bg-red-100 text-red-600' :
-                          item.category === 'update' ? 'bg-blue-100 text-blue-600' :
+                          item.type === 'alert' ? 'bg-red-100 text-red-600' :
+                          item.type === 'info' ? 'bg-blue-100 text-blue-600' :
                           'bg-indigo-100 text-indigo-600'
                         }`}>
-                          <Megaphone className="h-5 w-5" />
+                          {item.type === 'community_post' ? <MessageSquare className="h-5 w-5" /> : 
+                           item.type === 'alert' ? <AlertCircle className="h-5 w-5" /> :
+                           item.type === 'info' ? <Info className="h-5 w-5" /> :
+                           <Bell className="h-5 w-5" />}
                         </div>
                         
                         <div className="flex-1 min-w-0">
@@ -244,7 +263,7 @@ export default function AdminAnnouncements() {
                           
                           <div className="flex items-center gap-4 text-xs text-gray-500">
                             <span className="capitalize px-2 py-0.5 rounded-full bg-gray-100">
-                              {item.category}
+                              {item.type}
                             </span>
                             {item.link && (
                               <span className="flex items-center gap-1 text-indigo-600">
@@ -252,9 +271,6 @@ export default function AdminAnnouncements() {
                                 {item.link}
                               </span>
                             )}
-                            <span className="ml-auto">
-                              By: {item.createdBy?.name || 'Admin'}
-                            </span>
                           </div>
                         </div>
                       </motion.div>

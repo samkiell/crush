@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload, Sparkles, Flag, Bookmark, Map, BarChart2, Megaphone } from 'lucide-react';
+import { Sun, Moon, Eye, Menu, X, Bell, LogOut, User, LayoutDashboard, BookOpen, Settings, Users, Phone, HelpCircle, LogIn, UserPlus, ChevronRight, MessageCircle, Monitor, Library, ShieldAlert, Upload, Sparkles, Flag, Bookmark, Map, BarChart2 } from 'lucide-react';
 import { useTheme } from '../utils/theme';
 import "@/lib/syncEngine"; // Initialize sync engine
 import { useSelector } from 'react-redux';
@@ -88,7 +88,7 @@ const Header = () => {
   const adminLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
-    { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
+    { name: 'Notifications', href: '/admin/notifications', icon: Bell },
     { name: 'Users', href: '/admin/users', icon: Users },
     { name: 'Upload', href: '/admin/questions/upload', icon: Upload },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
