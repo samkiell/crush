@@ -95,7 +95,6 @@ const Header = () => {
     { name: 'Routes', href: '/routes', icon: Map },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
-    { name: 'Notes', href: '/notes', icon: FileQuestion },
     { name: 'Help', href: '/help', icon: HelpCircle },
   ];
 
