@@ -7,7 +7,6 @@ import { toast } from "react-hot-toast";
 
 export default function HelpShakeListener() {
   const router = useRouter();
-  const [showFab, setShowFab] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [needsPermission, setNeedsPermission] = useState(false);
   
@@ -61,17 +60,6 @@ export default function HelpShakeListener() {
     } else {
       setPermissionGranted(true);
     }
-
-    // Always show FAB on mobile/tablet widths
-    const checkMobile = () => {
-      if (window.innerWidth < 1024) {
-        setShowFab(true);
-      }
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -126,18 +114,10 @@ export default function HelpShakeListener() {
     };
   }, [permissionGranted, handleShake]);
 
-  if (!showFab) return null;
+  if (!permissionGranted && !needsPermission) return null;
 
   return (
     <>
-      <button
-        onClick={() => router.push("/help")}
-        className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all active:scale-95 md:hidden flex items-center justify-center"
-        aria-label="Get Help"
-      >
-        <HelpCircle size={24} />
-      </button>
-
       {/* Permission Request Button for iOS */}
       {needsPermission && !permissionGranted && (
         <button

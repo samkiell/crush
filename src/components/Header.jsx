@@ -92,8 +92,11 @@ const Header = () => {
     { name: 'Routes', href: '/routes', icon: Map },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
+    { name: 'Community', href: '/community', icon: Users },
     { name: 'Help', href: '/help', icon: HelpCircle },
   ];
+
+  const navLinks = user?.role === 'admin' ? adminLinks : baseLinks;
 
   const guestLinks = [
     { name: 'Community', href: '/community', icon: Users },
