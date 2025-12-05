@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import ChatMessage from "@/models/ChatMessage";
 import ChatRoom from "@/models/ChatRoom";
-import User from "@/models/User"; // Import User model
+import User from "@/lib/models/User"; // Import User model
 import jwt from "jsonwebtoken";
 
 // Helper to verify JWT

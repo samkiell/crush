@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import dbConnect from "@/lib/db";
 import ChatMessage from "@/models/ChatMessage";
 import ChatRoom from "@/models/ChatRoom";
+import "@/lib/models/User";
 
 export default function handler(req, res) {
   if (res.socket.server.io) {
