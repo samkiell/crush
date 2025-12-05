@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Home, BookOpen, MessageSquare, Users, Monitor, Upload, UserCog, Map, Flag, HelpCircle } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, Users, Monitor, Upload, UserCog, Map, Flag, HelpCircle, BarChart2 } from 'lucide-react';
 
 export default function BottomNav() {
     const pathname = usePathname();
@@ -48,9 +48,9 @@ export default function BottomNav() {
             icon: Home,
         },
         {
-            label: 'Routes',
-            href: '/routes',
-            icon: Map,
+            label: 'Analytics',
+            href: '/admin/analytics',
+            icon: BarChart2,
         },
         {
             label: 'Chat',

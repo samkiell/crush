@@ -160,6 +160,30 @@ export default function AdminAnalyticsPage() {
               trend="up"
             />
           </div>
+          
+          {/* Secondary Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <MetricCard
+              title="Total Users"
+              value={analyticsData.metrics.totalUsers}
+              trend="up"
+            />
+            <MetricCard
+              title="New Users (30d)"
+              value={analyticsData.metrics.newUsers}
+              trend="neutral"
+            />
+            <MetricCard
+              title="Avg. Session Score"
+              value={`${analyticsData.metrics.averageScore}%`}
+              trend="neutral"
+            />
+            <MetricCard
+              title="Session Completion Rate"
+              value={`${analyticsData.metrics.completionRate}%`}
+              trend="neutral"
+            />
+          </div>
 
           {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

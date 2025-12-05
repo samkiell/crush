@@ -64,6 +64,36 @@ export async function GET(req) {
       { $group: { _id: null, total: { $sum: "$numberOfQuestions" } } },
     ]);
 
+    // 8. New Users (Last 30 days)
+    const newUsersCount = await User.countDocuments({
+      createdAt: { $gte: thirtyDaysAgo },
+    });
+
+    // 9. Average Score (Submitted sessions)
+    const scoreStats = await CbtSession.aggregate([
+      {
+        $match: {
+          status: "submitted",
+          "summary.percentage": { $exists: true },
+        },
+      },
+      { $group: { _id: null, avgScore: { $avg: "$summary.percentage" } } },
+    ]);
+    const averageScore = scoreStats[0]?.avgScore?.toFixed(1) || 0;
+
+    // 10. Completion Rate
+    const totalSessions = await CbtSession.countDocuments({
+      createdAt: { $gte: thirtyDaysAgo },
+    });
+    const submittedSessions = await CbtSession.countDocuments({
+      createdAt: { $gte: thirtyDaysAgo },
+      status: "submitted",
+    });
+    const completionRate =
+      totalSessions > 0
+        ? ((submittedSessions / totalSessions) * 100).toFixed(1)
+        : 0;
+
     // 7. Traffic Trend (Last 7 days)
     // We need daily counts. This is hard with just 'lastLogin'.
     // We'll use loginHistory but limit to recent entries.
@@ -91,6 +121,10 @@ export async function GET(req) {
         premiumUsers: premiumUsersCount,
         conversionRate: conversionRate,
         totalQuestions: questionUsage[0]?.total || 0,
+        totalUsers: totalUsersCount,
+        newUsers: newUsersCount,
+        averageScore: averageScore,
+        completionRate: completionRate,
       },
       charts: {
         traffic: trafficTrend.map((t) => ({ label: t._id, value: t.count })),
