@@ -8,6 +8,8 @@ const STORES = {
   SUBMISSIONS: "submissions",
   STUDY_PROGRESS: "study-progress",
   CBT_SESSIONS: "cbt-sessions",
+  NOTES: "notes",
+  NOTE_SYNC_QUEUE: "note-sync-queue",
 };
 
 export const initDB = async () => {
@@ -27,6 +29,20 @@ export const initDB = async () => {
       }
       if (!db.objectStoreNames.contains(STORES.CBT_SESSIONS)) {
         db.createObjectStore(STORES.CBT_SESSIONS, { keyPath: "sessionId" });
+      }
+      if (!db.objectStoreNames.contains(STORES.NOTES)) {
+        const noteStore = db.createObjectStore(STORES.NOTES, {
+          keyPath: "_id",
+        });
+        noteStore.createIndex("userId", "userId");
+        noteStore.createIndex("questionId", "questionId");
+        noteStore.createIndex("subject", "subject");
+      }
+      if (!db.objectStoreNames.contains(STORES.NOTE_SYNC_QUEUE)) {
+        db.createObjectStore(STORES.NOTE_SYNC_QUEUE, {
+          keyPath: "id",
+          autoIncrement: true,
+        });
       }
     },
   });
@@ -104,4 +120,49 @@ export const saveStudyProgressLocal = async (topicId, progressData) => {
 export const getStudyProgressLocal = async (topicId) => {
   const db = await initDB();
   return db.get(STORES.STUDY_PROGRESS, topicId);
+};
+
+// --- Notes Caching ---
+
+export const saveNoteLocal = async (note) => {
+  const db = await initDB();
+  await db.put(STORES.NOTES, note);
+};
+
+export const getNotesLocal = async (userId) => {
+  const db = await initDB();
+  const tx = db.transaction(STORES.NOTES, "readonly");
+  const index = tx.store.index("userId");
+  return index.getAll(userId);
+};
+
+export const getNoteByQuestionLocal = async (questionId) => {
+  const db = await initDB();
+  const tx = db.transaction(STORES.NOTES, "readonly");
+  const index = tx.store.index("questionId");
+  return index.getAll(questionId);
+};
+
+export const deleteNoteLocal = async (noteId) => {
+  const db = await initDB();
+  await db.delete(STORES.NOTES, noteId);
+};
+
+export const queueNoteSync = async (action, noteData) => {
+  const db = await initDB();
+  await db.add(STORES.NOTE_SYNC_QUEUE, {
+    action, // 'create', 'update', 'delete'
+    data: noteData,
+    timestamp: Date.now(),
+  });
+};
+
+export const getNoteSyncQueue = async () => {
+  const db = await initDB();
+  return db.getAll(STORES.NOTE_SYNC_QUEUE);
+};
+
+export const clearNoteSyncQueueItem = async (id) => {
+  const db = await initDB();
+  await db.delete(STORES.NOTE_SYNC_QUEUE, id);
 };
