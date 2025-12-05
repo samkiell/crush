@@ -39,11 +39,6 @@ export default function BottomNav() {
             href: '/cbt',
             icon: Monitor,
         },
-        {
-            label: 'Help',
-            href: '/help',
-            icon: HelpCircle,
-        },
     ];
 
     const adminNavItems = [
@@ -71,11 +66,6 @@ export default function BottomNav() {
             label: 'Users',
             href: '/admin/users',
             icon: Users,
-        },
-        {
-            label: 'Help',
-            href: '/help',
-            icon: HelpCircle,
         },
     ];
 
