@@ -11,7 +11,9 @@ export const GET = apiHandler(async (req, { params }) => {
   await dbConnect();
 
   // 1. Fetch User
-  const user = await User.findOne({ username })
+  const user = await User.findOne({
+    username: { $regex: new RegExp(`^${username}$`, "i") },
+  })
     .select("-password -__v")
     .populate({
       path: "bookmarks",
