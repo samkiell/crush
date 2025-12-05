@@ -81,6 +81,7 @@ const Header = () => {
     { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
+    { name: 'Notes', href: '/notes', icon: FileQuestion },
     { name: 'CBT', href: '/cbt', icon: Monitor },
     { name: 'Help', href: '/help', icon: HelpCircle },
   ];
@@ -93,7 +94,7 @@ const Header = () => {
     { name: 'Routes', href: '/routes', icon: Map },
     { name: 'Chat', href: '/chat', icon: MessageCircle },
     { name: 'Community', href: '/community', icon: Users },
-    { name: 'Community', href: '/community', icon: Users },
+    { name: 'Notes', href: '/notes', icon: FileQuestion },
     { name: 'Help', href: '/help', icon: HelpCircle },
   ];
 

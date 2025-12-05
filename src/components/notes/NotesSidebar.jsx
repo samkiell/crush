@@ -158,7 +158,7 @@ const NotesSidebar = ({ questionId, subject, onClose }) => {
       </div>
 
       {!isCreating && !editingNote && (
-        <div className="p-4 border-t border-base-content/10 bg-base-200/30">
+        <div className="p-4 border-t border-base-content/10 bg-base-200/30 pb-24 md:pb-4">
           <button
             onClick={() => setIsCreating(true)}
             className="btn btn-primary w-full gap-2 shadow-lg shadow-primary/20"
