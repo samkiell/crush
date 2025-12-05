@@ -132,7 +132,7 @@ export default function ChatWindow({ room, onBack }) {
     }
 
     return (
-        <div className="h-full flex flex-col bg-base-100 relative">
+        <div className="h-full flex flex-col bg-base-100 relative pb-24 md:pb-0">
             {/* Minimal Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-base-200 bg-base-100/80 backdrop-blur-md sticky top-0 z-10">
                 <div className="flex items-center gap-3">

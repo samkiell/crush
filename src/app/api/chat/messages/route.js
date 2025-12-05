@@ -71,21 +71,27 @@ export async function GET(request) {
 }
 
 // POST - Send a new message
+// POST - Send a new message
 export async function POST(request) {
   try {
+    console.log("[API] POST /api/chat/messages - Start");
     await dbConnect();
+    console.log("[API] DB Connected");
 
     // Verify authentication
     const decoded = verifyToken(request);
     if (!decoded) {
+      console.log("[API] Auth failed: No token or invalid");
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 401 }
       );
     }
+    console.log("[API] User ID from token:", decoded.id);
 
     const user = await User.findById(decoded.id).select("name avatar");
     if (!user) {
+      console.log("[API] User not found in DB");
       return NextResponse.json(
         { success: false, message: "User not found" },
         { status: 404 }
@@ -94,6 +100,7 @@ export async function POST(request) {
 
     const body = await request.json();
     const { roomId, content, type, mediaUrl, replyTo } = body;
+    console.log("[API] Request body:", { roomId, content, type });
 
     // Validate required fields
     if (!roomId || !content) {
@@ -107,6 +114,7 @@ export async function POST(request) {
     const room = await ChatRoom.findById(roomId);
 
     if (!room) {
+      console.log("[API] Room not found:", roomId);
       return NextResponse.json(
         { success: false, message: "Chat room not found" },
         { status: 404 }
@@ -119,6 +127,7 @@ export async function POST(request) {
       .some((memberId) => memberId.toString() === user._id.toString());
 
     if (!isMember) {
+      console.log("[API] User is not a member of the room");
       return NextResponse.json(
         { success: false, message: "You must be a member to send messages" },
         { status: 403 }
@@ -126,6 +135,7 @@ export async function POST(request) {
     }
 
     // Create message
+    console.log("[API] Creating message...");
     const newMessage = await ChatMessage.create({
       room: roomId,
       sender: user._id,
@@ -134,6 +144,7 @@ export async function POST(request) {
       mediaUrl,
       replyTo,
     });
+    console.log("[API] Message created:", newMessage._id);
 
     // Update room's last message
     room.lastMessage = {
@@ -150,9 +161,12 @@ export async function POST(request) {
 
     // Emit socket event
     if (global.io) {
+      console.log("[API] Emitting socket event to room:", roomId);
       global.io.to(roomId).emit("message:new", populatedMessage);
     } else {
-      console.warn("Socket.io not initialized, message not emitted via socket");
+      console.warn(
+        "[API] Socket.io not initialized, message not emitted via socket"
+      );
     }
 
     return NextResponse.json(
@@ -163,9 +177,9 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error("[API] Error sending message:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to send message" },
+      { success: false, message: "Failed to send message: " + error.message },
       { status: 500 }
     );
   }
