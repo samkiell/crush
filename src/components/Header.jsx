@@ -351,7 +351,11 @@ const Header = () => {
                   </div>
 
                   {isAuthenticated ? (
-                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl">
+                    <Link 
+                      href={user?.username ? `/profile/${user.username}` : '/profile'}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl active:scale-95 transition-transform"
+                    >
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg overflow-hidden shrink-0">
                         {user?.avatar ? (
                           <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
@@ -374,7 +378,7 @@ const Header = () => {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       <Link href="/login" onClick={() => setIsMenuOpen(false)} className="btn btn-outline btn-sm w-full border-white/20 text-white hover:bg-white hover:text-neutral hover:border-white">Login</Link>
