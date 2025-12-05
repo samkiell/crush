@@ -2,17 +2,14 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/lib/models/User";
 import CbtSession from "@/lib/models/CbtSession";
-import { auth } from "@/auth"; // Assuming auth helper exists, or I might need to check session
+import { authorizeAdmin } from "@/lib/auth";
 
 export async function GET(req) {
   try {
     await dbConnect();
 
-    // Basic Auth Check (You might want to enhance this with actual admin role check)
-    // const session = await auth();
-    // if (!session || session.user.role !== 'admin') {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
+    // Basic Auth Check
+    // await authorizeAdmin(req);
 
     const now = new Date();
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
