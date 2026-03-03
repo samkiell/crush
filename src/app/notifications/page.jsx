@@ -1,110 +1,134 @@
 'use client';
 
-import { Bell, CheckCircle, AlertCircle, Info, Flame, MessageCircle, Trophy, Clock, X } from 'lucide-react';
-import { useState } from 'react';
+import { Bell, CheckCircle, AlertCircle, Info, Flame, MessageCircle, Trophy, Clock, X, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { useSocket } from '@/hooks/useSocket';
+import { useRouter } from 'next/navigation';
 
 export default function NotificationsPage() {
     const [filter, setFilter] = useState('all'); // all, unread, important
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const socket = useSocket();
+    const router = useRouter();
 
-    // Mock notifications - replace with Redux/API data
-    const [notifications, setNotifications] = useState([
-        {
-            id: 1,
-            type: 'streak_risk',
-            icon: Flame,
-            title: 'Streak at Risk!',
-            message: 'Your 12-day streak expires in 2 hours. Study now to keep it alive!',
-            timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 min ago
-            priority: 'high',
-            unread: true,
-            actionUrl: '/practice',
-        },
-        {
-            id: 2,
-            type: 'exam_countdown',
-            icon: AlertCircle,
-            title: 'JAMB Exam Countdown',
-            message: '3 days until your exam! Complete your final review.',
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-            priority: 'critical',
-            unread: true,
-        },
-        {
-            id: 3,
-            type: 'achievement',
-            icon: Trophy,
-            title: 'Achievement Unlocked!',
-            message: '"Week Warrior" - You maintained a 7-day streak!',
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-            priority: 'medium',
-            unread: true,
-        },
-        {
-            id: 4,
-            type: 'community',
-            icon: MessageCircle,
-            title: 'New Reply',
-            message: 'AdewaleJAMB replied to your question about Organic Chemistry',
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-            priority: 'low',
-            unread: false,
-            actionUrl: '/community',
-        },
-        {
-            id: 5,
-            type: 'ai_recommendation',
-            icon: Info,
-            title: 'AI Recommendation',
-            message: 'Focus on Calculus today based on your upcoming exam schedule',
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
-            priority: 'medium',
-            unread: false,
-        },
-    ]);
+    useEffect(() => {
+        fetchNotifications();
+    }, []);
 
-    const filteredNotifications = notifications.filter((notif) => {
-        if (filter === 'unread') return notif.unread;
-        if (filter === 'important') return notif.priority === 'critical' || notif.priority === 'high';
-        return true;
-    });
+    useEffect(() => {
+        if (!socket) return;
 
-    const unreadCount = notifications.filter((n) => n.unread).length;
+        const handleNewNotification = (newNotification) => {
+            // Add new notification to the top of the list
+            // We need to ensure the structure matches what we expect
+            const formatted = {
+                ...newNotification,
+                // Ensure ID is present (socket might send _id)
+                _id: newNotification._id || Date.now().toString(),
+                isRead: false,
+                createdAt: new Date().toISOString()
+            };
+            setNotifications(prev => [formatted, ...prev]);
+        };
 
-    const markAsRead = (id) => {
-        setNotifications(notifications.map((n) =>
-            n.id === id ? { ...n, unread: false } : n
-        ));
+        socket.on('notification:new', handleNewNotification);
+
+        return () => {
+            socket.off('notification:new', handleNewNotification);
+        };
+    }, [socket]);
+
+    const fetchNotifications = async () => {
+        try {
+            const res = await fetch('/api/notifications?limit=50');
+            const data = await res.json();
+            if (data.success) {
+                setNotifications(data.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch notifications:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const markAllAsRead = () => {
-        setNotifications(notifications.map((n) => ({ ...n, unread: false })));
+    const markAsRead = async (id) => {
+        // Optimistic update
+        setNotifications(notifications.map((n) =>
+            n._id === id ? { ...n, isRead: true } : n
+        ));
+
+        try {
+            await fetch('/api/notifications', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notificationId: id })
+            });
+        } catch (error) {
+            console.error('Failed to mark as read:', error);
+        }
+    };
+
+    const markAllAsRead = async () => {
+        // Optimistic update
+        setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
+
+        try {
+            await fetch('/api/notifications', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ markAll: true })
+            });
+        } catch (error) {
+            console.error('Failed to mark all as read:', error);
+        }
     };
 
     const deleteNotification = (id) => {
-        setNotifications(notifications.filter((n) => n.id !== id));
+        // We don't have a delete API yet, so just hide it from UI for now
+        // Or we could implement a DELETE endpoint. 
+        // For now, let's just remove from state.
+        setNotifications(notifications.filter((n) => n._id !== id));
     };
 
-    const getPriorityColor = (priority) => {
-        const colors = {
-            critical: 'border-error bg-error/10',
-            high: 'border-warning bg-warning/10',
-            medium: 'border-info bg-info/10',
-            low: 'border-base-300 bg-base-100',
-        };
-        return colors[priority] || colors.low;
+    const getIconInfo = (type) => {
+        switch (type) {
+            case 'streak_risk':
+            case 'alert':
+                return { icon: Flame, color: 'text-warning', bg: 'bg-warning/10', border: 'border-warning' };
+            case 'exam_countdown':
+            case 'critical':
+                return { icon: AlertCircle, color: 'text-error', bg: 'bg-error/10', border: 'border-error' };
+            case 'achievement':
+                return { icon: Trophy, color: 'text-success', bg: 'bg-success/10', border: 'border-success' };
+            case 'community_post':
+            case 'community_reply':
+                return { icon: MessageCircle, color: 'text-info', bg: 'bg-info/10', border: 'border-info' };
+            case 'ai_recommendation':
+                return { icon: Info, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary' };
+            default:
+                return { icon: Bell, color: 'text-base-content', bg: 'bg-base-200', border: 'border-base-300' };
+        }
     };
 
-    const getIconColor = (type) => {
-        const colors = {
-            streak_risk: 'text-warning',
-            exam_countdown: 'text-error',
-            achievement: 'text-success',
-            community: 'text-info',
-            ai_recommendation: 'text-primary',
-        };
-        return colors[type] || 'text-base-content';
-    };
+    const filteredNotifications = notifications.filter((notif) => {
+        if (filter === 'unread') return !notif.isRead;
+        // Assume 'alert' and 'streak_risk' are important
+        if (filter === 'important') return ['alert', 'streak_risk', 'exam_countdown'].includes(notif.type);
+        return true;
+    });
+
+    const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-base-100 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-base-100">
@@ -146,7 +170,7 @@ export default function NotificationsPage() {
                             onClick={() => setFilter('important')}
                             className={`btn btn-sm ${filter === 'important' ? 'btn-primary' : 'btn-ghost'}`}
                         >
-                            Important ({notifications.filter(n => n.priority === 'critical' || n.priority === 'high').length})
+                            Important ({notifications.filter(n => ['alert', 'streak_risk', 'exam_countdown'].includes(n.type)).length})
                         </button>
                     </div>
                 </div>
@@ -165,21 +189,22 @@ export default function NotificationsPage() {
                         </div>
                     ) : (
                         filteredNotifications.map((notification) => {
-                            const Icon = notification.icon;
+                            const { icon: Icon, color, bg, border } = getIconInfo(notification.type);
+                            const isUnread = !notification.isRead;
+                            
                             return (
                                 <div
-                                    key={notification.id}
-                                    className={`relative p-4 rounded-xl border-2 transition-all hover:shadow-md ${notification.unread
-                                            ? 'bg-primary/5 border-primary/20'
-                                            : 'bg-base-100 border-base-300'
-                                        } ${getPriorityColor(notification.priority)}`}
+                                    key={notification._id}
+                                    className={`relative p-4 rounded-xl border-2 transition-all hover:shadow-md ${
+                                        isUnread
+                                            ? 'bg-base-100 border-primary/40 shadow-sm' // Highlight unread
+                                            : 'bg-base-100 border-base-200 opacity-80'
+                                    }`}
                                 >
                                     <div className="flex items-start gap-4">
                                         {/* Icon */}
                                         <div
-                                            className={`p-3 rounded-lg bg-base-200 flex-shrink-0 ${getIconColor(
-                                                notification.type
-                                            )}`}
+                                            className={`p-3 rounded-lg flex-shrink-0 ${bg} ${color}`}
                                         >
                                             <Icon className="w-5 h-5" />
                                         </div>
@@ -187,38 +212,39 @@ export default function NotificationsPage() {
                                         {/* Content */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-start justify-between gap-2 mb-1">
-                                                <h3 className="font-semibold text-base-content">
+                                                <h3 className={`font-semibold text-base-content ${isUnread ? 'font-bold' : ''}`}>
                                                     {notification.title}
                                                 </h3>
-                                                {notification.unread && (
-                                                    <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
+                                                {isUnread && (
+                                                    <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2" title="Unread"></div>
                                                 )}
                                             </div>
-                                            <p className="text-sm text-base-content/70 mb-3">
+                                            <p className="text-sm text-base-content/70 mb-3 line-clamp-2">
                                                 {notification.message}
                                             </p>
 
                                             <div className="flex items-center justify-between gap-2">
                                                 <span className="text-xs text-base-content/50 flex items-center gap-1">
                                                     <Clock className="w-3 h-3" />
-                                                    {formatDistanceToNow(notification.timestamp, {
+                                                    {notification.createdAt ? formatDistanceToNow(new Date(notification.createdAt), {
                                                         addSuffix: true,
-                                                    })}
+                                                    }) : 'Just now'}
                                                 </span>
 
                                                 <div className="flex items-center gap-2">
-                                                    {notification.unread && (
+                                                    {isUnread && (
                                                         <button
-                                                            onClick={() => markAsRead(notification.id)}
+                                                            onClick={() => markAsRead(notification._id)}
                                                             className="btn btn-xs btn-ghost"
                                                         >
                                                             Mark as read
                                                         </button>
                                                     )}
-                                                    {notification.actionUrl && (
+                                                    {notification.link && (
                                                         <a
-                                                            href={notification.actionUrl}
+                                                            href={notification.link}
                                                             className="btn btn-xs btn-primary"
+                                                            target={notification.link.startsWith('http') ? '_blank' : '_self'}
                                                         >
                                                             View
                                                         </a>
@@ -227,11 +253,11 @@ export default function NotificationsPage() {
                                             </div>
                                         </div>
 
-                                        {/* Delete Button */}
+                                        {/* Delete Button (Visual only for now) */}
                                         <button
-                                            onClick={() => deleteNotification(notification.id)}
-                                            className="btn btn-ghost btn-circle btn-xs flex-shrink-0"
-                                            title="Delete notification"
+                                            onClick={() => deleteNotification(notification._id)}
+                                            className="btn btn-ghost btn-circle btn-xs flex-shrink-0 opacity-50 hover:opacity-100"
+                                            title="Dismiss"
                                         >
                                             <X className="w-4 h-4" />
                                         </button>

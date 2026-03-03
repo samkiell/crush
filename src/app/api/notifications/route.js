@@ -127,7 +127,25 @@ export async function PUT(req) {
     await dbConnect();
 
     const body = await req.json();
-    const { notificationId } = body;
+    const { notificationId, markAll } = body;
+
+    if (markAll) {
+      // Mark all unread notifications for this user as read
+      // 1. Update personal notifications
+      await Notification.updateMany(
+        { recipient: user._id, isRead: false },
+        { $set: { isRead: true } }
+      );
+
+      // 2. Update global notifications (add user to readBy)
+      // We need to find global notifications where user is NOT in readBy
+      await Notification.updateMany(
+        { recipient: null, readBy: { $ne: user._id } },
+        { $addToSet: { readBy: user._id } }
+      );
+
+      return NextResponse.json({ success: true });
+    }
 
     if (!notificationId) {
       return NextResponse.json(
